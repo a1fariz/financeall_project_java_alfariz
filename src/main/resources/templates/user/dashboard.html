@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - FinanceAll</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+    <link th:href="@{/css/all.min.css}" rel="stylesheet">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="main-content container mt-4">
+    <div class="mb-4">
+        <h1>Hello, <span th:text="${user?.fullName ?: 'User'}">User</span>! 👋</h1>
+        <p class="text-secondary">Here is your financial summary for today.</p>
+    </div>
+
+    <div th:if="${not #lists.isEmpty(announcements)}" class="mb-5">
+        <div th:each="ann : ${announcements}" class="glass-card p-4 shadow-sm" 
+             style="border-left: 5px solid var(--accent); background: rgba(99, 102, 241, 0.05); margin-bottom: 20px;">
+            
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h4 class="h5 mb-0" style="color: var(--accent); font-weight: 700;">
+                    📢 <span th:text="${ann.title}">Judul Pengumuman</span>
+                </h4>
+                <span class="badge bg-light text-dark opacity-75" style="font-size: 0.75rem;"
+                      th:text="${#temporals.format(ann.createdAt, 'dd MMM yyyy')}">Tanggal</span>
+            </div>
+            
+            <hr style="opacity: 0.1; margin: 10px 0;">
+            
+            <p class="mb-0" style="line-height: 1.6; color: var(--text-primary); font-size: 0.95rem;" 
+               th:text="${ann.content}">Isi pesan broadcast...</p>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-md-4">
+            <div class="glass-card p-4 h-100 shadow-sm">
+                <h3 class="h6 text-muted text-uppercase fw-bold">Active Balance</h3>
+                <div class="display-6 fw-bold text-primary mb-2" 
+                     th:text="${wallet != null} ? 'Rp ' + ${#numbers.formatDecimal(wallet.balance, 0, 'COMMA', 0, 'POINT')} : 'Rp 0'"></div>
+                <span class="badge bg-primary bg-opacity-10 text-primary" 
+                      th:text="${level != null ? 'Level: ' + level.name : 'Level: Newbie'}"></span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="glass-card p-4 h-100 shadow-sm">
+                <h3 class="h6 text-muted text-uppercase fw-bold">Total Debts</h3>
+                <div class="display-6 fw-bold text-danger mb-2" 
+                     th:text="${totalDebt != null} ? 'Rp ' + ${#numbers.formatDecimal(totalDebt, 0, 'COMMA', 0, 'POINT')} : 'Rp 0'"></div>
+                <a th:href="@{/user/debt}" class="small text-muted text-decoration-none">Manage Debts &rarr;</a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="glass-card p-4 h-100 shadow-sm">
+                <h3 class="h6 text-muted text-uppercase fw-bold">Emergency Fund</h3>
+                <div class="display-6 fw-bold text-warning mb-2" 
+                     th:text="${emergencyFund != null} ? 'Rp ' + ${#numbers.formatDecimal(emergencyFund.currentAmount, 0, 'COMMA', 0, 'POINT')} : 'Rp 0'"></div>
+                <a th:href="@{/user/emergency}" class="small text-muted text-decoration-none">View Details &rarr;</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/bootstrap.min.js}"></script>
+</body>
+</html>

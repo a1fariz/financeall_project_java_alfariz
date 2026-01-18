@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"><title>Wallet - FinanceAll</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+<div class="main-content container">
+    <div class="mb-4">
+        <h1>My Wallet 👛</h1>
+        <p class="text-secondary">Manage your active funds and spending limits.</p>
+    </div>
+    <div class="grid-2">
+        <section class="glass-card" style="background: linear-gradient(135deg, var(--accent) 0%, #818cf8 100%); color: white;">
+            <h3 class="h6 text-uppercase fw-bold" style="color: rgba(255,255,255,0.8);">Available Balance</h3>
+            <div style="font-size: 2.8rem; font-weight: 800;" 
+                 th:text="${wallet != null} ? 'Rp ' + ${#numbers.formatDecimal(wallet.balance, 0, 'COMMA', 0, 'POINT')} : 'Rp 0'"></div>
+        </section>
+        <section class="glass-card">
+            <h3 class="h5 fw-bold mb-4">Quick Actions</h3>
+            <div class="d-grid gap-3">
+                <a th:href="@{/user/transaction}" class="btn-primary py-3 text-center text-decoration-none">+ Add Transaction</a>
+            </div>
+        </section>
+    </div>
+</div>
+</body>
+</html>

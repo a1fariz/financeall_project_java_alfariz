@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"><title>FI Calculator - FinanceAll</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+<div class="main-content container">
+    <div class="mb-4 text-center">
+        <h1>Financial Independence 🧮</h1>
+        <p class="text-secondary">Find your freedom number based on monthly expenses.</p>
+    </div>
+    <div class="grid-2">
+        <section class="glass-card shadow-sm p-4">
+            <h3 class="h5 fw-bold mb-4">Parameters</h3>
+            <form th:action="@{/user/fi/calculate}" method="post">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Monthly Expense (Rp)</label>
+                    <input type="number" name="monthlyExpense" class="form-control" placeholder="5,000,000" required>
+                </div>
+                <button type="submit" class="btn-auth w-100">Calculate</button>
+            </form>
+        </section>
+        <section th:if="${result != null}" class="glass-card text-center d-flex flex-column justify-content-center">
+            <h3 class="h6 text-muted mb-3">Your Freedom Number</h3>
+            <div class="display-5 fw-bold text-primary mb-4" 
+                 th:text="${result.fiNumber != null} ? 'Rp ' + ${#numbers.formatDecimal(result.fiNumber, 0, 'COMMA', 0, 'POINT')} : 'Rp 0'"></div>
+            <div class="p-3 bg-danger bg-opacity-10 rounded">
+                <p class="mb-1 small text-secondary">Gap to Freedom:</p>
+                <h4 class="text-danger fw-bold" th:text="${result.gap != null} ? 'Rp ' + ${#numbers.formatDecimal(result.gap, 0, 'COMMA', 0, 'POINT')} : 'Rp 0'"></h4>
+            </div>
+        </section>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Daftar - FinanceAll</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="auth-page auth-register"> 
+    <div class="auth-container">
+        <div class="auth-banner">
+            <h2>Mulai Perjalanan Anda!</h2>
+            <p>Bergabunglah dengan ribuan pengguna lainnya.</p>
+        </div>
+
+        <div class="auth-form-wrapper">
+            <h1 class="auth-title">Daftar Akun</h1>
+            <p class="auth-subtitle">Lengkapi detail di bawah untuk membuat akun baru</p>
+
+            <div th:if="${error}" class="alert alert-error" style="margin-bottom: 20px;">
+                <span>⚠️</span> <span th:text="${error}"></span>
+            </div>
+
+            <form th:action="@{/register}" method="post">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" name="username" placeholder="Pilih username" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" placeholder="contoh@email.com" required>
+                </div>
+
+                <div class="grid-2" style="gap: 10px; margin-bottom: 0;">
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" name="password" placeholder="••••••••" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Konfirmasi</label>
+                        <input type="password" name="confirmPassword" placeholder="••••••••" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-auth">Buat Akun Sekarang</button>
+            </form>
+
+            <div class="auth-footer">
+                Sudah punya akun? <a th:href="@{/login}">Masuk di sini</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

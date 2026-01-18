@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinanceAll</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+<div class="main-content">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem;">
+        <h1>Activity Logs 📜</h1>
+        <a th:href="@{/admin/dashboard}" style="color:var(--accent);">&larr; Dashboard</a>
+    </div>
+    <section class="glass-card">
+        <div class="table-container">
+            <table class="table-modern">
+                <thead>
+                    <tr>
+                        <th>Waktu</th>
+                        <th>User Admin</th>
+                        <th>Aksi</th>
+                        <th>Detail</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="log : ${allLogs}">
+                        <td th:text="${#temporals.format(log.timestamp, 'dd MMM HH:mm')}"></td>
+                        <td th:text="${log.user.username}"></td>
+                        <td><span class="badge badge-income" th:text="${log.action}"></span></td>
+                        <td th:text="${log.details}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+</body>
+</html>

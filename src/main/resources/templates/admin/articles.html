@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Articles - FinanceAll</title>
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="main-content">
+    <div class="grid-2">
+        <div class="glass-card">
+            <h3 class="auth-title">📢 Create New Article</h3>
+            <p class="auth-subtitle">Broadcast information to all users</p>
+            
+            <form th:action="@{/admin/articles/add}" method="post">
+                <div class="form-group">
+                    <label>Article Title</label>
+                    <input type="text" name="title" placeholder="Enter title..." required class="form-control-custom">
+                </div>
+                <div class="form-group">
+                    <label>Content</label>
+                    <textarea name="content" rows="5" class="form-control-custom" placeholder="Write your message here..." required style="background: var(--bg-input); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 12px; padding: 10px; width: 100%;"></textarea>
+                </div>
+                <button type="submit" class="btn-auth">🚀 Post Article</button>
+            </form>
+        </div>
+
+        <div class="glass-card">
+            <h3>Recent Articles</h3>
+            <div th:if="${#lists.isEmpty(articles)}" style="text-align: center; padding: 2rem; opacity: 0.5;">
+                No articles published yet.
+            </div>
+            
+            <div th:each="a : ${articles}" class="card-modern mb-3" style="padding: 1rem; margin-bottom: 1rem; background: rgba(255,255,255,0.03);">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div>
+                        <h5 th:text="${a.title}" style="margin: 0; color: var(--accent);"></h5>
+                        <small th:text="${#temporals.format(a.createdAt, 'dd MMM yyyy HH:mm')}" style="opacity: 0.6; font-size: 0.75rem;"></small>
+                    </div>
+                    <a th:href="@{/admin/articles/delete/{id}(id=${a.id})}" class="btn-icon btn-delete" onclick="return confirm('Delete this article?')">🗑️</a>
+                </div>
+                <p th:text="${a.content}" style="margin-top: 10px; font-size: 0.9rem; line-height: 1.4;"></p>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"><title>Level Progress - FinanceAll</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+<div class="main-content container">
+    <div class="mb-4">
+        <h1>Financial Mastery Level 🎮</h1>
+        <p class="text-secondary">Level up by being consistent with your tracking.</p>
+    </div>
+
+    <div class="grid-2">
+        <section class="glass-card border-start border-primary border-5">
+            <p class="text-muted mb-1">Current Status</p>
+            <h1 class="display-4 fw-bold text-primary" th:text="${progress?.level?.name ?: 'Newbie'}">Newbie</h1>
+            <p class="mt-3 fw-bold">Total XP: <span class="text-primary" th:text="${progress?.currentPoints ?: 0}">0</span></p>
+            
+            <div class="mt-4">
+                <p class="small text-secondary mb-1">Progress to Next Level</p>
+                <div class="progress-track" style="height: 12px; background: rgba(0,0,0,0.05);">
+                    <div class="progress-fill" th:style="'width: ' + ${progressPercentage ?: 0} + '%; background: var(--accent);'"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass-card">
+            <h3 class="h5 fw-bold mb-3">Level Requirements Table</h3>
+            <div class="table-container shadow-none border rounded">
+                <table class="table-modern small">
+                    <thead>
+                        <tr><th>Level</th><th>Name</th><th>Required XP</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="l : ${allLevels}">
+                            <td th:text="${l.id}"></td>
+                            <td th:text="${l.name}"></td>
+                            <td th:text="${l.requiredPoints}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+</div>
+</body>
+</html>

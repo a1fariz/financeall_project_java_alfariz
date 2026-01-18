@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Transaction - FinanceAll</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="main-content container d-flex justify-content-center">
+    <div class="glass-card shadow-lg" style="width: 100%; max-width: 600px; padding: 2.5rem;">
+        <div class="mb-4 text-center">
+            <h1 class="fw-bold">Edit Transaction ✏️</h1>
+            <p class="text-secondary">Update your record details</p>
+        </div>
+        <div th:if="${successMsg}" class="alert alert-success alert-dismissible fade show" role="alert">
+    <span th:text="${successMsg}"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+<div th:if="${errorMsg}" class="alert alert-danger alert-dismissible fade show" role="alert">
+    <span th:text="${errorMsg}"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+        <form th:action="@{/user/transaction/update}" method="post">
+    <input type="hidden" name="id" th:value="${transaction.id}">
+    
+    <div class="mb-3">
+        <label class="form-label fw-bold">Amount (Rp)</label>
+        <input type="number" name="amount" th:value="${transaction.amount}" class="form-control" required>
+    </div>
+
+    <div class="d-flex gap-3">
+        <a th:href="@{/user/transaction}" class="btn-primary flex-fill text-center" 
+           style="background: rgba(100,100,100,0.2); color: var(--text-primary); text-decoration: none; padding: 0.8rem;">
+            Cancel
+        </a>
+        <button type="submit" class="btn-auth flex-fill mt-0">
+            Save Changes
+        </button>
+    </div>
+</form>
+    </div>
+</div>
+
+<script th:src="@{/js/bootstrap.min.js}"></script>
+</body>
+</html>

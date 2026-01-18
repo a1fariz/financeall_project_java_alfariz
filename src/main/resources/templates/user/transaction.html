@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Transactions - FinanceAll</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="main-content container">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+        <h1>Transaction History 📊</h1>
+        <div class="d-flex gap-2">
+            <button class="btn-primary" style="background:var(--success);" data-bs-toggle="modal" data-bs-target="#incomeModal">
+                ➕ Income
+            </button>
+            <button class="btn-primary" style="background:var(--danger);" data-bs-toggle="modal" data-bs-target="#expenseModal">
+                ➖ Expense
+            </button>
+        </div>
+    </div>
+
+    <div th:if="${errorMsg}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <span th:text="${errorMsg}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div th:if="${successMsg}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <span th:text="${successMsg}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+
+    <div class="table-container shadow-sm">
+        <table class="table-modern">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Category</th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th>Note</th>
+                    <th class="text-end">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:if="${#lists.isEmpty(transactions)}">
+                    <td colspan="6" class="text-center py-5 text-muted">No records found.</td>
+                </tr>
+                <tr th:each="trx : ${transactions}">
+                    <td th:text="${trx.createdAt != null ? #temporals.format(trx.createdAt, 'dd MMM yyyy') : '-'}"></td>
+                    <td><span class="badge bg-light text-dark" th:text="${trx.category}"></span></td>
+                    <td>
+                        <span th:if="${trx.type == 'INCOME'}" class="badge badge-income">Income</span>
+                        <span th:if="${trx.type == 'EXPENSE'}" class="badge badge-expense">Expense</span>
+                    </td>
+                    <td th:class="${trx.type == 'INCOME' ? 'text-success fw-bold' : 'text-danger fw-bold'}"
+                        th:text="${trx.amount != null ? (trx.type == 'EXPENSE' ? '- ' : '+ ') + 'Rp ' + #numbers.formatDecimal(trx.amount, 0, 'POINT', 0, 'COMMA') : 'Rp 0'}">
+                    </td>
+                    <td th:text="${trx.description}"></td>
+                    <td class="text-end">
+                        <a th:href="@{/user/transaction/edit/{id}(id=${trx.id})}" class="btn-action btn-edit">✏️</a>
+                        <a th:href="@{/user/transaction/delete/{id}(id=${trx.id})}" 
+                           onclick="return confirm('Are you sure?')" class="btn-action btn-delete">🗑️</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal fade" id="incomeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content transaction-modal">
+            <div class="modal-header">
+                <h5 class="modal-title">➕ Add Income</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form th:action="@{/user/transaction/add}" method="post">
+                <input type="hidden" name="type" value="INCOME">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Amount (Rp)</label>
+                        <input type="number" name="amount" class="form-control" required placeholder="0">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Category</label>
+                        <select name="category" class="form-control">
+                            <option th:each="cat : ${categories}" th:value="${cat}" th:text="${cat}"></option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <input type="text" name="description" class="form-control" placeholder="e.g. Salary">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn-auth w-100" style="background: var(--success);">Save Income</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="expenseModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content transaction-modal">
+            <div class="modal-header">
+                <h5 class="modal-title">➖ Add Expense</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form th:action="@{/user/transaction/add}" method="post">
+                <input type="hidden" name="type" value="EXPENSE">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Amount (Rp)</label>
+                        <input type="number" name="amount" class="form-control" required placeholder="0">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Category</label>
+                        <select name="category" class="form-control">
+                            <option th:each="cat : ${categories}" th:value="${cat}" th:text="${cat}"></option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <input type="text" name="description" class="form-control" placeholder="e.g. Food">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn-auth w-100" style="background: var(--danger);">Save Expense</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/bootstrap.min.js}"></script>
+</body>
+</html>

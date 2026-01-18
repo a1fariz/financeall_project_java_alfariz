@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="header">
+    <header class="desktop-header">
+        <a th:href="${session.user != null ? (session.user.role == 'ROLE_ADMIN' ? '/admin/dashboard' : '/user/dashboard') : '/login'}" class="logo">
+            Finance<span style="color: var(--accent);">All.</span> 🚀
+        </a>
+        
+        <nav class="nav-menu">
+            <div th:if="${session.user != null && session.user.role == 'ROLE_USER'}" style="display: flex; gap: 1.2rem;">
+                <a th:href="@{/user/dashboard}" class="nav-link">📊 Dashboard</a>
+                <a th:href="@{/user/transaction}" class="nav-link">💸 Transactions</a>
+                <a th:href="@{/user/wallet}" class="nav-link">👛 Wallet</a>
+                <a th:href="@{/user/debt}" class="nav-link">📑 Debts</a>
+                <a th:href="@{/user/emergency}" class="nav-link">🛡️ Emergency Fund</a>
+                <a th:href="@{/user/fi}" class="nav-link">🧮 FI Calculator</a>
+            </div>
+
+            <div th:if="${session.user != null && session.user.role == 'ROLE_ADMIN'}" style="display: flex; gap: 1.2rem;">
+                <a th:href="@{/admin/dashboard}" class="nav-link">🏠 Dashboard</a>
+                <a th:href="@{/admin/analysis}" class="nav-link">📈 Analysis</a>
+                <a th:href="@{/admin/users}" class="nav-link">👥 Users</a>
+                <a th:href="@{/admin/articles}" class="nav-link">📰 Articles</a>
+                <a th:href="@{/admin/levels}" class="nav-link">🎮 Levels</a>
+                <a th:href="@{/admin/logs}" class="nav-link">📜 Activity Logs</a>
+            </div>
+            
+            <div style="display: flex; align-items: center; gap: 15px; margin-left: 20px; border-left: 1px solid var(--border-color); padding-left: 20px;">
+                <a th:href="@{/user/profile}" class="nav-link" th:if="${session.user != null && session.user.role == 'ROLE_USER'}">👤 Profile</a>
+                <button class="theme-btn" onclick="toggleTheme()" style="background: none; border: none; cursor: pointer;">
+                    <span id="theme-icon-desktop">🌙</span>
+                </button>
+                <a th:href="@{/logout}" class="btn-primary" style="background: var(--danger); padding: 8px 15px; border-radius: 8px; color: white; text-decoration: none;">Logout</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="mobile-header">
+        <button class="menu-toggle" onclick="toggleMobile()" style="background:none; border:none; font-size:1.5rem;">☰</button>
+        <div class="logo">FinanceAll.</div>
+        <button class="theme-btn" onclick="toggleTheme()" style="background:none; border:none;"><span id="theme-icon-mobile">🌙</span></button>
+    </div>
+
+    <div class="mobile-sidebar" id="mobileSidebar">
+        <div style="padding: 20px;">
+            <h3 style="color: var(--accent);">FinanceAll.</h3>
+            <p th:if="${session.user}" style="font-size: 0.8rem; opacity: 0.6;" th:text="${session.user.username}"></p>
+            <hr>
+            <div th:if="${session.user != null}">
+                <div th:if="${session.user.role == 'ROLE_USER'}">
+                    <a th:href="@{/user/dashboard}" class="mobile-link">📊 Dashboard</a>
+                    <a th:href="@{/user/transaction}" class="mobile-link">💸 Transactions</a>
+                    <a th:href="@{/user/wallet}" class="mobile-link">👛 Wallet</a>
+                    <a th:href="@{/user/debt}" class="mobile-link">📑 Debts</a>
+                    <a th:href="@{/user/emergency}" class="mobile-link">🛡️ Emergency Fund</a>
+                    <a th:href="@{/user/fi}" class="mobile-link">🧮 FI Calculator</a>
+                    <a th:href="@{/user/profile}" class="mobile-link">👤 Profile</a>
+                </div>
+                
+                <div th:if="${session.user.role == 'ROLE_ADMIN'}">
+                    <a th:href="@{/admin/dashboard}" class="mobile-link">🏠 Dashboard</a>
+                    <a th:href="@{/admin/analysis}" class="mobile-link">📈 Analysis</a>
+                    <a th:href="@{/admin/users}" class="mobile-link">👥 Users</a>
+                    <a th:href="@{/admin/articles}" class="mobile-link">📰 Articles</a>
+                    <a th:href="@{/admin/levels}" class="mobile-link">🎮 Levels</a>
+                    <a th:href="@{/admin/logs}" class="mobile-link">📜 Activity Logs</a>
+                </div>
+
+                <a th:href="@{/logout}" class="mobile-link" style="color:var(--danger); border-top: 1px solid var(--border-color); margin-top:10px;">🚪 Logout</a>
+            </div>
+        </div>
+    </div>
+    <div class="mobile-overlay" id="mobileOverlay" onclick="toggleMobile()"></div>
+
+    <script>
+        function toggleMobile() { 
+            const sidebar = document.getElementById('mobileSidebar');
+            const overlay = document.getElementById('mobileOverlay');
+            if(sidebar && overlay) {
+                sidebar.classList.toggle('active'); 
+                overlay.style.display = sidebar.classList.contains('active') ? 'block' : 'none';
+            }
+        }
+        
+        function toggleTheme() {
+            const doc = document.documentElement;
+            const isDark = doc.getAttribute('data-theme') === 'dark';
+            doc.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            localStorage.setItem('theme', isDark ? 'light' : 'dark');
+            const icons = ['theme-icon-desktop', 'theme-icon-mobile'];
+            icons.forEach(id => {
+                const icon = document.getElementById(id);
+                if(icon) icon.textContent = isDark ? '🌙' : '☀️';
+            });
+        }
+
+        // Initialize theme on load
+        if(localStorage.getItem('theme') === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            if(document.getElementById('theme-icon-desktop')) document.getElementById('theme-icon-desktop').textContent = '☀️';
+            if(document.getElementById('theme-icon-mobile')) document.getElementById('theme-icon-mobile').textContent = '☀️';
+        }
+    </script>
+</div>
+</body>
+</html>

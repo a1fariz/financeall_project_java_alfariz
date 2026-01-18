@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - FinanceAll</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+</head>
+<body class="auth-page auth-login"> 
+    <div class="auth-container">
+        <div class="auth-banner">
+            <h2>Welcome Back!</h2>
+            <p>Kelola keuangan Anda dengan tampilan modern dan pantau pertumbuhan aset Anda setiap hari.</p>
+        </div>
+        <div class="auth-form-wrapper">
+            <h1 class="auth-title">Login</h1>
+            <p class="auth-subtitle">Masukkan akun Anda untuk melanjutkan</p>
+
+            <div th:if="${error}" class="alert alert-error" style="margin-bottom: 20px;">
+                <span th:text="${error}"></span>
+            </div>
+
+            <div th:if="${success}" class="alert alert-success" style="margin-bottom: 20px;">
+                <span th:text="${success}"></span>
+            </div>
+
+            <form th:action="@{/login}" method="post">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" name="username" placeholder="Username Anda" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn-auth">Masuk Sekarang</button>
+            </form>
+            <div class="auth-footer">
+                Belum punya akun? <a th:href="@{/register}">Daftar Gratis</a><br><br>
+                <a th:href="@{/reset-password}">Lupa Password?</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

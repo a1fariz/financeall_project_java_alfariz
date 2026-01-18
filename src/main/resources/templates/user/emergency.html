@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"><title>Emergency Fund - FinanceAll</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+<div class="main-content container text-center">
+    <div class="mb-5">
+        <h1>Emergency Fund Safety Net 🛡️</h1>
+        <p class="text-secondary">Be prepared for unexpected life events.</p>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <section class="glass-card p-5 shadow-sm">
+                <h3 class="h5 text-muted mb-4">Current Saving Progress</h3>
+                <div class="display-3 fw-bold text-success mb-2" 
+                     th:text="${fund != null} ? 'Rp ' + ${#numbers.formatDecimal(fund.currentAmount, 0, 'COMMA', 0, 'POINT')} : 'Rp 0'"></div>
+                <p class="text-secondary mb-4">Targeting <span th:text="${fund != null} ? 'Rp ' + ${#numbers.formatDecimal(fund.targetAmount, 0, 'COMMA', 0, 'POINT')} : 'Rp 0'"></span></p>
+                
+                <div class="progress-track mb-5" style="height: 25px;">
+                    <div class="progress-fill" th:style="'width:' + ${progressPercentage} + '%; background: var(--success);'"></div>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <form th:action="@{/user/emergency/update}" method="post" class="p-3 border rounded bg-white bg-opacity-50">
+                            <label class="form-label small fw-bold">Deposit Money</label>
+                            <input type="number" name="amount" class="form-control mb-3" placeholder="0" required>
+                            <button type="submit" class="btn-primary w-100">Add to Fund</button>
+                        </form>
+                    </div>
+                    <div class="col-md-6">
+                        <form th:action="@{/user/emergency/set-target}" method="post" class="p-3 border rounded bg-white bg-opacity-50">
+                            <label class="form-label small fw-bold">Update Goal Target</label>
+                            <input type="number" name="target" class="form-control mb-3" placeholder="0" required>
+                            <button type="submit" class="btn-primary w-100" style="background:var(--text-primary);">Set New Target</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+</body>
+</html>

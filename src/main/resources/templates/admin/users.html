@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Users - FinanceAll</title>
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="main-content">
+    <div class="glass-card mb-4" style="display: flex; justify-content: space-between; align-items: center;">
+        <h3>👥 User Management</h3>
+        <form th:action="@{/admin/users}" method="get" style="display: flex; gap: 10px;">
+            <input type="hidden" name="sortBy" th:value="${currentSort}">
+            <input type="text" name="keyword" th:value="${keyword}" placeholder="Search username..." class="form-control-custom" style="width: 200px; padding: 8px;">
+            <button type="submit" class="btn-primary" style="padding: 8px 15px;">Search</button>
+        </form>
+    </div>
+
+    <div class="glass-table-container">
+        <table class="glass-table">
+            <thead>
+                <tr>
+                    <th><a th:href="@{/admin/users(sortBy='username', keyword=${keyword})}" style="color:var(--accent)">Username ↕</a></th>
+                    <th><a th:href="@{/admin/users(sortBy='email', keyword=${keyword})}" style="color:var(--accent)">Email ↕</a></th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="u : ${users}">
+                    <td th:text="${u.username}" style="font-weight: 600;"></td>
+                    <td th:text="${u.email}"></td>
+                    <td>
+                        <span th:class="${u.banned ? 'badge badge-expense' : 'badge badge-income'}"
+                              th:text="${u.banned ? 'Banned' : 'Active'}"></span>
+                    </td>
+                    <td style="display: flex; gap: 8px;">
+                        <form th:action="@{/admin/users/ban/{id}(id=${u.id})}" method="post">
+                            <button type="submit" class="btn-action btn-ban" th:text="${u.banned ? '✅ Unban' : '🚫 Ban'}"></button>
+                        </form>
+                        <a th:href="@{/admin/users/delete/{id}(id=${u.id})}" class="btn-action btn-del" onclick="return confirm('Hapus user ini selamanya?')">🗑️ Delete</a>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(users)}">
+                    <td colspan="4" style="text-align: center; padding: 2rem;">No users found.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

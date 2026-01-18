@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinanceAll - Manage Levels</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+</head>
+<body>
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <main class="container" style="margin-top: 2rem;">
+        <div class="container" style="margin-top: 6rem; padding: 0 15px;"> 
+    
+    <div style="display: flex;justify-content: space-between; align-items: center; margin-bottom: 2.5rem; flex-wrap: wrap;gap: 1rem;background: rgba(30, 41, 59, 0.5);padding: 20px; border-radius: 12px;">
+        <h2 style="margin: 0; color: white; font-size: 1.75rem;">Game Progression Levels</h2>
+        <button class="btn" onclick="openModal()" style="background-color: #2563eb;color: white; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; white-space: nowrap;font-weight: 600; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+            + Add New Level
+        </button>
+    </div>
+
+    </div>
+
+        <div class="card" style="background: #1e293b; border-radius: 10px; padding: 20px; overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; color: white;">
+                <thead>
+                    <tr style="border-bottom: 2px solid #334155; text-align: left;">
+                        <th style="padding: 15px;">Level Name</th>
+                        <th style="padding: 15px;">Required Points (XP)</th>
+                        <th style="padding: 15px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:if="${#lists.isEmpty(levels)}">
+                        <td colspan="3" style="padding: 20px; text-align: center; color: #94a3b8;">No levels available. Click "+ Add New Level" to start.</td>
+                    </tr>
+                    
+                    <tr th:each="lvl : ${levels}" style="border-bottom: 1px solid #334155;">
+                        <td style="padding: 15px;" th:text="${lvl.name}">Newbie</td>
+                        <td style="padding: 15px;" th:text="${lvl.requiredPoints}">0</td>
+                        <td style="padding: 15px; display: flex; gap: 15px;">
+                            <a href="javascript:void(0)" 
+                               th:data-id="${lvl.id}"
+                               th:data-name="${lvl.name}"
+                               th:data-points="${lvl.requiredPoints}"
+                               onclick="handleEdit(this)"
+                               style="color: #60a5fa; text-decoration: none;">Edit</a>
+                            
+                            <a th:href="@{/admin/levels/delete/{id}(id=${lvl.id})}" 
+                               style="color: #f87171; text-decoration: none;" 
+                               onclick="return confirm('Are you sure you want to delete this level?')">Delete</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <div id="levelModal" class="modal" style="display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.7);">
+        <div style="background: #1e293b; color: white; width: 400px; margin: 10% auto; padding: 30px; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
+            <h3 id="modalTitle" style="margin-top: 0;">Add New Level</h3>
+            <hr style="border: 0; border-top: 1px solid #334155; margin: 20px 0;">
+            
+            <form th:action="@{/admin/levels/save}" method="post">
+                <input type="hidden" name="id" id="levelId">
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px;">Level Name</label>
+                    <input type="text" name="name" id="levelName" placeholder="Example: Pro, Legend..." required 
+                           style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #334155; background: #0f172a; color: white;">
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px;">Required Points (XP)</label>
+                    <input type="number" name="requiredPoints" id="levelPoints" placeholder="0" required 
+                           style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #334155; background: #0f172a; color: white;">
+                </div>
+                
+                <div style="display: flex; gap: 10px; margin-top: 30px;">
+                    <button type="submit" style="flex: 1; background: #2563eb; color: white; padding: 12px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">Save Level</button>
+                    <button type="button" onclick="closeModal()" style="flex: 1; background: #475569; color: white; padding: 12px; border: none; border-radius: 5px; cursor: pointer;">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openModal(id = null, name = '', points = '') {
+            const modal = document.getElementById('levelModal');
+            const title = document.getElementById('modalTitle');
+            const idInput = document.getElementById('levelId');
+            const nameInput = document.getElementById('levelName');
+            const pointsInput = document.getElementById('levelPoints');
+
+            if (id) {
+                // Konfigurasi untuk EDIT
+                title.innerText = "Edit Level";
+                idInput.value = id;
+                nameInput.value = name;
+                pointsInput.value = points;
+            } else {
+                // Konfigurasi untuk ADD NEW
+                title.innerText = "Add New Level";
+                idInput.value = ""; // Pastikan ID kosong agar dianggap data baru oleh Spring
+                nameInput.value = "";
+                pointsInput.value = "";
+            }
+            modal.style.display = 'block';
+        }
+
+        function handleEdit(el) {
+            const id = el.getAttribute('data-id');
+            const name = el.getAttribute('data-name');
+            const points = el.getAttribute('data-points');
+            openModal(id, name, points);
+        }
+
+        function closeModal() {
+            document.getElementById('levelModal').style.display = 'none';
+        }
+
+        // Tutup modal jika user klik di luar kotak modal
+        window.onclick = function(event) {
+            const modal = document.getElementById('levelModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+    </script>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>
