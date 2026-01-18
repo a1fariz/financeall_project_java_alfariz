@@ -1,118 +1,87 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Debt Management - FinanceAll</title>
+    <meta charset="UTF-8"><title>Manajemen Hutang - FinanceAll</title>
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
     <link th:href="@{/css/style.css}" rel="stylesheet">
-    <link th:href="@{/css/all.min.css}" rel="stylesheet">
 </head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
 
 <div class="main-content container">
     <div class="mb-4">
-        <h1>Debt Management 📑</h1>
-        <p class="text-secondary">Track your liabilities and plan your payoff strategy.</p>
+        <h1>Manajemen Hutang 📑</h1>
+        <p class="text-secondary">Lacak dan lunasi hutang Anda secara strategis.</p>
     </div>
 
     <div class="row g-4">
         <div class="col-lg-4">
-            <div class="glass-card shadow-sm h-100">
-                <h3 class="h5 fw-bold mb-4">Record New Debt</h3>
+            <div class="glass-card h-100">
+                <h3 class="h5 fw-bold mb-4">Tambah Catatan</h3>
                 <form th:action="@{/user/debt/add}" method="post">
-                    <div class="form-group mb-3">
-                        <label class="form-label fw-bold">Creditor Name</label>
-                        <input type="text" name="creditor" class="form-control" placeholder="e.g. Bank, Friend" required>
+                    <div class="mb-3">
+                        <label class="form-label">Pemberi Pinjaman</label>
+                        <input type="text" name="creditor" class="form-control" required>
                     </div>
-                    <div class="form-group mb-3">
-                        <label class="form-label fw-bold">Total Amount (Rp)</label>
-                        <input type="number" name="totalAmount" class="form-control" placeholder="0" required>
+                    <div class="mb-3">
+                        <label class="form-label">Total Pinjaman (Rp)</label>
+                        <input type="number" name="totalAmount" class="form-control" required>
                     </div>
-                    <div class="form-group mb-4">
-                        <label class="form-label fw-bold">Due Date</label>
+                    <div class="mb-4">
+                        <label class="form-label">Jatuh Tempo</label>
                         <input type="date" name="dueDate" class="form-control" required>
                     </div>
-                    <button type="submit" class="btn-auth w-100">Save Record</button>
+                    <button type="submit" class="btn-auth w-100">Simpan</button>
                 </form>
             </div>
         </div>
 
         <div class="col-lg-8">
-            <div class="d-flex gap-2 mb-3">
-                <a th:href="@{/user/debt(strategy='snowball')}" class="btn btn-sm btn-outline-primary">❄️ Snowball</a>
-                <a th:href="@{/user/debt(strategy='avalanche')}" class="btn btn-sm btn-outline-danger">🔥 Avalanche</a>
-            </div>
-            
             <div class="row g-3">
                 <div th:each="debt : ${debts}" class="col-md-6">
-                    <div class="glass-card shadow-sm h-100">
-                        <div class="d-flex justify-content-between align-items-start">
-                            <h5 th:text="${debt.creditor}" class="fw-bold"></h5>
+                    <div class="glass-card shadow-sm h-100 d-flex flex-column">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 th:text="${debt.creditor}" class="fw-bold text-primary mb-0"></h5>
                             <a th:href="@{/user/debt/delete/{id}(id=${debt.id})}" 
-                               class="text-danger small" onclick="return confirm('Delete this record?')">
-                                <i class="fas fa-trash"></i>
-                            </a>
+                               class="text-danger small fw-bold" onclick="return confirm('Hapus?')">Hapus</a>
                         </div>
                         
-                        <div class="small mt-3 mb-1 d-flex justify-content-between">
-                            <span>Payoff Progress</span>
+                        <div class="small mt-2 mb-1 d-flex justify-content-between text-secondary">
+                            <span>Lunas</span>
                             <span th:with="percent=${debt.totalAmount > 0 ? (debt.paidAmount * 100 / debt.totalAmount) : 0}" 
                                   th:text="${#numbers.formatInteger(percent, 0)} + '%'"></span>
                         </div>
-                        <div class="progress-track mb-3" style="height: 8px;">
+                        <div class="progress-track mb-3">
                             <div class="progress-fill" 
                                  th:with="percent=${debt.totalAmount > 0 ? (debt.paidAmount * 100 / debt.totalAmount) : 0}"
-                                 th:style="'width:' + ${percent} + '%; background: var(--danger);'"></div>
+                                 th:style="'width:' + ${percent} + '%;'"></div>
                         </div>
 
-                        <div class="d-flex justify-content-between small">
-                            <span class="text-muted">Remaining Balance:</span>
+                        <div class="d-flex justify-content-between small mb-3">
+                            <span class="text-muted">Sisa:</span>
                             <strong class="text-danger" 
-                                    th:text="${debt.remainingAmount != null} ? 'Rp ' + ${#numbers.formatDecimal(debt.remainingAmount, 0, 'COMMA', 0, 'POINT')} : 'Rp 0'"></strong>
+                                    th:text="'Rp ' + ${#numbers.formatDecimal(debt.remainingAmount, 0, 'COMMA', 0, 'POINT')}"></strong>
+                        </div>
+
+                        <div class="mt-auto pt-3 border-top border-secondary border-opacity-10">
+                            <form th:action="@{/user/debt/pay}" method="post">
+                                <input type="hidden" name="debtId" th:value="${debt.id}">
+                                <div class="input-group input-group-sm">
+                                    <input type="number" name="amount" class="form-control" placeholder="Nominal" required>
+                                    <button class="btn btn-success text-white" type="submit">Bayar</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
-                <div th:each="debt : ${debts}" class="col-md-6">
-    <div class="glass-card shadow-sm h-100">
-        <div class="d-flex justify-content-between align-items-start">
-            <h5 th:text="${debt.creditor}" class="fw-bold"></h5>
-            <a th:href="@{/user/debt/delete/{id}(id=${debt.id})}" 
-               class="text-danger small" onclick="return confirm('Delete this record?')">
-                <i class="fas fa-trash"></i>
-            </a>
-        </div>
-        
-        <div class="d-flex justify-content-between small mb-3">
-            <span class="text-muted">Remaining Balance:</span>
-            <strong class="text-danger" 
-                    th:text="${debt.remainingAmount != null} ? 'Rp ' + ${#numbers.formatDecimal(debt.remainingAmount, 0, 'COMMA', 0, 'POINT')} : 'Rp 0'"></strong>
-        </div>
-
-        <div class="border-top pt-3">
-            <form th:action="@{/user/debt/pay}" method="post" class="d-inline">
-                <input type="hidden" name="debtId" th:value="${debt.id}">
-                <div class="input-group input-group-sm">
-                    <input type="number" name="amount" class="form-control" placeholder="Nominal Bayar" required>
-                    <button class="btn btn-success text-white" type="submit">
-                        <i class="fas fa-hand-holding-usd me-1"></i> Bayar
-                    </button>
-                </div>
-            </form>
-        </div>
-        </div>
-</div>
-
-                <div th:if="${#lists.isEmpty(debts)}" class="col-12 text-center py-5 glass-card text-muted">
-                    No active debts found. Start by adding one!
+                
+                <div th:if="${#lists.isEmpty(debts)}" class="col-12">
+                    <div class="glass-card text-center py-5 text-muted">Belum ada data hutang.</div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<script th:src="@{/js/bootstrap.min.js}"></script>
 <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

@@ -1,48 +1,34 @@
 /* --- 1. DEFINISI VARIABLE (TEMA KACA/GLASS) --- */
 :root {
-    /* DEFAULT: LIGHT MODE */
     --bg-body: #f3f4f6;
     --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
-    
-    --bg-nav: rgba(255, 255, 255, 0.8);
-    --bg-card: rgba(255, 255, 255, 0.7);
-    --bg-input: #f9fafb;
-    
-    --text-primary: #69707a;
-    --text-secondary: #6b7280;
-    --text-muted: #9ca3af;
-    
+    --bg-nav: rgba(255, 255, 255, 0.85);
+    --bg-card: rgba(255, 255, 255, 0.75);
+    --bg-input: #ffffff;
+    --text-primary: #1f2937;
+    --text-secondary: #4b5563;
     --border-color: rgba(255, 255, 255, 0.6);
-    --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
-    
-    --accent: #4f46e5; /* Indigo Modern */
+    --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.08);
+    --accent: #4f46e5; /* Indigo */
     --accent-hover: #4338ca;
     --danger: #ef4444;
     --success: #10b981;
     --warning: #f59e0b;
-
     --header-height: 70px;
     --radius: 16px;
 }
 
 [data-theme="dark"] {
-    /* DARK MODE */
     --bg-body: #0f172a;
     --bg-gradient: radial-gradient(circle at 50% 0%, #1e293b 0%, #0f172a 100%);
-    
-    --bg-nav: rgba(30, 30, 30, 0.8);
-    --bg-card: rgba(30, 30, 30, 0.6);
+    --bg-nav: rgba(15, 23, 42, 0.85);
+    --bg-card: rgba(30, 41, 59, 0.7);
     --bg-input: #1e293b;
-    
     --text-primary: #f8fafc;
     --text-secondary: #cbd5e1;
-    --text-muted: #f8f9fb;
-    
     --border-color: rgba(255, 255, 255, 0.1);
     --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
-    
-    --accent: #6366f1;
-    --accent-hover: #4f46e5;
+    --accent: #818cf8;
 }
 
 /* --- 2. GLOBAL RESET --- */
@@ -53,37 +39,19 @@ body {
     background-image: var(--bg-gradient);
     color: var(--text-primary);
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    overflow-x: hidden;
     transition: background 0.3s ease, color 0.3s ease;
 }
 
 a { text-decoration: none; color: inherit; transition: 0.2s; }
 
-[data-theme="dark"] .text-secondary { color: var(--text-secondary) !important; }
-[data-theme="dark"] .text-muted { color: var(--text-muted) !important; }
-[data-theme="dark"] .text-primary { color: #818cf8 !important; } /* Biru dashboard lebih terang */
-[data-theme="dark"] .text-dark { color: #f8fafc !important; }
-
-/* --- 3. LAYOUT UTAMA --- */
 .main-content {
     margin-top: var(--header-height);
-    padding: 3rem;
-    width: 100%;
+    padding: 2rem;
     max-width: 1200px;
     margin-left: auto; margin-right: auto;
-    flex: 1;
-}
-    
-.grid-2 {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
 }
 
-/* Base Card Style (Glass) */
+/* --- 3. GLASS COMPONENTS --- */
 .glass-card {
     background: var(--bg-card);
     backdrop-filter: blur(12px);
@@ -92,421 +60,98 @@ a { text-decoration: none; color: inherit; transition: 0.2s; }
     border-radius: var(--radius);
     padding: 1.5rem;
     box-shadow: var(--shadow);
+    transition: transform 0.2s;
 }
+.glass-card:hover { transform: translateY(-3px); }
 
-h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.5rem; }
-h2 { font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem; }
-
-/* --- 4. STYLE KHUSUS LOGIN & REGISTER (MODERN SPLIT) --- */
-.auth-page {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    padding: 2rem;
-}
-
-.auth-container {
-    display: flex;
-    width: 100%;
-    max-width: 1000px;
-    background: var(--bg-card);
-    backdrop-filter: blur(20px);
+/* --- 4. FORM ELEMENTS --- */
+.form-control, .form-select {
+    background-color: var(--bg-input);
     border: 1px solid var(--border-color);
-    border-radius: 24px;
-    overflow: hidden;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.15);
-    min-height: 600px;
-}
-
-/* Kiri: Banner Artistik */
-.auth-banner {
-    flex: 1;
-    background: linear-gradient(135deg, var(--accent) 0%, #818cf8 100%);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 3rem;
-    color: white;
-    position: relative;
-    overflow: hidden;
-}
-
-/* Pattern Hiasan di Banner */
-.auth-banner::before {
-    content: '';
-    position: absolute;
-    top: -50px; right: -50px;
-    width: 200px; height: 200px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 50%;
-}
-.auth-banner::after {
-    content: '';
-    position: absolute;
-    bottom: -50px; left: -50px;
-    width: 300px; height: 300px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 50%;
-}
-
-.auth-banner h2 { font-size: 2.5rem; margin-bottom: 1rem; position: relative; z-index: 2; }
-.auth-banner p { font-size: 1.1rem; opacity: 0.9; line-height: 1.6; position: relative; z-index: 2; }
-
-/* Kanan: Form Input */
-.auth-form-wrapper {
-    flex: 1;
-    padding: 3rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.auth-title { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text-primary); }
-.auth-subtitle { color: var(--text-secondary); margin-bottom: 2rem; font-size: 0.95rem; }
-
-.form-group { margin-bottom: 1.2rem; }
-.form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.9rem; color: var(--text-primary); }
-
-input, select {
-    width: 100%;
-    padding: 14px 16px;
-    background: var(--bg-input);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    font-size: 1rem;
     color: var(--text-primary);
-    transition: all 0.2s;
-    outline: none;
+    border-radius: 12px;
+    padding: 12px;
 }
-input:focus, select:focus {
+.form-control:focus {
+    background-color: var(--bg-input);
+    color: var(--text-primary);
     border-color: var(--accent);
-    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
 }
 
+/* --- 5. BUTTONS --- */
 .btn-auth {
-    width: 100%;
-    padding: 14px;
-    background: var(--accent);
-    color: white;
-    border: none;
-    border-radius: 12px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    margin-top: 1rem;
-    transition: transform 0.2s, background 0.2s;
+    width: 100%; padding: 12px;
+    background: var(--accent); color: white;
+    border: none; border-radius: 12px;
+    font-weight: 600; cursor: pointer;
+    transition: 0.2s;
 }
 .btn-auth:hover { background: var(--accent-hover); transform: translateY(-2px); }
 
-.auth-footer { text-align: center; margin-top: 2rem; font-size: 0.9rem; color: var(--text-secondary); }
-.auth-footer a { color: var(--accent); font-weight: 600; }
-
-/* Alert Messages */
-.alert { padding: 12px; border-radius: 8px; margin-bottom: 1.5rem; font-size: 0.9rem; display: flex; gap: 8px; align-items: center; }
-.alert-error { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.2); }
-.alert-success { background: rgba(16, 185, 129, 0.1); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.2); }
-
-/* --- 5. HEADER & NAVIGASI --- */
-.desktop-header {
-    position: fixed; top: 0; left: 0; width: 100%; height: var(--header-height);
-    background: var(--bg-nav); backdrop-filter: blur(15px);
-    border-bottom: 1px solid var(--border-color);
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 2rem; z-index: 1000;
-}
-.logo { font-size: 1.5rem; font-weight: 800; color: var(--accent); letter-spacing: -0.5px; }
-.nav-menu { display: flex; gap: 1.5rem; align-items: center; }
-.nav-link { font-weight: 500; color: var(--text-secondary); }
-.nav-link:hover { color: var(--accent); }
-
-/* --- 6. MOBILE RESPONSIVE --- */
-.mobile-header, .mobile-sidebar, .mobile-overlay { display: none; }
-
-@media (max-width: 768px) {
-    .auth-banner { display: none; }
-    .auth-container { max-width: 450px; min-height: auto; }
-    .auth-form-wrapper { padding: 2rem; }
-
-    .desktop-header { display: none; }
-    .mobile-header {
-        display: flex; align-items: center; justify-content: space-between;
-        position: fixed; top: 0; left: 0; width: 100%; height: 60px;
-        background: var(--bg-nav); backdrop-filter: blur(15px);
-        border-bottom: 1px solid var(--border-color);
-        padding: 0 1rem; z-index: 1000;
-    }
-    .mobile-sidebar {
-        display: block; position: fixed; top: 0; left: 0; bottom: 0;
-        width: 75%; background: var(--bg-nav); z-index: 1100;
-        padding: 2rem 1.5rem; transform: translateX(-100%); transition: transform 0.3s ease;
-        border-right: 1px solid var(--border-color);
-    }
-    .mobile-sidebar.active { transform: translateX(0); }
-    .mobile-overlay {
-        display: block; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
-        z-index: 1050; opacity: 0; pointer-events: none; transition: 0.3s;
-    }
-    .mobile-sidebar.active + .mobile-overlay { opacity: 1; pointer-events: all; }
-    .menu-toggle { background: none; border: none; font-size: 1.5rem; color: var(--text-primary); }
-    .mobile-link { display: block; padding: 12px 0; color: var(--text-primary); border-bottom: 1px solid var(--border-color); }
-    
-    .grid-2 { grid-template-columns: 1fr; }
-    .main-content { padding: 1rem; margin-top: 60px; }
-}
-
-/* ==========================================================================
-   7. TAMBAHAN: KOMPONEN UI MODERN (Untuk Halaman Debt & Transaksi)
-   Menggunakan variabel dari tema di atas agar konsisten.
-   ========================================================================== */
-
-/* Button Utama & Secondary */
-.btn-primary {
-    background: var(--accent);
-    color: white;
-    padding: 10px 20px;
-    border-radius: 12px;
-    font-weight: 500;
-    border: none;
-    cursor: pointer;
-    display: inline-flex; align-items: center; gap: 8px;
-    transition: 0.2s;
-}
-.btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
-
-/* Modern Card untuk Grid Layout (Misal: List Hutang) */
-.card-modern {
-    background: var(--bg-card);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius);
-    padding: 0; /* Padding diatur di child */
-    box-shadow: var(--shadow);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    display: flex; flex-direction: column;
-    height: 100%;
-}
-
-.card-modern:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 25px rgba(0,0,0,0.1);
-    border-color: var(--accent);
-}
-
-.card-header-modern {
-    padding: 1.5rem;
-    border-bottom: 1px solid var(--border-color);
-    display: flex; justify-content: space-between; align-items: center;
-}
-
-.card-body-modern {
-    padding: 1.5rem;
-    flex: 1;
-}
-
-/* Tabel Modern (Glass Style) */
-.table-container {
-    background: var(--bg-card);
-    backdrop-filter: blur(12px);
-    border-radius: var(--radius);
-    border: 1px solid var(--border-color);
-    box-shadow: var(--shadow);
-    overflow: hidden; /* Agar sudut tumpul tabel terlihat */
-    margin-top: 1rem;
-}
-
-.table-modern {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.table-modern th {
-    background: rgba(0,0,0,0.03);
-    color: var(--text-secondary);
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 0.75rem;
-    letter-spacing: 0.05em;
-    padding: 1rem 1.5rem;
-    text-align: left;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.table-modern td {
-    padding: 1rem 1.5rem;
-    vertical-align: middle;
-    color: var(--text-primary);
-    border-bottom: 1px solid var(--border-color);
-    font-size: 0.95rem;
-}
-
-.table-modern tr:last-child td { border-bottom: none; }
-.table-modern tr:hover td { background: rgba(255,255,255,0.4); }
-
-/* Status Badges */
-.badge {
-    padding: 5px 12px;
-    border-radius: 50px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    display: inline-flex; align-items: center; gap: 6px;
-}
-
-.badge-income { background: rgba(16, 185, 129, 0.15); color: var(--success); }
-.badge-expense { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
-.badge-debt-lunas { background: rgba(16, 185, 129, 0.15); color: var(--success); }
-.badge-debt-belum { background: rgba(245, 158, 11, 0.15); color: #d97706; } /* Warna Oranye */
-
-/* Progress Bar (Hutang/Tabungan) */
-.debt-progress-container { margin-top: 15px; }
-
-.debt-progress-label {
-    display: flex; justify-content: space-between;
-    margin-bottom: 8px; font-size: 0.85rem; color: var(--text-secondary);
-}
-
+/* --- 6. PROGRESS BAR --- */
 .progress-track {
     width: 100%; height: 8px;
-    background: rgba(0,0,0,0.05);
+    background: rgba(0,0,0,0.1);
     border-radius: 10px; overflow: hidden;
+    margin-top: 5px; margin-bottom: 10px;
 }
+[data-theme="dark"] .progress-track { background: rgba(255,255,255,0.1); }
 
 .progress-fill {
     height: 100%;
     background: var(--accent);
     border-radius: 10px;
-    transition: width 0.5s ease;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Tombol Aksi Kecil (Edit/Delete) */
-.btn-icon {
-    width: 34px; height: 34px;
-    border-radius: 10px;
-    display: inline-flex; align-items: center; justify-content: center;
-    border: none; cursor: pointer;
-    transition: all 0.2s;
-    background: transparent;
-}
-
-.btn-edit { color: var(--accent); background: rgba(79, 70, 229, 0.1); }
-.btn-edit:hover { background: var(--accent); color: white; }
-
-.btn-delete { color: var(--danger); background: rgba(239, 68, 68, 0.1); }
-.btn-delete:hover { background: var(--danger); color: white; }
-
-/* --- PERBAIKAN POPUP TRANSAKSI WALLET --- */
-
-/* Memastikan Modal di Tengah & Background Blur */
-.modal.fade .modal-dialog {
-    display: flex;
-    align-items: center;
-    min-height: calc(100% - 1rem);
-}
-
-.modal-content.transaction-modal {
+/* --- 7. TABLE --- */
+.table-container {
+    overflow-x: auto;
     background: var(--bg-card);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    border-radius: var(--radius);
     border: 1px solid var(--border-color);
-    border-radius: 24px;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
-
-/* Header Modal yang Bersih */
-.transaction-modal .modal-header {
+.table-modern { width: 100%; border-collapse: collapse; }
+.table-modern th, .table-modern td {
+    padding: 1rem; text-align: left;
     border-bottom: 1px solid var(--border-color);
-    padding: 1.5rem;
+}
+.table-modern th { 
+    color: var(--text-secondary); font-weight: 600; font-size: 0.85rem; text-transform: uppercase; 
 }
 
-/* Pewarnaan Label agar tidak sakit mata (Muted) */
-.transaction-modal .form-label {
-    color: var(--text-secondary);
-    font-weight: 500;
-    font-size: 0.85rem;
-    margin-bottom: 0.5rem;
+/* --- 8. AUTH PAGE --- */
+.auth-page { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem; }
+.auth-container {
+    display: flex; width: 100%; max-width: 900px;
+    background: var(--bg-card); backdrop-filter: blur(20px);
+    border-radius: 24px; overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
 }
+.auth-banner {
+    flex: 1; padding: 3rem; color: white;
+    display: flex; flex-direction: column; justify-content: center;
+    background: linear-gradient(135deg, var(--accent) 0%, #818cf8 100%);
+}
+.auth-form-wrapper { flex: 1; padding: 3rem; display: flex; flex-direction: column; justify-content: center; }
 
-/* Input yang lebih lega di HP */
-.transaction-modal .form-control, 
-.transaction-modal .form-select {
-    background: var(--bg-input);
-    border: 1px solid var(--border-color);
-    color: var(--text-primary);
-    padding: 12px 16px;
-    border-radius: 12px;
-}
-
-/* Tombol Khusus Pemasukan & Pengeluaran */
-.btn-income {
-    background: rgba(16, 185, 129, 0.2);
-    color: var(--success);
-    border: 1px solid var(--success);
-}
-.btn-expense {
-    background: rgba(239, 68, 68, 0.2);
-    color: var(--danger);
-    border: 1px solid var(--danger);
-}
-
-/* Responsif Layar Kecil (HP) */
-@media (max-width: 576px) {
-    .modal-dialog {
-        margin: 0.75rem; /* Jarak pas di pinggir layar HP */
-    }
-    .transaction-modal .modal-body {
-        padding: 1.25rem;
-    }
-    .transaction-modal .modal-footer {
-        flex-direction: column; /* Tombol tumpuk ke bawah di HP agar mudah ditekan */
-        gap: 10px;
-    }
-    .transaction-modal .modal-footer .btn {
-        width: 100%;
-        margin: 0 !important;
-    }
-}
-
-/* Perbaikan Jarak Dashboard agar tidak nabrak */
-.dashboard-greeting {
-    margin-bottom: 2.5rem !important; /* Jarak bawah greeting lebih lebar */
-    padding-top: 3em;
-}
-
-.announcement-container {
-    margin-top: 2.5rem;
-    margin-bottom: 3rem !important; /* Jarak ke konten bawah (saldo) sangat aman */
-}
-
-.announcement-item {
-    transition: all 0.3s ease;
-    border-left: 5px solid var(--accent) !important;
-    margin-bottom: 2rem !important; /* Jarak antar pengumuman jika lebih dari satu */
-}
-
-/* Memastikan konten utama punya nafas di layar kecil */
 @media (max-width: 768px) {
-    .main-content {
-        padding-top: 2.5rem !important;
-    }
-    .announcement-container {
-        margin-bottom: 2rem !important;
-    }
+    .auth-banner { display: none; }
+    .desktop-header { display: none; }
+    .mobile-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--bg-nav); position: fixed; top: 0; width: 100%; z-index: 1000; border-bottom: 1px solid var(--border-color); }
+    .main-content { padding: 1rem; margin-top: 60px; }
+    .grid-2 { grid-template-columns: 1fr; }
 }
-/* Tambahkan ini di bagian bawah CSS yang Anda berikan untuk variasi warna Auth */
 
-/* Login: Default Indigo */
-.auth-login .auth-banner { background: linear-gradient(135deg, #4f46e5 0%, #818cf8 100%); }
-
-/* Register: Emerald/Green */
-.auth-register .auth-banner { background: linear-gradient(135deg, #059669 0%, #34d399 100%); }
-.auth-register .btn-auth { background: #10b981; }
-.auth-register .btn-auth:hover { background: #059669; }
-.auth-register .auth-footer a { color: #10b981; }
-
-/* Reset Password: Amber/Orange */
-.auth-reset .auth-banner { background: linear-gradient(135deg, #d97706 0%, #fbbf24 100%); }
-.auth-reset .btn-auth { background: #f59e0b; }
-.auth-reset .btn-auth:hover { background: #d97706; }
-.auth-reset .auth-footer a { color: #f59e0b; }
-
+/* --- 9. NAV & HEADER --- */
+.desktop-header {
+    position: fixed; top: 0; left: 0; width: 100%; height: var(--header-height);
+    background: var(--bg-nav); backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-color);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2rem; z-index: 1000;
+}
+.nav-link { font-weight: 500; color: var(--text-secondary); margin-right: 1.5rem; }
+.nav-link:hover { color: var(--accent); }
+.logo { font-size: 1.5rem; font-weight: 800; color: var(--text-primary); }

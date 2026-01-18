@@ -4,11 +4,7 @@ import com.financeall.service.FIService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
+import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 
 @Controller
@@ -24,8 +20,11 @@ public class FIController {
 
     @PostMapping("/calculate")
     public String calculateFI(@RequestParam BigDecimal monthlyExpense, 
-                              @RequestParam(defaultValue = "4.0") BigDecimal withdrawalRate, Model model) {
-        model.addAttribute("result", fiService.performCalculation(monthlyExpense, withdrawalRate));
+                              @RequestParam BigDecimal currentAssets,
+                              @RequestParam(defaultValue = "4.0") BigDecimal withdrawalRate, 
+                              Model model) {
+        // Memanggil service dengan parameter lengkap
+        model.addAttribute("result", fiService.performCalculation(monthlyExpense, withdrawalRate, currentAssets));
         return "user/fi";
     }
 }

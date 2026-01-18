@@ -5,12 +5,10 @@ import com.financeall.service.DebtService;
 import com.financeall.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-
-import java.math.BigDecimal;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import java.math.BigDecimal;
 
 @Controller
 @RequestMapping("/user/debt")
@@ -24,25 +22,33 @@ public class DebtController {
         User user = (User) session.getAttribute("user");
         if (user == null) return "redirect:/login";
 
-        User dbUser = userService.findById(user.getId());
-        model.addAttribute("debts", debtService.getSortedDebts(dbUser.getId(), strategy));
-        model.addAttribute("totalDebt", debtService.calculateTotalDebt(dbUser));
+        model.addAttribute("debts", debtService.getSortedDebts(user.getId(), strategy));
+        model.addAttribute("totalDebt", debtService.calculateTotalDebt(user));
         return "user/debt";
     }
 
     @PostMapping("/add")
-    public String addDebt(HttpSession session, @RequestParam String creditor, @RequestParam BigDecimal totalAmount, @RequestParam String dueDate) {
+    public String addDebt(HttpSession session, @RequestParam String creditor, 
+                          @RequestParam BigDecimal totalAmount, @RequestParam String dueDate) {
         User user = (User) session.getAttribute("user");
-        if (user != null) debtService.createDebt(userService.findById(user.getId()), creditor, totalAmount, dueDate);
+        if (user != null) {
+            debtService.createDebt(userService.findById(user.getId()), creditor, totalAmount, dueDate);
+        }
         return "redirect:/user/debt";
     }
-    // Tambahkan di dalam class DebtController
-@PostMapping("/pay")
-public String payDebt(HttpSession session, @RequestParam Long debtId, @RequestParam BigDecimal amount) {
-    User user = (User) session.getAttribute("user");
-    if (user == null) return "redirect:/login";
+
+    @PostMapping("/pay")
+    public String payDebt(HttpSession session, @RequestParam Long debtId, @RequestParam BigDecimal amount) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) return "redirect:/login";
+        
+        debtService.payDebt(debtId, amount);
+        return "redirect:/user/debt";
+    }
     
-    debtService.payDebt(debtId, amount);
-    return "redirect:/user/debt";
-}
+    @GetMapping("/delete/{id}")
+    public String deleteDebt(@PathVariable Long id) {
+        debtService.delete(id);
+        return "redirect:/user/debt";
+    }
 }

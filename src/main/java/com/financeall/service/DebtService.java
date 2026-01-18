@@ -19,6 +19,7 @@ public class DebtService {
         if ("avalanche".equals(strategy)) {
             debts.sort(Comparator.comparing(DebtItem::getInterestRate, Comparator.nullsLast(Comparator.reverseOrder())));
         } else {
+            // Default Snowball: urutkan dari sisa hutang terkecil
             debts.sort(Comparator.comparing(DebtItem::getRemainingAmount));
         }
         return debts;
@@ -27,35 +28,37 @@ public class DebtService {
     public void createDebt(User user, String creditor, BigDecimal amount, String dueDateStr) {
         LocalDate date = (dueDateStr != null && !dueDateStr.isEmpty()) ? LocalDate.parse(dueDateStr) : null;
         DebtItem debt = DebtItem.builder()
-                .name(creditor).creditor(creditor).totalAmount(amount)
-                .paidAmount(BigDecimal.ZERO).interestRate(BigDecimal.ZERO)
-                .dueDate(date).user(user).build();
+                .creditor(creditor)
+                .totalAmount(amount)
+                .paidAmount(BigDecimal.ZERO) // Awalnya 0
+                .interestRate(BigDecimal.ZERO)
+                .dueDate(date)
+                .user(user)
+                .build();
+        repository.save(debt);
+    }
+
+    public void payDebt(Long debtId, BigDecimal amount) {
+        DebtItem debt = repository.findById(debtId)
+                .orElseThrow(() -> new RuntimeException("Data hutang tidak ditemukan"));
+        
+        BigDecimal currentPaid = debt.getPaidAmount() != null ? debt.getPaidAmount() : BigDecimal.ZERO;
+        BigDecimal newPaid = currentPaid.add(amount);
+        
+        // Pastikan tidak membayar lebih dari total hutang
+        if (newPaid.compareTo(debt.getTotalAmount()) > 0) {
+            newPaid = debt.getTotalAmount();
+        }
+        
+        debt.setPaidAmount(newPaid);
         repository.save(debt);
     }
 
     public BigDecimal calculateTotalDebt(User user) {
-    List<DebtItem> debts = repository.findByUserId(user.getId());
-    if (debts == null || debts.isEmpty()) return BigDecimal.ZERO;
-    return debts.stream()
-            // Tambahkan pengecekan null untuk setiap item
-            .map(item -> item.getRemainingAmount() != null ? item.getRemainingAmount() : BigDecimal.ZERO)
-            .reduce(BigDecimal.ZERO, BigDecimal::add);
-}
- // Tambahkan di dalam class DebtService
-public void payDebt(Long debtId, BigDecimal amount) {
-    DebtItem debt = repository.findById(debtId)
-            .orElseThrow(() -> new RuntimeException("Data hutang tidak ditemukan"));
-    
-    BigDecimal currentPaid = debt.getPaidAmount() != null ? debt.getPaidAmount() : BigDecimal.ZERO;
-    debt.setPaidAmount(currentPaid.add(amount));
-    
-    // Validasi agar pembayaran tidak melebihi total hutang
-    if (debt.getPaidAmount().compareTo(debt.getTotalAmount()) > 0) {
-        debt.setPaidAmount(debt.getTotalAmount());
+        return repository.findByUserId(user.getId()).stream()
+                .map(item -> item.getRemainingAmount() != null ? item.getRemainingAmount() : BigDecimal.ZERO)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
     
-    repository.save(debt);
-}
-
     public void delete(Long id) { repository.deleteById(id); }
 }

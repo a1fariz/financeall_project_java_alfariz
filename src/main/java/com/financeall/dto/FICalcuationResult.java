@@ -11,6 +11,8 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FICalcuationResult {
-    private BigDecimal fiNumber;
-    private BigDecimal gap;
+    private BigDecimal fiNumber;           // Target angka kebebasan
+    private BigDecimal currentInvestments; // Aset saat ini
+    private BigDecimal gap;                // Kekurangan (Target - Aset)
+    private double progressPercentage;     // Persentase capaian (0-100%)
 }
