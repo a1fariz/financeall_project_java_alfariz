@@ -1,72 +1,111 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"><title>FI Calculator - FinanceAll</title>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator FI - FinanceAll</title>
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
     <link th:href="@{/css/style.css}" rel="stylesheet">
 </head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
-<div class="main-content container">
-    <div class="mb-4 text-center">
-        <h1>Financial Independence 🧮</h1>
-        <p class="text-secondary">Hitung berapa banyak aset yang Anda butuhkan untuk pensiun dini.</p>
+
+<div class="main-content">
+    <div class="corporate-card mb-4">
+        <h2 class="fw-bold mb-1 text-dark">Financial Independence Calculator 🚀</h2>
+        <p class="text-secondary mb-0">Hitung seberapa dekat Anda menuju kemerdekaan finansial (Bebas Kerja/Pensiun Dini).</p>
     </div>
-    
-    <div class="row g-4">
-        <div class="col-md-5">
-            <section class="glass-card h-100">
-                <h3 class="h5 fw-bold mb-4 text-primary">Data Keuangan</h3>
-                <form th:action="@{/user/fi/calculate}" method="post">
-                    <div class="mb-3">
-                        <label class="form-label fw-bold small text-muted">Pengeluaran Bulanan (Rp)</label>
-                        <input type="number" name="monthlyExpense" class="form-control" placeholder="Contoh: 5000000" required>
+
+    <div class="row g-4 mb-4">
+        <div class="col-lg-5">
+            <div class="corporate-card h-100">
+                <h5 class="fw-bold mb-3">Parameter Simulasi</h5>
+                <form th:action="@{/user/fi/calculate}" method="post" class="d-flex flex-column gap-3">
+                    <div>
+                        <label class="form-label">Pengeluaran Bulanan Saat Ini (Rp)</label>
+                        <input type="number" name="monthlyExpense" class="form-control" required placeholder="Contoh: 5000000">
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-bold small text-muted">Aset Investasi Saat Ini (Rp)</label>
-                        <input type="number" name="currentAssets" class="form-control" placeholder="Contoh: 100000000" required>
+                    <div>
+                        <label class="form-label">Nilai Investasi Sekarang (Rp)</label>
+                        <input type="number" name="currentInvestment" class="form-control" required placeholder="Contoh: 10000000">
                     </div>
-                    <div class="mb-4">
-                        <label class="form-label fw-bold small text-muted">Safe Withdrawal Rate (%)</label>
-                        <input type="number" name="withdrawalRate" class="form-control" value="4.0" step="0.1" required>
-                        <small class="text-muted" style="font-size: 0.75rem;">Standar umum adalah 4% (Rule of 25).</small>
+                    <div>
+                        <label class="form-label">Tabungan Rutin Bulanan (Rp)</label>
+                        <input type="number" name="monthlyInvestment" class="form-control" required placeholder="Contoh: 1500000">
                     </div>
-                    <button type="submit" class="btn-auth w-100">Hitung Target</button>
+                    <div>
+                        <label class="form-label">Asumsi Imbal Hasil Investasi Tahunan (%)</label>
+                        <input type="number" step="0.1" name="annualReturn" class="form-control" required placeholder="Contoh: 8">
+                    </div>
+                    <button type="submit" class="btn-auth mt-2">Jalankan Proyeksi</button>
                 </form>
-            </section>
+            </div>
         </div>
 
-        <div class="col-md-7">
-            <section th:if="${result != null}" class="glass-card text-center d-flex flex-column justify-content-center h-100">
-                <h3 class="h6 text-muted mb-3 text-uppercase fw-bold">Target Dana Kebebasan (FI Number)</h3>
-                <div class="display-5 fw-bold text-primary mb-4" 
-                     th:text="'Rp ' + ${#numbers.formatDecimal(result.fiNumber, 0, 'COMMA', 0, 'POINT')}">Rp 0</div>
+        <div class="col-lg-7">
+            <div class="corporate-card h-100 d-flex flex-column justify-content-center">
+                <h5 class="fw-bold mb-3">Hasil Proyeksi Kebebasan Finansial</h5>
                 
-                <div class="text-start px-3 mb-4">
-                    <div class="d-flex justify-content-between small mb-1 fw-bold text-secondary">
-                        <span>Progres Pencapaian</span>
-                        <span th:text="${#numbers.formatDecimal(result.progressPercentage, 0, 1)} + '%'">0%</span>
-                    </div>
-                    <div class="progress-track">
-                        <div class="progress-fill" 
-                             th:style="'width:' + ${result.progressPercentage} + '%; background: linear-gradient(90deg, var(--accent), var(--success));'"></div>
-                    </div>
+                <div th:if="${!hasResult}" class="text-center py-5 text-muted opacity-75">
+                    <p style="font-size: 2.5rem; margin-bottom: 0.5rem;">📊</p>
+                    <p class="small mb-0">Silakan isi formulir di sebelah kiri untuk melihat kapan Anda bisa berhenti bekerja secara opsional.</p>
                 </div>
 
-                <div class="p-3 bg-danger bg-opacity-10 rounded border border-danger border-opacity-25 mx-3">
-                    <p class="mb-1 small text-danger fw-bold text-uppercase">Gap (Kekurangan Dana)</p>
-                    <h4 class="text-danger fw-bold mb-0" 
-                        th:text="'Rp ' + ${#numbers.formatDecimal(result.gap, 0, 'COMMA', 0, 'POINT')}">Rp 0</h4>
+                <div th:if="${hasResult}" class="d-flex flex-column gap-3">
+                    <div class="p-3 rounded-3" style="background: rgba(37,99,235,0.05); border-left: 4px solid var(--accent-blue);">
+                        <small class="text-secondary d-block fw-semibold">Target Angka Kemerdekaan Finansial (Aturan 4%)</small>
+                        <h3 class="fw-bold mt-1 mb-0 text-primary" th:text="'Rp ' + ${#numbers.formatDecimal(fiTarget, 0, 'POINT', 0, 'COMMA')}"></h3>
+                    </div>
+                    
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <div class="p-3 rounded-3 bg-light border">
+                                <small class="text-secondary d-block">Estimasi Waktu Tunggu</small>
+                                <h3 class="fw-bold mt-1 mb-0 text-dark"><span th:text="${estimatedYears}"></span> <span style="font-size: 1rem; color: var(--text-muted);">Tahun</span></h3>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-3 rounded-3 bg-light border">
+                                <small class="text-secondary d-block">Nilai Aset Masa Depan</small>
+                                <h4 class="fw-bold mt-1 mb-0 text-dark" th:text="'Rp ' + ${#numbers.formatDecimal(futureValue, 0, 'POINT', 0, 'COMMA')}"></h4>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </section>
-            
-            <section th:if="${result == null}" class="glass-card h-100 d-flex align-items-center justify-content-center text-muted">
-                <p>Silakan isi data di samping untuk melihat hasil kalkulasi.</p>
-            </section>
+            </div>
+        </div>
+    </div>
+
+    <div class="corporate-card">
+        <h5 class="fw-bold mb-4">5 Riwayat Simulasi Terakhir</h5>
+        <div class="table-container">
+            <table class="table-modern">
+                <thead>
+                    <tr>
+                        <th>Pengeluaran Bulanan</th>
+                        <th>Target Pokok Aset</th>
+                        <th>Rencana Rutin / Bln</th>
+                        <th>Imbal Hasil</th>
+                        <th class="text-center">Waktu Capai</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="r : ${records}">
+                        <td th:text="'Rp ' + ${#numbers.formatDecimal(r.monthlyExpense, 0, 'POINT', 0, 'COMMA')}"></td>
+                        <td class="fw-semibold" th:text="'Rp ' + ${#numbers.formatDecimal(r.fiTarget, 0, 'POINT', 0, 'COMMA')}"></td>
+                        <td th:text="'Rp ' + ${#numbers.formatDecimal(r.monthlyInvestment, 0, 'POINT', 0, 'COMMA')}"></td>
+                        <td th:text="${r.annualReturn} + '% / thn'"></td>
+                        <td class="text-center"><span class="badge bg-success" style="font-size: 0.85rem;" th:text="${r.estimatedYears} + ' Tahun'"></span></td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(records)}">
+                        <td colspan="5" class="text-center py-4 text-muted">Belum ada riwayat kalkulasi yang tersimpan.</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
-<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/bootstrap.min.js}"></script>
 </body>
 </html>

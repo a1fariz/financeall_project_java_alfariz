@@ -3,9 +3,11 @@ package com.financeall.model;
 import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
+import org.hibernate.annotations.Check;
 
 @Entity
 @Table(name = "wallets")
+@Check(constraints = "balance >= 0 AND monthly_limit >= 0")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,13 +17,18 @@ public class Wallet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Builder.Default // FIX: Wajib agar Builder tidak membuat nilai ini menjadi null
+    private BigDecimal amount = BigDecimal.ZERO;
+
     private String walletName; 
 
-    @Column(columnDefinition = "DECIMAL(19,2) DEFAULT 0.00")
-    private BigDecimal balance;
+    @Column(nullable = false)
+    @Builder.Default // FIX
+    private BigDecimal balance = BigDecimal.ZERO;
 
-    @Column(columnDefinition = "DECIMAL(19,2) DEFAULT 0.00")
-    private BigDecimal monthlyLimit; 
+    @Column(nullable = false)
+    @Builder.Default // FIX
+    private BigDecimal monthlyLimit = BigDecimal.ZERO;
 
     @OneToOne
     @JoinColumn(name = "user_id")

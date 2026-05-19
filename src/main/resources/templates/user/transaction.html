@@ -2,133 +2,142 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Transactions - FinanceAll</title>
+    <title>Transaksi - FinanceAll</title>
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
     <link th:href="@{/css/style.css}" rel="stylesheet">
 </head>
 <body>
+
 <div th:replace="~{fragments/header :: header}"></div>
 
-<div class="main-content container">
-    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-        <h1>Transaction History 📊</h1>
+<div class="main-content">
+    <div class="corporate-card mb-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <div>
+            <h2 class="fw-bold mb-1 text-dark">Riwayat Transaksi 📊</h2>
+            <p class="text-secondary mb-0">Catat pemasukan dan pengeluaran Anda.</p>
+        </div>
         <div class="d-flex gap-2">
-            <button class="btn-primary" style="background:var(--success);" data-bs-toggle="modal" data-bs-target="#incomeModal">
-                ➕ Income
-            </button>
-            <button class="btn-primary" style="background:var(--danger);" data-bs-toggle="modal" data-bs-target="#expenseModal">
-                ➖ Expense
-            </button>
+            <button type="button" class="btn-primary" style="background: var(--success);" data-bs-toggle="modal" data-bs-target="#incomeModal">➕ Pemasukan</button>
+            <button type="button" class="btn-primary" style="background: var(--danger);" data-bs-toggle="modal" data-bs-target="#expenseModal">➖ Pengeluaran</button>
         </div>
     </div>
 
-    <div th:if="${errorMsg}" class="alert alert-danger alert-dismissible fade show" role="alert">
+    <div th:if="${errorMsg}" class="p-3 mb-4 rounded-3 bg-danger" style="border-left: 4px solid var(--danger);">
         <span th:text="${errorMsg}"></span>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
-    <div th:if="${successMsg}" class="alert alert-success alert-dismissible fade show" role="alert">
+    <div th:if="${successMsg}" class="p-3 mb-4 rounded-3 bg-success" style="border-left: 4px solid var(--success);">
         <span th:text="${successMsg}"></span>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
 
     <div class="table-container shadow-sm">
         <table class="table-modern">
             <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Category</th>
-                    <th>Type</th>
-                    <th>Amount</th>
-                    <th>Note</th>
-                    <th class="text-end">Action</th>
-                </tr>
+            <tr>
+                <th>Tanggal</th>
+                <th>Judul</th>
+                <th>Kategori</th>
+                <th>Tipe</th>
+                <th class="text-end">Nominal</th>
+                <th>Deskripsi</th>
+                <th class="text-center">Aksi</th>
+            </tr>
             </thead>
             <tbody>
-                <tr th:if="${#lists.isEmpty(transactions)}">
-                    <td colspan="6" class="text-center py-5 text-muted">No records found.</td>
-                </tr>
-                <tr th:each="trx : ${transactions}">
-                    <td th:text="${trx.createdAt != null ? #temporals.format(trx.createdAt, 'dd MMM yyyy') : '-'}"></td>
-                    <td><span class="badge bg-light text-dark" th:text="${trx.category}"></span></td>
-                    <td>
-                        <span th:if="${trx.type == 'INCOME'}" class="badge badge-income">Income</span>
-                        <span th:if="${trx.type == 'EXPENSE'}" class="badge badge-expense">Expense</span>
-                    </td>
-                    <td th:class="${trx.type == 'INCOME' ? 'text-success fw-bold' : 'text-danger fw-bold'}"
-                        th:text="${trx.amount != null ? (trx.type == 'EXPENSE' ? '- ' : '+ ') + 'Rp ' + #numbers.formatDecimal(trx.amount, 0, 'POINT', 0, 'COMMA') : 'Rp 0'}">
-                    </td>
-                    <td th:text="${trx.description}"></td>
-                    <td class="text-end">
-                        <a th:href="@{/user/transaction/edit/{id}(id=${trx.id})}" class="btn-action btn-edit">✏️</a>
-                        <a th:href="@{/user/transaction/delete/{id}(id=${trx.id})}" 
-                           onclick="return confirm('Are you sure?')" class="btn-action btn-delete">🗑️</a>
-                    </td>
-                </tr>
+            <tr th:if="${#lists.isEmpty(transactions)}">
+                <td colspan="7" class="text-center py-5 text-muted">Belum ada transaksi.</td>
+            </tr>
+            <tr th:each="trx : ${transactions}">
+                <td th:text="${trx.transactionDate != null ? #temporals.format(trx.transactionDate, 'dd MMM yyyy') : '-'}"></td>
+                <td class="fw-semibold text-dark" th:text="${trx.title}"></td>
+                <td><span class="badge bg-secondary" th:text="${trx.category}"></span></td>
+                <td><span class="badge" th:classappend="${trx.type.name() == 'INCOME'} ? 'bg-success' : 'bg-danger'" th:text="${trx.type.name()}"></span></td>
+                <td class="fw-bold text-end" th:classappend="${trx.type.name() == 'INCOME'} ? 'text-success' : 'text-danger'" th:text="${(trx.type.name() == 'EXPENSE' ? '- ' : '+ ') + 'Rp ' + #numbers.formatDecimal(trx.amount, 0, 'POINT', 0, 'COMMA')}"></td>
+                <td th:text="${trx.description}"></td>
+                <td class="text-center">
+                    <a th:href="@{/user/transaction/edit/{id}(id=${trx.id})}" class="btn btn-sm btn-outline-primary py-1 px-2" style="font-size: 0.8rem;">Edit</a>
+                </td>
+            </tr>
             </tbody>
         </table>
     </div>
 </div>
 
-<div class="modal fade" id="incomeModal" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="incomeModal" tabindex="-1" aria-labelledby="incomeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content transaction-modal">
-            <div class="modal-header">
-                <h5 class="modal-title">➕ Add Income</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        <div class="modal-content corporate-card p-0">
+            <div class="modal-header border-bottom-0 pb-0">
+                <h5 class="fw-bold text-dark mb-0">Tambah Pemasukan</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form th:action="@{/user/transaction/add}" method="post">
                 <input type="hidden" name="type" value="INCOME">
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label">Amount (Rp)</label>
-                        <input type="number" name="amount" class="form-control" required placeholder="0">
+                        <label class="form-label">Judul</label>
+                        <input type="text" name="title" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Category</label>
-                        <select name="category" class="form-control">
+                        <label class="form-label">Nominal (Rp)</label>
+                        <input type="number" name="amount" class="form-control" required min="1" step="0.01">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tanggal</label>
+                        <input type="date" name="transactionDate" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Kategori</label>
+                        <select name="category" class="form-select">
                             <option th:each="cat : ${categories}" th:value="${cat}" th:text="${cat}"></option>
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Description</label>
-                        <input type="text" name="description" class="form-control" placeholder="e.g. Salary">
+                        <label class="form-label">Deskripsi</label>
+                        <input type="text" name="description" class="form-control">
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn-auth w-100" style="background: var(--success);">Save Income</button>
+                <div class="modal-footer border-top-0 pt-0">
+                    <button type="submit" class="btn-primary w-100" style="background: var(--success);">Simpan Pemasukan</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="expenseModal" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="expenseModal" tabindex="-1" aria-labelledby="expenseModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content transaction-modal">
-            <div class="modal-header">
-                <h5 class="modal-title">➖ Add Expense</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        <div class="modal-content corporate-card p-0">
+            <div class="modal-header border-bottom-0 pb-0">
+                <h5 class="fw-bold text-dark mb-0">Tambah Pengeluaran</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form th:action="@{/user/transaction/add}" method="post">
                 <input type="hidden" name="type" value="EXPENSE">
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label">Amount (Rp)</label>
-                        <input type="number" name="amount" class="form-control" required placeholder="0">
+                        <label class="form-label">Judul</label>
+                        <input type="text" name="title" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Category</label>
-                        <select name="category" class="form-control">
+                        <label class="form-label">Nominal (Rp)</label>
+                        <input type="number" name="amount" class="form-control" required min="1" step="0.01">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tanggal</label>
+                        <input type="date" name="transactionDate" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Kategori</label>
+                        <select name="category" class="form-select">
                             <option th:each="cat : ${categories}" th:value="${cat}" th:text="${cat}"></option>
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Description</label>
-                        <input type="text" name="description" class="form-control" placeholder="e.g. Food">
+                        <label class="form-label">Deskripsi</label>
+                        <input type="text" name="description" class="form-control">
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn-auth w-100" style="background: var(--danger);">Save Expense</button>
+                <div class="modal-footer border-top-0 pt-0">
+                    <button type="submit" class="btn-primary w-100" style="background: var(--danger);">Simpan Pengeluaran</button>
                 </div>
             </form>
         </div>

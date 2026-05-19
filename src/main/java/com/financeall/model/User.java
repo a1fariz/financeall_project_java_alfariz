@@ -2,55 +2,143 @@ package com.financeall.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "users")
-@Data @NoArgsConstructor @AllArgsConstructor @Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class User implements Serializable {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    // =========================
+    // BASIC INFO
+    // =========================
+
+    @Column(nullable = false,
+            unique = true,
+            length = 50)
     private String username;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false,
+            unique = true,
+            length = 100)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false,
+            length = 255)
     private String password;
 
+    @Column(nullable = false,
+            length = 100)
     private String fullName;
+
+    @Column(nullable = false,
+            length = 20)
     private String role;
+
+    @Column(length = 255)
     private String recoveryPin;
-    
-    @Column(columnDefinition = "boolean default false")
+
+    @Column(nullable = false)
     private boolean isBanned = false;
 
-    public boolean isEnabled() {
-    return !isBanned; // Agar th:text="${u.enabled}" tidak error
-    }
-    // --- RELASI ONE-TO-ONE ---
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    // =========================
+    // AUDIT TIMESTAMP
+    // =========================
+
+    @Column(nullable = false,
+            updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column(nullable = false)
+    private LocalDateTime updatedAt;
+
+    // =========================
+    // RELATIONSHIPS
+    // =========================
+
+    @OneToOne(mappedBy = "user",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     private Wallet wallet;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     private UserLevelProgress userLevelProgress;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     private EmergencyFund emergencyFund;
 
-    // --- RELASI ONE-TO-MANY (Tambahkan yang ini agar Service lain tidak merah) ---
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<TransactionRecord> transactionRecords;
+    @OneToMany(mappedBy = "user",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    @Builder.Default
+    private List<TransactionRecord> transactionRecords = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<DebtItem> debtItems; // Wajib ada untuk DebtService
+    @OneToMany(mappedBy = "user",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    @Builder.Default
+    private List<DebtItem> debtItems = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<FIRecord> fiRecords; // Wajib ada untuk FIService
+    @OneToMany(mappedBy = "user",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    @Builder.Default
+    private List<FIRecord> fiRecords = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<AdminLog> adminLogs;
+    @OneToMany(mappedBy = "user",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    @Builder.Default
+    private List<AdminLog> adminLogs = new ArrayList<>();
+
+    // =========================
+    // LIFECYCLE
+    // =========================
+
+    @PrePersist
+    public void prePersist() {
+
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+
+        if (role == null || role.isBlank()) {
+            role = "USER";
+        }
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
+
+    // =========================
+    // HELPER METHOD
+    // =========================
+
+    public boolean isEnabled() {
+        return !isBanned;
+    }
 }

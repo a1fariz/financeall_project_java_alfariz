@@ -1,37 +1,57 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"><title>My Profile - FinanceAll</title>
+    <meta charset="UTF-8">
+    <title>Profil Saya - FinanceAll</title>
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
     <link th:href="@{/css/style.css}" rel="stylesheet">
 </head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
-<div class="main-content container d-flex justify-content-center">
-    <div class="glass-card shadow-lg p-5" style="width: 100%; max-width: 600px;">
+
+<div class="main-content d-flex justify-content-center">
+    <div class="corporate-card" style="width: 100%; max-width: 600px; padding: 2.5rem;">
+        
         <div class="mb-4 text-center">
-            <h2 class="fw-bold text-dark">Profile Settings 👤</h2>
-            <p class="text-secondary">Keep your personal and security information updated.</p>
+            <h2 class="fw-bold text-dark mb-1">Pengaturan Profil 👤</h2>
+            <p class="text-secondary small">Perbarui informasi pribadi dan keamanan akun Anda.</p>
         </div>
 
-        <form th:action="@{/user/profile/update}" method="post" th:object="${user}">
-            <input type="hidden" th:field="*{id}">
-            <div class="mb-3">
-                <label class="form-label fw-bold">Full Name</label>
-                <input type="text" th:field="*{fullName}" class="form-control" required>
+        <div th:if="${successMsg}" class="p-3 mb-4 rounded-3 bg-success" style="border-left: 4px solid var(--success);">
+            <span th:text="${successMsg}"></span>
+        </div>
+        <div th:if="${errorMsg}" class="p-3 mb-4 rounded-3 bg-danger" style="border-left: 4px solid var(--danger);">
+            <span th:text="${errorMsg}"></span>
+        </div>
+
+        <form th:action="@{/user/profile/update}" method="post" class="d-flex flex-column gap-3">
+            <input type="hidden" name="id" th:value="${user.id}">
+            
+            <div>
+                <label class="form-label">Nama Lengkap</label>
+                <input type="text" name="fullName" th:value="${user.fullName}" class="form-control" required>
             </div>
-            <div class="mb-3">
-                <label class="form-label fw-bold">Email Address</label>
-                <input type="email" th:field="*{email}" class="form-control" required>
+            
+            <div>
+                <label class="form-label">Alamat Email</label>
+                <input type="email" name="email" th:value="${user.email}" class="form-control" required>
             </div>
-            <div class="mb-4">
-                <label class="form-label fw-bold">Recovery PIN (6 Digits)</label>
-                <input type="text" th:field="*{recoveryPin}" class="form-control" maxlength="6" required>
-                <small class="text-muted">Used to reset your password if you forget it.</small>
+            
+            <div class="p-3 mt-2 rounded-3" style="background-color: #f8fafc; border: 1px solid var(--border-light);">
+                <label class="form-label text-danger">Ubah Password (Opsional)</label>
+                <input type="password" name="password" class="form-control" placeholder="Biarkan kosong jika tidak ingin mengubah sandi">
             </div>
-            <button type="submit" class="btn-auth w-100 py-3">Update My Profile</button>
+
+            <div>
+                <label class="form-label">Recovery PIN (6 Digit)</label>
+                <input type="text" name="recoveryPin" th:value="${user.recoveryPin}" class="form-control" maxlength="6" required>
+                <small class="text-muted mt-1 d-block">Pastikan Anda mengingat PIN ini untuk reset password.</small>
+            </div>
+
+            <button type="submit" class="btn-auth mt-3 w-100">Simpan Perubahan</button>
         </form>
     </div>
 </div>
+
 </body>
 </html>

@@ -1,27 +1,77 @@
 package com.financeall.controller;
 
+import com.financeall.model.TransactionRecord;
 import com.financeall.model.User;
+import com.financeall.model.Wallet;
+import com.financeall.repository.TransactionRecordRepository;
+import com.financeall.repository.WalletRepository;
 import com.financeall.service.UserService;
+import com.financeall.service.WalletService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
+
 @Controller
-@RequestMapping("/user/wallet")
+@RequestMapping("/user")
 @RequiredArgsConstructor
 public class WalletController {
+
+    private final WalletRepository walletRepository;
+    private final WalletService walletService;
+    private final TransactionRecordRepository transactionRepository;
     private final UserService userService;
 
-    @GetMapping
-    public String showWallet(HttpSession session, Model model) {
-        User user = (User) session.getAttribute("user");
-        if (user == null) return "redirect:/login";
-        
-        // Pastikan model wallet dikirim agar tidak Error 500
-        model.addAttribute("wallet", userService.getOrCreateWallet(userService.findById(user.getId())));
+    @GetMapping("/wallet")
+    public String wallet(HttpSession session, Model model) {
+        User sessionUser = (User) session.getAttribute("user");
+        if (sessionUser == null) {
+            return "redirect:/login";
+        }
+
+        // FIX: Re-fetch user from DB to avoid stale/detached session object
+        User user = userService.findById(sessionUser.getId());
+        if (user == null) {
+            session.invalidate();
+            return "redirect:/login";
+        }
+
+        // FIX: Inisialisasi proper
+        Wallet wallet = walletRepository.findByUser(user)
+                .orElseGet(() -> {
+                    Wallet newWallet = Wallet.builder()
+                            .user(user)
+                            .balance(BigDecimal.ZERO)
+                            .monthlyLimit(BigDecimal.ZERO)
+                            .amount(BigDecimal.ZERO)
+                            .build();
+                    return walletRepository.save(newWallet);
+                });
+
+        Map<String, Object> monthlyStats = walletService.getMonthlyStats(user);
+        List<TransactionRecord> recentTransactions = transactionRepository.findTop5ByUserOrderByTransactionDateDesc(user);
+
+        model.addAttribute("wallet", wallet);
+        model.addAttribute("recentTransactions", recentTransactions);
+        model.addAttribute("user", user);
+
+        model.addAttribute("totalIncome", getBigDecimalSafely(monthlyStats, "income"));
+        model.addAttribute("totalExpense", getBigDecimalSafely(monthlyStats, "expense"));
+        model.addAttribute("cashflow", getBigDecimalSafely(monthlyStats, "cashflow"));
+
         return "user/wallet";
     }
-}
 
+    private BigDecimal getBigDecimalSafely(Map<String, Object> map, String key) {
+        Object value = map.get(key);
+        if (value instanceof BigDecimal) return (BigDecimal) value;
+        if (value instanceof Number) return BigDecimal.valueOf(((Number) value).doubleValue());
+        return BigDecimal.ZERO;
+    }
+}

@@ -10,13 +10,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer {
     private final AuthInterceptor authInterceptor;
 
-@Override
-public void addInterceptors(InterceptorRegistry registry) {
-    registry.addInterceptor(authInterceptor)
-            .addPathPatterns("/**")
-            .excludePathPatterns(
-                "/login", "/register", "/reset-password", // Tambahkan ini
-                "/css/**", "/js/**", "/images/**", "/"
-            );
-}
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(authInterceptor)
+                .addPathPatterns("/**")
+                .excludePathPatterns(
+                    "/login", "/register", "/reset-password", "/error", // <-- WAJIB ADA /error
+                    "/css/**", "/js/**", "/images/**", "/"
+                );
+    }
 }

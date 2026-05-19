@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FICalcuationResult {
+public class FICalculationResult {
     private BigDecimal fiNumber;           // Target angka kebebasan
     private BigDecimal currentInvestments; // Aset saat ini
     private BigDecimal gap;                // Kekurangan (Target - Aset)

@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
+@Table(name = "debt_items")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,17 +16,23 @@ public class DebtItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Builder.Default // FIX
+    private BigDecimal amount = BigDecimal.ZERO;
+
     private String name;
     private String creditor;
-    
-    @Column(columnDefinition = "DECIMAL(19,2) DEFAULT 0.00")
-    private BigDecimal totalAmount;
 
-    @Column(columnDefinition = "DECIMAL(19,2) DEFAULT 0.00")
-    private BigDecimal paidAmount;
+    @Column(nullable = false) 
+    @Builder.Default // FIX
+    private BigDecimal totalAmount = BigDecimal.ZERO;
 
-    @Column(columnDefinition = "DECIMAL(19,2) DEFAULT 0.00")
-    private BigDecimal interestRate;
+    @Column(nullable = false)
+    @Builder.Default // FIX
+    private BigDecimal paidAmount = BigDecimal.ZERO;
+
+    @Column(nullable = false)
+    @Builder.Default // FIX
+    private BigDecimal interestRate = BigDecimal.ZERO;
 
     private LocalDate dueDate;
 
@@ -37,5 +44,9 @@ public class DebtItem {
         BigDecimal total = (totalAmount != null) ? totalAmount : BigDecimal.ZERO;
         BigDecimal paid = (paidAmount != null) ? paidAmount : BigDecimal.ZERO;
         return total.subtract(paid);
+    }
+
+    public boolean isPaidOff() {
+        return getRemainingAmount().compareTo(BigDecimal.ZERO) <= 0;
     }
 }

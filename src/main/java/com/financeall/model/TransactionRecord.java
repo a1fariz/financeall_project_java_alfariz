@@ -4,13 +4,12 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-
-import org.springframework.format.annotation.DateTimeFormat;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "transaction_records")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -20,24 +19,25 @@ public class TransactionRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String type; // "INCOME" atau "EXPENSE"
+    // USER
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    // INFO
+    private String title;
+
+    private String description;
 
     @Enumerated(EnumType.STRING)
     private TransactionCategory category;
 
+    @Enumerated(EnumType.STRING)
+    private TransactionType type;
+
+    // MONEY
     private BigDecimal amount;
 
-    // Ingat: Nama field ini description, bukan note
-    private String description;
-
-@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private LocalDateTime createdAt;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "wallet_id")
-    private Wallet wallet;
+    // DATE
+    private LocalDate transactionDate;
 }

@@ -7,12 +7,15 @@ import com.financeall.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Component
 @RequiredArgsConstructor
 public class DataSeeder implements CommandLineRunner {
     private final UserRepository userRepo;
     private final LevelRepository levelRepo;
+    private final PasswordEncoder passwordEncoder;
+    
 
     @Override
     public void run(String... args) {
@@ -29,9 +32,9 @@ public class DataSeeder implements CommandLineRunner {
             User admin = User.builder()
                     .username("admin")
                     .email("admin@financeall.com")
-                    .password("admin123")
+                    .password(passwordEncoder.encode("admin123"))
                     .fullName("Super Admin")
-                    .role("ROLE_ADMIN")
+                    .role("ADMIN")
                     .recoveryPin("123456")
                     .build();
             userRepo.save(admin);

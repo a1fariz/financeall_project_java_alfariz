@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th=\"http://www.thymeleaf.org\">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,74 +8,96 @@
     <link th:href="@{/css/style.css}" rel="stylesheet">
 </head>
 <body>
+
 <div th:replace="~{fragments/header :: header}"></div>
 
 <div class="main-content">
-    <div class="mb-4">
-        <h1>Admin Dashboard 🛠️</h1>
-        <p class="auth-subtitle">Ringkasan sistem dan kontrol broadcast.</p>
-    </div>
-
-    <div th:if="${param.success}" class="alert alert-success alert-dismissible fade show" role="alert" 
-         style="background: rgba(16, 185, 129, 0.2); border: 1px solid #10b981; color: #10b981; border-radius: 12px; margin-bottom: 1.5rem;">
-        🚀 <strong>Berhasil!</strong> Broadcast telah dikirim ke semua user.
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-
-    <div th:if="${param.error}" class="alert alert-danger alert-dismissible fade show" role="alert"
-         style="background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #ef4444; border-radius: 12px; margin-bottom: 1.5rem;">
-        ❌ <strong>Gagal!</strong> Judul dan isi pesan tidak boleh kosong.
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-
-    <div class="grid-2 mb-4">
-        <section class="glass-card" style="background: linear-gradient(135deg, var(--accent) 0%, #818cf8 100%); color: white; display: flex; align-items: center; justify-content: space-between;">
+    <div class="glass-card mb-4">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
             <div>
-                <h3 style="color: white; font-size: 1.1rem; opacity: 0.9;">Total Registered Users</h3>
-                <div style="font-size: 3.5rem; font-weight: 800;" th:text="${totalUsers}">0</div>
-                <a th:href="@{/admin/users}" style="color: white; text-decoration: underline; font-size: 0.9rem;">Kelola Semua User ➜</a>
+                <h1 class="fw-bold mb-1">Admin Dashboard 🛠️</h1>
+                <p class="text-secondary mb-0">Monitor FinanceAll system activity and metrics.</p>
             </div>
-            <div style="font-size: 4rem; opacity: 0.2;">👥</div>
-        </section>
-
-        <section class="glass-card" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; display: flex; align-items: center; justify-content: space-between;">
-            <div>
-                <h3 style="color: white; font-size: 1.1rem; opacity: 0.9;">Global System Debt</h3>
-                <div style="font-size: 2.5rem; font-weight: 700;" 
-                     th:text="'Rp ' + ${#numbers.formatDecimal(globalStats.totalSystemDebt ?: 0, 0, 'POINT', 0, 'COMMA')}">0</div>
-                <p style="margin:0; opacity: 0.8; font-size: 0.9rem;">Total hutang di sistem</p>
+            <div class="text-md-end">
+                <small class="text-secondary d-block">System Status</small>
+                <span class="badge" style="background: var(--success); color: white;">ACTIVE</span>
             </div>
-            <div style="font-size: 4rem; opacity: 0.2;">💸</div>
-        </section>
+        </div>
     </div>
 
-<section class="glass-card">
-    <h3>📢 Kirim Broadcast</h3>
-    <p class="auth-subtitle">Pesan ini akan muncul sebagai pengumuman bagi semua user.</p>
-    
-    <div th:if="${param.success}" class="alert alert-success">
-        🚀 Broadcast berhasil dikirim!
-    </div>
-    <div th:if="${param.error}" class="alert alert-danger">
-        ❌ Gagal: Judul dan isi tidak boleh kosong.
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="glass-card stat-card h-100 d-flex align-items-center gap-3">
+                <div class="stat-icon"><i class="bi bi-people"></i>👥</div>
+                <div>
+                    <small class="text-secondary d-block">Total Users</small>
+                    <h3 class="fw-bold mb-0" th:text="${totalUsers}">0</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="glass-card stat-card h-100 d-flex align-items-center gap-3" style="border-left-color: var(--success);">
+                <div class="stat-icon" style="color: var(--success); background: rgba(16,185,129,0.1);"><i class="bi bi-wallet"></i>💰</div>
+                <div>
+                    <small class="text-secondary d-block">Global Balance</small>
+                    <h4 class="fw-bold mb-0" th:text="'Rp ' + ${#numbers.formatDecimal(globalBalance ?: 0, 0, 'POINT', 0, 'COMMA')}">Rp 0</h4>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <form th:action="@{/admin/broadcast}" method="post" style="margin-top:1.5rem;">
-        <div class="form-group mb-3">
-            <label>Judul Broadcast</label>
-            <input type="text" name="title" placeholder="Masukkan judul..." required class="form-control-custom"
-                   style="background: var(--bg-input); border: 1px solid var(--border-color); padding: 12px; width: 100%; border-radius: 12px; color: var(--text-primary);">
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="glass-card h-100">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="fw-bold mb-0">System Logs 📜</h3>
+                    <a th:href="@{/admin/logs}" class="nav-link p-0" style="color: var(--accent);">View All &rarr;</a>
+                </div>
+                
+                <div class="table-container">
+                    <table class="table-modern">
+                        <thead>
+                            <tr>
+                                <th>Admin</th>
+                                <th>Action</th>
+                                <th>Detail</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="log : ${latestLogs}">
+                                <td th:text="${log.user.username}" class="fw-semibold"></td>
+                                <td><span class="badge bg-secondary text-uppercase" th:text="${log.action}"></span></td>
+                                <td th:text="${log.detail}"></td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(latestLogs)}">
+                                <td colspan="3" class="text-center text-secondary py-4">No recent logs available.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-        <div class="form-group mb-3">
-            <label>Isi Pesan</label>
-            <textarea name="message" placeholder="Tulis pesan di sini..." rows="4" required
-                      style="background: var(--bg-input); border: 1px solid var(--border-color); padding: 12px; width: 100%; border-radius: 12px; color: var(--text-primary);"></textarea>
+
+        <div class="col-lg-5">
+            <div class="glass-card h-100">
+                <h3 class="fw-bold mb-4">Latest Users 👥</h3>
+                
+                <div th:if="${#lists.isEmpty(latestUsers)}" class="empty-state">
+                    <h5>No users found</h5>
+                </div>
+
+                <div th:if="${!#lists.isEmpty(latestUsers)}" class="d-flex flex-column gap-3">
+                    <div th:each="u : ${latestUsers}" class="d-flex justify-content-between align-items-center p-3 rounded-3" style="background: rgba(255,255,255,0.04); border: 1px solid var(--border-color);">
+                        <div>
+                            <h6 class="fw-bold mb-0" th:text="${u.username}"></h6>
+                            <small class="text-secondary" th:text="${u.email}"></small>
+                        </div>
+                        <span class="badge" style="background: var(--accent); color: white;" th:text="${u.role}"></span>
+                    </div>
+                </div>
+            </div>
         </div>
-        <button type="submit" class="btn-primary" style="width: 100%; height: 50px; font-weight: bold;">
-            🚀 Kirim Broadcast Sekarang
-        </button>
-    </form>
-</section>
+    </div>
 </div>
 
 <script th:src="@{/js/bootstrap.min.js}"></script>

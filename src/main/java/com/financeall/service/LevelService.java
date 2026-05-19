@@ -3,8 +3,11 @@ package com.financeall.service;
 import com.financeall.model.*;
 import com.financeall.repository.*;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -20,7 +23,6 @@ public class LevelService {
         return progressRepository.findByUser(user).orElseGet(() -> initializeUserProgress(user));
     }
 
-    // Metode bantuan agar Controller tidak memproses logika null
     public Level getUserLevel(User user) {
         UserLevelProgress progress = getUserLevelData(user);
         return progress != null ? progress.getLevel() : null;
@@ -43,11 +45,13 @@ public class LevelService {
         progressRepository.save(progress);
     }
 
-    private void checkLevelUp(UserLevelProgress progress) {
-        levelRepository.findAll().forEach(level -> {
-            if (progress.getCurrentPoints() >= level.getRequiredPoints()) {
-                progress.setLevel(level);
-            }
-        });
-    }
+    // FIX: Gunakan Stream Max buat dapetin level tertinggi secara akurat
+   private void checkLevelUp(UserLevelProgress progress) {
+    // Urutkan descending — cari level tertinggi yang terpenuhi
+    levelRepository.findAll().stream()
+        .sorted(Comparator.comparingInt(Level::getRequiredPoints).reversed())
+        .filter(level -> progress.getCurrentPoints() >= level.getRequiredPoints())
+        .findFirst()
+        .ifPresent(progress::setLevel); // set hanya satu kali ke level tertinggi
+}
 }

@@ -12,63 +12,79 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-
 @Controller
-@RequestMapping("/user/transaction") // Konsisten dengan Header
+@RequestMapping("/user/transaction")
 @RequiredArgsConstructor
 public class TransactionController {
     private final TransactionService transactionService;
     private final UserService userService;
 
-  @GetMapping
+    @GetMapping
     public String listTransactions(HttpSession session, @RequestParam(defaultValue = "0") int page, Model model) {
-        User user = (User) session.getAttribute("user");
-        if (user == null) return "redirect:/login";
+        User sessionUser = (User) session.getAttribute("user");
+        if (sessionUser == null) return "redirect:/login";
 
-        model.addAttribute("transactions", transactionService.findUserTransactions(userService.findById(user.getId()), page));
+        // FIX: Re-fetch user from DB
+        User user = userService.findById(sessionUser.getId());
+        if (user == null) { session.invalidate(); return "redirect:/login"; }
+
+        model.addAttribute("transactions", transactionService.findUserTransactions(user, page));
         model.addAttribute("categories", TransactionCategory.values());
         return "user/transaction";
     }
 
-    // PERBAIKAN: Ubah mapping agar tidak duplikat dan tambahkan penanganan error
     @PostMapping("/add") 
     public String addTransaction(@ModelAttribute TransactionRecord transaction, HttpSession session, RedirectAttributes redirectAttributes) {
-        User user = (User) session.getAttribute("user");
-        if (user == null) return "redirect:/login";
+        User sessionUser = (User) session.getAttribute("user");
+        if (sessionUser == null) return "redirect:/login";
+
+        // FIX: Re-fetch user from DB
+        User user = userService.findById(sessionUser.getId());
+        if (user == null) { session.invalidate(); return "redirect:/login"; }
 
         try {
             transactionService.saveTransaction(transaction, user);
             redirectAttributes.addFlashAttribute("successMsg", "Transaksi berhasil ditambahkan!");
         } catch (RuntimeException e) {
-            // Menangkap error "Saldo tidak cukup" dari Service
             redirectAttributes.addFlashAttribute("errorMsg", e.getMessage());
         }
-        
         return "redirect:/user/transaction";
     }
 
-   @GetMapping("/edit/{id}")
-    public String editPage(@PathVariable("id") Long id, HttpSession session, Model model) {
-        User user = (User) session.getAttribute("user");
-        if (user == null) return "redirect:/login";
-        
-        // PERBAIKAN: Gunakan .orElseThrow atau .get() jika service mengembalikan Optional
-        // agar Thymeleaf bisa membaca property seperti ${transaction.id}
-        TransactionRecord transaction = transactionService.findById(id); 
-        // Pastikan service Anda sudah mengembalikan TransactionRecord, bukan Optional<TransactionRecord>
-        // Jika service mengembalikan Optional, gunakan: transactionService.findById(id).orElse(null);
+    @GetMapping("/edit/{id}")
+    public String editPage(@PathVariable("id") Long id, HttpSession session, Model model, RedirectAttributes redirectAttributes) {
+        User sessionUser = (User) session.getAttribute("user");
+        if (sessionUser == null) return "redirect:/login";
 
-        model.addAttribute("transaction", transaction);
-        model.addAttribute("categories", TransactionCategory.values());
-        return "user/transaction-edit"; // Pastikan file ada di templates/user/transaction-edit.html
+        // FIX: Re-fetch user from DB
+        User user = userService.findById(sessionUser.getId());
+        if (user == null) { session.invalidate(); return "redirect:/login"; }
+    
+        try {
+            TransactionRecord transaction = transactionService.findById(id);
+        
+            // SECURITY CHECK (PENCEGAHAN IDOR)
+            if (!transaction.getUser().getId().equals(user.getId())) {
+                throw new RuntimeException("Akses ditolak: Ini bukan transaksi Anda!");
+            }
+
+            model.addAttribute("transaction", transaction);
+            model.addAttribute("categories", TransactionCategory.values());
+            return "user/transaction-edit";
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("errorMsg", e.getMessage());
+            return "redirect:/user/transaction";
+        }
     }
 
     @PostMapping("/update")
     public String updateTransaction(@ModelAttribute TransactionRecord transaction, HttpSession session, RedirectAttributes redirectAttributes) {
-        User user = (User) session.getAttribute("user");
-        if (user == null) return "redirect:/login";
+        User sessionUser = (User) session.getAttribute("user");
+        if (sessionUser == null) return "redirect:/login";
+
+        // FIX: Re-fetch user from DB
+        User user = userService.findById(sessionUser.getId());
+        if (user == null) { session.invalidate(); return "redirect:/login"; }
 
         try {
             transactionService.updateTransaction(transaction.getId(), transaction, user);
@@ -76,7 +92,6 @@ public class TransactionController {
             return "redirect:/user/transaction";
         } catch (RuntimeException e) {
             redirectAttributes.addFlashAttribute("errorMsg", e.getMessage());
-            // PERBAIKAN: Pastikan ID tidak null saat redirect balik ke halaman edit
             if (transaction.getId() != null) {
                 return "redirect:/user/transaction/edit/" + transaction.getId();
             }
@@ -84,15 +99,21 @@ public class TransactionController {
         }
     }
 
-    @GetMapping("/delete/{id}")
+    @PostMapping("/delete/{id}")
     public String deleteTransaction(@PathVariable Long id, HttpSession session, RedirectAttributes redirectAttributes) {
-        User user = (User) session.getAttribute("user");
-        if (user != null) {
-            transactionService.deleteTransaction(id, userService.findById(user.getId()));
+        User sessionUser = (User) session.getAttribute("user");
+        if (sessionUser == null) return "redirect:/login";
+
+        // FIX: Re-fetch user from DB
+        User user = userService.findById(sessionUser.getId());
+        if (user == null) { session.invalidate(); return "redirect:/login"; }
+
+        try {
+            transactionService.deleteTransaction(id, user);
             redirectAttributes.addFlashAttribute("successMsg", "Transaksi berhasil dihapus!");
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("errorMsg", e.getMessage());
         }
         return "redirect:/user/transaction";
     }
-
-    
 }

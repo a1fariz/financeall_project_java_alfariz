@@ -1,30 +1,80 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"><title>Wallet - FinanceAll</title>
+    <meta charset="UTF-8">
+    <title>Dompet - FinanceAll</title>
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
     <link th:href="@{/css/style.css}" rel="stylesheet">
 </head>
 <body>
+
 <div th:replace="~{fragments/header :: header}"></div>
-<div class="main-content container">
-    <div class="mb-4">
-        <h1>My Wallet 👛</h1>
-        <p class="text-secondary">Manage your active funds and spending limits.</p>
+
+<div class="main-content">
+    <div class="corporate-card mb-4 d-flex justify-content-between align-items-center flex-wrap gap-3" style="background: var(--nav-dark); color: white;">
+        <div>
+            <h2 class="fw-bold mb-1 text-white">Dompet Saya 💳</h2>
+            <p class="mb-0" style="color: #94a3b8;">Pantau likuiditas dan cashflow bulanan Anda.</p>
+        </div>
+        <div class="text-md-end">
+            <small style="color: #94a3b8;">Total Saldo</small>
+            <h2 class="fw-bold text-success m-0" th:text="${wallet != null ? 'Rp ' + #numbers.formatDecimal(wallet.balance,0,'POINT',0,'COMMA') : 'Rp 0'}"></h2>
+        </div>
     </div>
-    <div class="grid-2">
-        <section class="glass-card" style="background: linear-gradient(135deg, var(--accent) 0%, #818cf8 100%); color: white;">
-            <h3 class="h6 text-uppercase fw-bold" style="color: rgba(255,255,255,0.8);">Available Balance</h3>
-            <div style="font-size: 2.8rem; font-weight: 800;" 
-                 th:text="${wallet != null} ? 'Rp ' + ${#numbers.formatDecimal(wallet.balance, 0, 'COMMA', 0, 'POINT')} : 'Rp 0'"></div>
-        </section>
-        <section class="glass-card">
-            <h3 class="h5 fw-bold mb-4">Quick Actions</h3>
-            <div class="d-grid gap-3">
-                <a th:href="@{/user/transaction}" class="btn-primary py-3 text-center text-decoration-none">+ Add Transaction</a>
+
+    <div class="row g-4 mb-4">
+        <div class="col-lg-4">
+            <div class="corporate-card stat-card p-4 h-100" style="border-left-color: var(--success);">
+                <small class="text-secondary fw-bold text-uppercase">Pemasukan Bulanan</small>
+                <h3 class="fw-bold text-success mt-2" th:text="'Rp ' + ${#numbers.formatDecimal(totalIncome,0,'POINT',0,'COMMA')}"></h3>
             </div>
-        </section>
+        </div>
+        <div class="col-lg-4">
+            <div class="corporate-card stat-card p-4 h-100" style="border-left-color: var(--danger);">
+                <small class="text-secondary fw-bold text-uppercase">Pengeluaran Bulanan</small>
+                <h3 class="fw-bold text-danger mt-2" th:text="'Rp ' + ${#numbers.formatDecimal(totalExpense,0,'POINT',0,'COMMA')}"></h3>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="corporate-card stat-card p-4 h-100" style="border-left-color: var(--warning);">
+                <small class="text-secondary fw-bold text-uppercase">Cashflow Bersih</small>
+                <h3 class="fw-bold mt-2" th:classappend="${cashflow >= 0} ? 'text-success' : 'text-danger'" th:text="'Rp ' + ${#numbers.formatDecimal(cashflow,0,'POINT',0,'COMMA')}"></h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="corporate-card">
+        <h5 class="fw-bold mb-4 text-dark">Aktivitas Terakhir</h5>
+        
+        <div th:if="${#lists.isEmpty(recentTransactions)}" class="text-center py-4 text-secondary">
+            <p>Belum ada aktivitas dompet tercatat.</p>
+        </div>
+
+        <div th:if="${!#lists.isEmpty(recentTransactions)}" class="table-container">
+            <table class="table-modern">
+                <thead>
+                <tr>
+                    <th>Tanggal</th>
+                    <th>Judul</th>
+                    <th>Tipe</th>
+                    <th class="text-end">Nominal</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="trx : ${recentTransactions}">
+                    <td th:text="${#temporals.format(trx.transactionDate,'dd MMM yyyy')}"></td>
+                    <td class="fw-semibold text-dark" th:text="${trx.title}"></td>
+                    <td>
+                        <span class="badge" th:classappend="${trx.type.name() == 'INCOME'} ? 'bg-success' : 'bg-danger'" th:text="${trx.type.name()}"></span>
+                    </td>
+                    <td class="fw-bold text-end" th:classappend="${trx.type.name() == 'INCOME'} ? 'text-success' : 'text-danger'" th:text="'Rp ' + ${#numbers.formatDecimal(trx.amount,0,'POINT',0,'COMMA')}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
+
+<script th:src="@{/js/bootstrap.min.js}"></script>
 </body>
 </html>

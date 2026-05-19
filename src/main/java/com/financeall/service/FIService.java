@@ -1,6 +1,7 @@
 package com.financeall.service;
 
-import com.financeall.dto.FICalcuationResult;
+import com.financeall.dto.FICalculationResult;
+
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -8,11 +9,18 @@ import java.math.RoundingMode;
 @Service
 public class FIService {
 
-    public FICalcuationResult performCalculation(BigDecimal monthlyExpense, BigDecimal withdrawalRate, BigDecimal currentAssets) {
+    public FICalculationResult performCalculation(BigDecimal monthlyExpense, BigDecimal withdrawalRate, BigDecimal currentAssets) {
+       
+         if (monthlyExpense == null || monthlyExpense.compareTo(BigDecimal.ZERO) <= 0)
+        throw new IllegalArgumentException("Pengeluaran bulanan harus lebih dari 0");
+    if (withdrawalRate == null || withdrawalRate.compareTo(BigDecimal.ZERO) <= 0
+            || withdrawalRate.compareTo(new BigDecimal("100")) > 0)
+        throw new IllegalArgumentException("Withdrawal rate harus antara 0.1% - 100%");
+
         // Rumus FI: Pengeluaran Tahunan / (Withdrawal Rate / 100)
         BigDecimal annualExpense = monthlyExpense.multiply(new BigDecimal("12"));
+
         BigDecimal rateDecimal = withdrawalRate.divide(new BigDecimal("100"), 4, RoundingMode.HALF_UP);
-        
         BigDecimal fiNumber = annualExpense.divide(rateDecimal, 2, RoundingMode.HALF_UP);
         
         // Hitung Gap (Kekurangan)
@@ -25,7 +33,7 @@ public class FIService {
                                    .multiply(new BigDecimal("100")).doubleValue();
         }
 
-        return FICalcuationResult.builder()
+        return FICalculationResult.builder()
                 .fiNumber(fiNumber)
                 .currentInvestments(currentAssets)
                 .gap(gap)

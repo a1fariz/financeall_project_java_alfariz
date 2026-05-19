@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -22,8 +23,12 @@ public class FinancialHealthService {
         List<DebtItem> allDebts = debtRepository.findAll();
         
         BigDecimal totalDebt = allDebts.stream()
-                .map(DebtItem::getRemainingAmount)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    .filter(Objects::nonNull)
+    .map(d -> {
+        BigDecimal remaining = d.getRemainingAmount();
+        return remaining != null ? remaining : BigDecimal.ZERO;
+    })
+    .reduce(BigDecimal.ZERO, BigDecimal::add);
                 
         stats.put("totalSystemDebt", totalDebt);
         stats.put("totalTransactions", transactionRepository.count());

@@ -27,10 +27,10 @@
                 </thead>
                 <tbody>
                     <tr th:each="log : ${allLogs}">
-                        <td th:text="${#temporals.format(log.timestamp, 'dd MMM HH:mm')}"></td>
+                        <td th:text="${#temporals.format(log.createdAt, 'dd MMM HH:mm')}"></td>
                         <td th:text="${log.user.username}"></td>
                         <td><span class="badge badge-income" th:text="${log.action}"></span></td>
-                        <td th:text="${log.details}"></td>
+                        <td th:text="${log.detail}"></td>
                     </tr>
                 </tbody>
             </table>

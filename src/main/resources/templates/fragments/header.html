@@ -1,112 +1,117 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
 <body>
+
 <div th:fragment="header">
+    <!-- ===================== DESKTOP HEADER ===================== -->
     <header class="desktop-header">
-        <a th:href="${session.user != null ? (session.user.role == 'admin' || session.user.role == 'ROLE_ADMIN' ? '/admin/dashboard' : '/user/dashboard') : '/login'}" class="logo">
-            Finance<span style="color: var(--accent);">All.</span> 🚀
+        <a th:href="${session.user != null ? ((session.user.role == 'ADMIN') ? '/admin/dashboard' : '/user/dashboard') : '/login'}" class="logo" style="text-decoration: none;">
+            Finance<span style="color: var(--success);">All.</span>
         </a>
-        
-        <nav class="nav-menu">
-            <div th:if="${session.user != null && (session.user.role == 'user' || session.user.role == 'ROLE_USER')}" class="d-flex gap-3 align-items-center">
-                <a th:href="@{/user/dashboard}" class="nav-link">📊 Dashboard</a>
-                <a th:href="@{/user/transaction}" class="nav-link">💸 Transaksi</a>
-                <a th:href="@{/user/wallet}" class="nav-link">👛 Dompet</a>
-                <a th:href="@{/user/debt}" class="nav-link">📑 Hutang</a>
-                <a th:href="@{/user/emergency}" class="nav-link">🛡️ Dana Darurat</a>
-                <a th:href="@{/user/fi}" class="nav-link">🧮 Kalkulator FI</a>
+
+        <nav class="d-flex align-items-center gap-1">
+            <!-- USER NAV -->
+            <div th:if="${session.user != null && session.user.role == 'USER'}" class="d-flex align-items-center gap-1">
+                <a th:href="@{/user/dashboard}" class="nav-link" th:classappend="${requestURI == '/user/dashboard' ? 'active' : ''}">Dashboard</a>
+                <a th:href="@{/user/transaction}" class="nav-link" th:classappend="${requestURI == '/user/transaction' ? 'active' : ''}">Transaksi</a>
+                <a th:href="@{/user/wallet}" class="nav-link" th:classappend="${requestURI == '/user/wallet' ? 'active' : ''}">Dompet</a>
+                <a th:href="@{/user/debt}" class="nav-link" th:classappend="${requestURI == '/user/debt' ? 'active' : ''}">Utang</a>
+                <a th:href="@{/user/emergency}" class="nav-link" th:classappend="${requestURI == '/user/emergency' ? 'active' : ''}">Dana Darurat</a>
+                <a th:href="@{/user/fi}" class="nav-link" th:classappend="${requestURI == '/user/fi' ? 'active' : ''}">FI Goals</a>
+                <a th:href="@{/user/level}" class="nav-link" th:classappend="${requestURI == '/user/level' ? 'active' : ''}">Level</a>
             </div>
 
-            <div th:if="${session.user != null && (session.user.role == 'admin' || session.user.role == 'ROLE_ADMIN')}" class="d-flex gap-3 align-items-center">
-                <a th:href="@{/admin/dashboard}" class="nav-link">🏠 Dashboard</a>
-                <a th:href="@{/admin/analysis}" class="nav-link">📈 Analisis</a>
-                <a th:href="@{/admin/users}" class="nav-link">👥 Pengguna</a>
-                <a th:href="@{/admin/logs}" class="nav-link">📜 Log Aktivitas</a>
+            <!-- ADMIN NAV -->
+            <div th:if="${session.user != null && session.user.role == 'ADMIN'}" class="d-flex align-items-center gap-1">
+                <a th:href="@{/admin/dashboard}" class="nav-link" th:classappend="${requestURI == '/admin/dashboard' ? 'active' : ''}">Dashboard</a>
+                <a th:href="@{/admin/users}" class="nav-link" th:classappend="${requestURI == '/admin/users' ? 'active' : ''}">Users</a>
+                <a th:href="@{/admin/analysis}" class="nav-link" th:classappend="${requestURI == '/admin/analysis' ? 'active' : ''}">Analisis</a>
+                <a th:href="@{/admin/articles}" class="nav-link" th:classappend="${requestURI == '/admin/articles' ? 'active' : ''}">Artikel</a>
+                <a th:href="@{/admin/levels}" class="nav-link" th:classappend="${requestURI == '/admin/levels' ? 'active' : ''}">Levels</a>
+                <a th:href="@{/admin/logs}" class="nav-link" th:classappend="${requestURI == '/admin/logs' ? 'active' : ''}">Logs</a>
             </div>
-            
-            <div class="d-flex align-items-center gap-3 ms-4 ps-4 border-start border-secondary border-opacity-25">
-                <a th:href="@{/user/profile}" class="nav-link m-0" 
-                   th:if="${session.user != null && (session.user.role == 'user' || session.user.role == 'ROLE_USER')}">
-                   👤 <span class="d-none d-lg-inline">Profil</span>
-                </a>
 
-                <button class="theme-btn" onclick="toggleTheme()" style="background: none; border: none; cursor: pointer; font-size: 1.2rem; padding: 0;">
-                    <span id="theme-icon-desktop">🌙</span>
-                </button>
-
-                <a th:href="@{/logout}" class="btn btn-sm btn-danger text-white fw-bold px-3 py-2" style="border-radius: 10px; text-decoration: none;">
-                    Logout
+            <!-- USER INFO + LOGOUT -->
+            <div th:if="${session.user != null}" class="d-flex align-items-center gap-3 ms-3 border-start ps-3" style="border-color: #334155 !important;">
+                <a th:href="${session.user.role == 'USER' ? '/user/profile' : '/admin/profile'}" class="text-white small text-decoration-none fw-medium" style="color: #cbd5e1 !important;">
+                     👤 <span th:text="${session.user.username}"></span>
                 </a>
+                <a th:href="@{/logout}" class="btn-primary py-1 px-3 btn-sm text-white" style="background: var(--danger); font-size: 0.8rem; text-decoration: none;">Logout</a>
             </div>
         </nav>
     </header>
 
-    <div class="mobile-header">
-        <button class="menu-toggle" onclick="toggleMobile()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">☰</button>
-        <div class="logo">FinanceAll.</div>
-        <button class="theme-btn" onclick="toggleTheme()" style="background: none; border: none; cursor: pointer;"><span id="theme-icon-mobile">🌙</span></button>
-    </div>
+    <!-- ===================== MOBILE HEADER ===================== -->
+    <header class="mobile-header">
+        <div class="mobile-logo">
+            Finance<span>All.</span>
+        </div>
+        <button class="hamburger-btn" onclick="toggleMobileSidebar()" aria-label="Menu">☰</button>
+    </header>
 
-    <div class="mobile-sidebar" id="mobileSidebar">
-        <div class="p-4">
-            <h3 class="fw-bold mb-1" style="color: var(--accent);">Menu</h3>
-            <p class="small text-muted mb-4" th:text="${session.user != null ? 'Hi, ' + session.user.username : 'Guest'}"></p>
-            
-            <div th:if="${session.user != null}">
-                <div th:if="${session.user.role == 'user' || session.user.role == 'ROLE_USER'}">
-                    <a th:href="@{/user/dashboard}" class="mobile-link">📊 Dashboard</a>
-                    <a th:href="@{/user/transaction}" class="mobile-link">💸 Transaksi</a>
-                    <a th:href="@{/user/wallet}" class="mobile-link">👛 Dompet</a>
-                    <a th:href="@{/user/debt}" class="mobile-link">📑 Hutang</a>
-                    <a th:href="@{/user/emergency}" class="mobile-link">🛡️ Dana Darurat</a>
-                    <a th:href="@{/user/fi}" class="mobile-link">🧮 Kalkulator FI</a>
-                    <a th:href="@{/user/profile}" class="mobile-link">👤 Profil Saya</a>
-                </div>
-
-                <div th:if="${session.user.role == 'admin' || session.user.role == 'ROLE_ADMIN'}">
-                    <a th:href="@{/admin/dashboard}" class="mobile-link">🏠 Dashboard</a>
-                    <a th:href="@{/admin/analysis}" class="mobile-link">📈 Analisis</a>
-                    <a th:href="@{/admin/users}" class="mobile-link">👥 Pengguna</a>
-                    <a th:href="@{/admin/logs}" class="mobile-link">📜 Log Aktivitas</a>
-                </div>
-
-                <a th:href="@{/logout}" class="mobile-link text-danger mt-3 pt-3 border-top fw-bold">🚪 Logout</a>
+    <!-- ===================== MOBILE SIDEBAR (DARI KANAN) ===================== -->
+    <div id="mobileSidebar" class="mobile-sidebar p-4">
+        <!-- Header sidebar -->
+        <div class="d-flex justify-content-between align-items-center mb-4 pb-3" style="border-bottom: 1px solid var(--border-color);">
+            <div>
+                <h5 class="fw-bold mb-0" style="color: var(--text-main);">Menu</h5>
+                <small th:if="${session.user != null}" class="text-muted" th:text="'@' + ${session.user.username}"></small>
             </div>
+            <button onclick="toggleMobileSidebar()" style="background:none; border:none; font-size:1.3rem; color: var(--text-muted); cursor:pointer; padding:0.25rem;">✕</button>
+        </div>
+
+        <!-- MENU USER -->
+        <div th:if="${session.user != null && session.user.role == 'USER'}" class="d-flex flex-column gap-1">
+            <a th:href="@{/user/dashboard}" class="sidebar-link"><span class="sidebar-icon">📊</span> Dashboard</a>
+            <a th:href="@{/user/transaction}" class="sidebar-link"><span class="sidebar-icon">💸</span> Transaksi</a>
+            <a th:href="@{/user/wallet}" class="sidebar-link"><span class="sidebar-icon">💳</span> Dompet</a>
+            <a th:href="@{/user/debt}" class="sidebar-link"><span class="sidebar-icon">📉</span> Utang</a>
+            <a th:href="@{/user/emergency}" class="sidebar-link"><span class="sidebar-icon">🛡️</span> Dana Darurat</a>
+            <a th:href="@{/user/fi}" class="sidebar-link"><span class="sidebar-icon">🚀</span> FI Goals</a>
+            <a th:href="@{/user/level}" class="sidebar-link"><span class="sidebar-icon">🎮</span> Level</a>
+            
+            <div style="border-top: 1px solid var(--border-color); margin: 0.75rem 0;"></div>
+            
+            <a th:href="@{/user/profile}" class="sidebar-link"><span class="sidebar-icon">👤</span> Profil Saya</a>
+        </div>
+
+        <!-- MENU ADMIN -->
+        <div th:if="${session.user != null && session.user.role == 'ADMIN'}" class="d-flex flex-column gap-1">
+            <a th:href="@{/admin/dashboard}" class="sidebar-link"><span class="sidebar-icon">📊</span> Dashboard</a>
+            <a th:href="@{/admin/users}" class="sidebar-link"><span class="sidebar-icon">👥</span> Users</a>
+            <a th:href="@{/admin/analysis}" class="sidebar-link"><span class="sidebar-icon">📈</span> Analisis</a>
+            <a th:href="@{/admin/articles}" class="sidebar-link"><span class="sidebar-icon">📰</span> Artikel</a>
+            <a th:href="@{/admin/levels}" class="sidebar-link"><span class="sidebar-icon">🎮</span> Levels</a>
+            <a th:href="@{/admin/logs}" class="sidebar-link"><span class="sidebar-icon">📋</span> Logs</a>
+            
+            <div style="border-top: 1px solid var(--border-color); margin: 0.75rem 0;"></div>
+            
+            <a th:href="@{/admin/profile}" class="sidebar-link"><span class="sidebar-icon">👤</span> Profil Admin</a>
+        </div>
+
+        <!-- LOGOUT -->
+        <div th:if="${session.user != null}" style="margin-top: auto; padding-top: 1rem;">
+            <a th:href="@{/logout}" class="btn-primary w-100 text-center" style="background: var(--danger); text-decoration: none; font-size: 0.85rem;">Logout</a>
         </div>
     </div>
-    <div class="mobile-overlay" id="mobileOverlay" onclick="toggleMobile()"></div>
+
+    <!-- OVERLAY -->
+    <div id="mobileOverlay" class="mobile-overlay" onclick="toggleMobileSidebar()"></div>
 
     <script>
-        function toggleMobile() { 
+        function toggleMobileSidebar() {
             const sidebar = document.getElementById('mobileSidebar');
             const overlay = document.getElementById('mobileOverlay');
             sidebar.classList.toggle('active');
-            overlay.style.display = sidebar.classList.contains('active') ? 'block' : 'none';
-        }
-        
-        function toggleTheme() {
-            const doc = document.documentElement;
-            const isDark = doc.getAttribute('data-theme') === 'dark';
-            const newTheme = isDark ? 'light' : 'dark';
-            doc.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            updateIcons(newTheme);
-        }
-
-        function updateIcons(theme) {
-            const icon = theme === 'dark' ? '☀️' : '🌙';
-            const desktopIcon = document.getElementById('theme-icon-desktop');
-            const mobileIcon = document.getElementById('theme-icon-mobile');
-            if(desktopIcon) desktopIcon.textContent = icon;
-            if(mobileIcon) mobileIcon.textContent = icon;
-        }
-
-        // Init theme on load
-        if(localStorage.getItem('theme') === 'dark') {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            updateIcons('dark');
+            overlay.classList.toggle('active');
+            document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
         }
     </script>
 </div>
+
 </body>
 </html>

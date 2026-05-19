@@ -1,31 +1,74 @@
 package com.financeall.model;
 
 import jakarta.persistence.*;
+
 import lombok.*;
+
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
-@Getter // Gunakan Getter/Setter terpisah, jangan @Data
-@Setter
-@Builder
+@Table(name = "admin_logs")
+
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdminLog {
+@Builder
+public class AdminLog
+        implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    private String action;
-    private String details;
-    
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user; 
 
-    private LocalDateTime timestamp;
+    // =========================
+    // ADMIN USER
+    // =========================
+
+    @ManyToOne(fetch = FetchType.LAZY)
+
+    @JoinColumn(
+            name = "user_id",
+            nullable = false
+    )
+
+    private User user;
+
+    // =========================
+    // ACTION
+    // =========================
+
+    @Column(nullable = false)
+    private String action;
+
+    // =========================
+    // DETAIL
+    // =========================
+
+    @Column(columnDefinition = "TEXT")
+    private String detail;
+
+    // =========================
+    // IP ADDRESS
+    // =========================
+
+    private String ipAddress;
+
+    // =========================
+    // TIMESTAMP
+    // =========================
+
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
+
+    // =========================
+    // AUTO TIMESTAMP
+    // =========================
 
     @PrePersist
     protected void onCreate() {
-        this.timestamp = LocalDateTime.now();
+
+        createdAt =
+                LocalDateTime.now();
     }
 }

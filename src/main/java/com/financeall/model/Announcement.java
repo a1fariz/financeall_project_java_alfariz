@@ -5,6 +5,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "announcements")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

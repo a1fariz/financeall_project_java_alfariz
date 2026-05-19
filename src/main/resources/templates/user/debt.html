@@ -9,29 +9,36 @@
 <div th:replace="~{fragments/header :: header}"></div>
 
 <div class="main-content container">
-    <div class="mb-4">
-        <h1>Manajemen Hutang 📑</h1>
-        <p class="text-secondary">Lacak dan lunasi hutang Anda secara strategis.</p>
+    <div class="corporate-card mb-4" style="background: var(--nav-dark); color: white;">
+        <h2 class="fw-bold mb-1 text-white">Manajemen Hutang 📑</h2>
+        <p class="mb-0" style="color: #94a3b8;">Lacak dan lunasi kewajiban Anda secara terstruktur.</p>
+    </div>
+
+    <div th:if="${errorMsg}" class="p-3 mb-4 rounded-3 bg-danger" style="border-left: 4px solid var(--danger);">
+        <span th:text="${errorMsg}"></span>
+    </div>
+    <div th:if="${successMsg}" class="p-3 mb-4 rounded-3 bg-success" style="border-left: 4px solid var(--success);">
+        <span th:text="${successMsg}"></span>
     </div>
 
     <div class="row g-4">
         <div class="col-lg-4">
-            <div class="glass-card h-100">
-                <h3 class="h5 fw-bold mb-4">Tambah Catatan</h3>
-                <form th:action="@{/user/debt/add}" method="post">
-                    <div class="mb-3">
-                        <label class="form-label">Pemberi Pinjaman</label>
-                        <input type="text" name="creditor" class="form-control" required>
+            <div class="corporate-card h-100">
+                <h5 class="fw-bold mb-4 text-dark">Tambah Catatan Utang</h5>
+                <form th:action="@{/user/debt/add}" method="post" class="d-flex flex-column gap-3">
+                    <div>
+                        <label class="form-label">Pemberi Pinjaman (Kreditur)</label>
+                        <input type="text" name="creditor" class="form-control" required placeholder="Contoh: Bank A / Teman">
                     </div>
-                    <div class="mb-3">
+                    <div>
                         <label class="form-label">Total Pinjaman (Rp)</label>
-                        <input type="number" name="totalAmount" class="form-control" required>
+                        <input type="number" name="totalAmount" class="form-control" required placeholder="1000000">
                     </div>
-                    <div class="mb-4">
-                        <label class="form-label">Jatuh Tempo</label>
+                    <div>
+                        <label class="form-label">Tenggat Waktu (Jatuh Tempo)</label>
                         <input type="date" name="dueDate" class="form-control" required>
                     </div>
-                    <button type="submit" class="btn-auth w-100">Simpan</button>
+                    <button type="submit" class="btn-primary mt-2">Catat Hutang</button>
                 </form>
             </div>
         </div>
@@ -39,49 +46,47 @@
         <div class="col-lg-8">
             <div class="row g-3">
                 <div th:each="debt : ${debts}" class="col-md-6">
-                    <div class="glass-card shadow-sm h-100 d-flex flex-column">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <h5 th:text="${debt.creditor}" class="fw-bold text-primary mb-0"></h5>
-                            <a th:href="@{/user/debt/delete/{id}(id=${debt.id})}" 
-                               class="text-danger small fw-bold" onclick="return confirm('Hapus?')">Hapus</a>
-                        </div>
+                    <div class="corporate-card stat-card h-100 d-flex flex-column" th:style="${debt.isPaidOff} ? 'border-left-color: var(--success);' : 'border-left-color: var(--danger);'">
                         
-                        <div class="small mt-2 mb-1 d-flex justify-content-between text-secondary">
-                            <span>Lunas</span>
-                            <span th:with="percent=${debt.totalAmount > 0 ? (debt.paidAmount * 100 / debt.totalAmount) : 0}" 
-                                  th:text="${#numbers.formatInteger(percent, 0)} + '%'"></span>
-                        </div>
-                        <div class="progress-track mb-3">
-                            <div class="progress-fill" 
-                                 th:with="percent=${debt.totalAmount > 0 ? (debt.paidAmount * 100 / debt.totalAmount) : 0}"
-                                 th:style="'width:' + ${percent} + '%;'"></div>
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <h5 class="fw-bold mb-1 text-dark" th:text="${debt.creditor}"></h5>
+                                <span class="badge" th:classappend="${debt.isPaidOff} ? 'bg-success' : 'bg-danger'" th:text="${debt.isPaidOff ? 'Lunas 🎉' : 'Belum Lunas'}"></span>
+                            </div>
+                            <div class="text-end">
+                                <small class="text-secondary d-block">Jatuh Tempo</small>
+                                <span class="fw-semibold text-dark" th:text="${debt.dueDate != null ? #temporals.format(debt.dueDate, 'dd MMM yyyy') : '-'}"></span>
+                            </div>
                         </div>
 
+                        <div class="d-flex justify-content-between small mb-2 mt-2 border-bottom pb-2">
+                            <span class="text-secondary">Total Hutang:</span>
+                            <strong class="text-dark" th:text="'Rp ' + ${#numbers.formatDecimal(debt.totalAmount, 0, 'COMMA', 0, 'POINT')}"></strong>
+                        </div>
                         <div class="d-flex justify-content-between small mb-3">
-                            <span class="text-muted">Sisa:</span>
-                            <strong class="text-danger" 
-                                    th:text="'Rp ' + ${#numbers.formatDecimal(debt.remainingAmount, 0, 'COMMA', 0, 'POINT')}"></strong>
+                            <span class="text-secondary">Sisa Tunggakan:</span>
+                            <strong class="text-danger" th:text="'Rp ' + ${#numbers.formatDecimal(debt.remainingAmount, 0, 'COMMA', 0, 'POINT')}"></strong>
                         </div>
 
-                        <div class="mt-auto pt-3 border-top border-secondary border-opacity-10">
-                            <form th:action="@{/user/debt/pay}" method="post">
+                        <div class="mt-auto pt-3 border-top" th:if="${!debt.isPaidOff}">
+                            <form th:action="@{/user/debt/pay}" method="post" class="d-flex gap-2">
                                 <input type="hidden" name="debtId" th:value="${debt.id}">
-                                <div class="input-group input-group-sm">
-                                    <input type="number" name="amount" class="form-control" placeholder="Nominal" required>
-                                    <button class="btn btn-success text-white" type="submit">Bayar</button>
-                                </div>
+                                <input type="number" name="amount" class="form-control py-1 px-2" placeholder="Nominal Bayar" required style="font-size: 0.9rem;">
+                                <button class="btn-primary py-1 px-3" type="submit" style="background: var(--success); font-size: 0.9rem; white-space: nowrap;">Bayar</button>
                             </form>
                         </div>
                     </div>
                 </div>
                 
                 <div th:if="${#lists.isEmpty(debts)}" class="col-12">
-                    <div class="glass-card text-center py-5 text-muted">Belum ada data hutang.</div>
+                    <div class="corporate-card text-center py-5 text-secondary">
+                        <p class="mb-0">Belum ada data hutang. Finansial Anda sehat! 🚀</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<div th:replace="~{fragments/footer :: footer}"></div>
+<script th:src="@{/js/bootstrap.min.js}"></script>
 </body>
 </html>

@@ -5,15 +5,20 @@ import com.financeall.model.Wallet;
 import com.financeall.repository.UserRepository;
 import com.financeall.repository.WalletRepository;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
+
     private final UserRepository userRepository;
     private final WalletRepository walletRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public User findById(Long id) {
         return userRepository.findById(id).orElse(null);
@@ -23,54 +28,94 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
     @Transactional
     public void register(User user) {
+        if (userRepository.existsByUsername(user.getUsername()))
+            throw new RuntimeException("Username '" + user.getUsername() + "' sudah digunakan.");
+        if (userRepository.existsByEmail(user.getEmail()))
+            throw new RuntimeException("Email '" + user.getEmail() + "' sudah terdaftar.");
+        if (user.getPassword() == null || user.getPassword().length() < 8)
+            throw new RuntimeException("Password minimal 8 karakter.");
+
         user.setRole("USER");
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
 
     public User login(String username, String password) {
         User user = userRepository.findByUsername(username);
-        if (user != null && user.getPassword().equals(password)) {
-            return user;
+        if (user == null) return null;
+        if (!passwordEncoder.matches(password, user.getPassword())) return null;
+        if (user.isBanned()) {
+            throw new RuntimeException("Akun Anda telah dinonaktifkan. Hubungi admin.");
         }
-        return null;
+        return user;
     }
 
     @Transactional
-    public void updateProfile(User user, User updatedData) {
+    public void updateProfile(User sessionUser, User updatedData) {
+        // FIX: Fetch fresh user from DB instead of using stale session object
+        User user = userRepository.findById(sessionUser.getId())
+                .orElseThrow(() -> new RuntimeException("User tidak ditemukan!"));
+
         user.setFullName(updatedData.getFullName());
         user.setEmail(updatedData.getEmail());
-        if (updatedData.getPassword() != null && !updatedData.getPassword().isEmpty()) {
-            user.setPassword(updatedData.getPassword());
+
+        // HASH PASSWORD BARU - hanya jika diisi dan bukan hash lama
+        if (updatedData.getPassword() != null
+                && !updatedData.getPassword().isEmpty()
+                && !updatedData.getPassword().startsWith("$2a$")) {
+            user.setPassword(
+                    passwordEncoder.encode(updatedData.getPassword())
+            );
         }
-        if (updatedData.getRecoveryPin() != null && !updatedData.getRecoveryPin().isEmpty()) {
+
+        if (updatedData.getRecoveryPin() != null
+                && !updatedData.getRecoveryPin().isEmpty()) {
             user.setRecoveryPin(updatedData.getRecoveryPin());
         }
+
         userRepository.save(user);
     }
 
     @Transactional
-    public void resetPassword(String username, String pin, String newPassword) {
+    public void resetPassword(String username,
+                              String pin,
+                              String newPassword) {
+
         User user = userRepository.findByUsername(username);
-        if (user == null) throw new RuntimeException("Username tidak ditemukan!");
-        if (user.getRecoveryPin() == null || !user.getRecoveryPin().equals(pin)) {
+
+        if (user == null) {
+            throw new RuntimeException("Username tidak ditemukan!");
+        }
+
+        if (user.getRecoveryPin() == null ||
+                !user.getRecoveryPin().equals(pin)) {
             throw new RuntimeException("PIN Pemulihan salah!");
         }
-        user.setPassword(newPassword);
+
+        // HASH PASSWORD BARU
+        user.setPassword(
+                passwordEncoder.encode(newPassword)
+        );
+
         userRepository.save(user);
     }
 
- // Pastikan wallet selalu terinisialisasi dengan balance 0
-@Transactional
-public Wallet getOrCreateWallet(User user) {
-    return walletRepository.findByUser(user).orElseGet(() -> {
-        Wallet newWallet = Wallet.builder()
-                .user(user)
-                .balance(BigDecimal.ZERO)
-                .monthlyLimit(BigDecimal.ZERO)
-                .build();
-        return walletRepository.save(newWallet);
-    });
-}
+    @Transactional
+    public Wallet getOrCreateWallet(User user) {
+        return walletRepository.findByUser(user).orElseGet(() -> {
+            Wallet newWallet = Wallet.builder()
+                    .user(user)
+                    .balance(BigDecimal.ZERO)
+                    .monthlyLimit(BigDecimal.ZERO)
+                    .build();
+            return walletRepository.save(newWallet);
+        });
+    }
+    
 }
