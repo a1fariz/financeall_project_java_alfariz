@@ -11,6 +11,7 @@ import com.financeall.repository.AnnouncementRepository;
 import com.financeall.repository.LevelRepository;
 import com.financeall.repository.AdminLogRepository;
 import com.financeall.service.AdminService;
+import com.financeall.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -33,7 +34,8 @@ public class AdminController {
     private final AnnouncementRepository announcementRepository;
     private final LevelRepository levelRepository;
     private final AdminLogRepository adminLogRepository;
-    private final AdminService adminService;    
+    private final AdminService adminService;
+    private final UserService userService;
     // ==========================================================
     // 1. ADMIN DASHBOARD
     // ==========================================================
@@ -213,5 +215,25 @@ public String deleteUser(@PathVariable Long id, HttpSession session) {
 
         model.addAttribute("adminUser", admin);
         return "admin/profile";
+    }
+
+    @PostMapping("/profile/update")
+    public String updateAdminProfile(@RequestParam String username,
+                                     @RequestParam String email,
+                                     @RequestParam(required = false) String password,
+                                     HttpSession session,
+                                     RedirectAttributes ra) {
+        User admin = (User) session.getAttribute("user");
+        if (admin == null) return "redirect:/login";
+
+        try {
+            userService.updateAdminProfile(admin.getId(), username, email, password);
+            // Refresh session so navbar/profile reflect changes
+            session.setAttribute("user", userService.findById(admin.getId()));
+            return "redirect:/admin/profile?success";
+        } catch (Exception e) {
+            ra.addFlashAttribute("errorMsg", e.getMessage());
+            return "redirect:/admin/profile?error";
+        }
     }
 }

@@ -15,6 +15,7 @@
             <p class="auth-subtitle">Update your personal information</p>
             
             <div th:if="${param.success}" class="alert alert-success">Profile updated successfully!</div>
+            <div th:if="${param.error}" class="alert alert-danger" th:text="${errorMsg} ?: 'Failed to update profile.'">Failed to update profile.</div>
 
             <form th:action="@{/admin/profile/update}" method="post">
                 <div class="form-group">
