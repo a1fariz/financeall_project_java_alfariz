@@ -43,6 +43,10 @@ public class UserService {
 
         user.setRole("USER");
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        // SECURITY FIX: Hash recovery PIN just like a password — never store it plaintext.
+        if (user.getRecoveryPin() != null && !user.getRecoveryPin().isEmpty()) {
+            user.setRecoveryPin(passwordEncoder.encode(user.getRecoveryPin()));
+        }
         userRepository.save(user);
     }
 
@@ -74,9 +78,11 @@ public class UserService {
             );
         }
 
+        // SECURITY FIX: Hash the new recovery PIN before saving.
         if (updatedData.getRecoveryPin() != null
-                && !updatedData.getRecoveryPin().isEmpty()) {
-            user.setRecoveryPin(updatedData.getRecoveryPin());
+                && !updatedData.getRecoveryPin().isEmpty()
+                && !updatedData.getRecoveryPin().startsWith("$2a$")) {
+            user.setRecoveryPin(passwordEncoder.encode(updatedData.getRecoveryPin()));
         }
 
         userRepository.save(user);
@@ -93,8 +99,9 @@ public class UserService {
             throw new RuntimeException("Username tidak ditemukan!");
         }
 
+        // SECURITY FIX: Compare hashed PIN using encoder, not plaintext equals.
         if (user.getRecoveryPin() == null ||
-                !user.getRecoveryPin().equals(pin)) {
+                !passwordEncoder.matches(pin, user.getRecoveryPin())) {
             throw new RuntimeException("PIN Pemulihan salah!");
         }
 

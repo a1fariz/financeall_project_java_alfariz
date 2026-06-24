@@ -93,7 +93,7 @@ public class AdminController {
     }
 
     // Di AdminController.java:
-@GetMapping("/users/delete/{id}")
+@PostMapping("/users/delete/{id}")
 public String deleteUser(@PathVariable Long id, HttpSession session) {
     User admin = (User) session.getAttribute("user");
     if (admin == null) return "redirect:/login";
@@ -148,7 +148,7 @@ public String deleteUser(@PathVariable Long id, HttpSession session) {
         return "redirect:/admin/articles";
     }
 
-    @GetMapping("/articles/delete/{id}")
+    @PostMapping("/articles/delete/{id}")
     public String deleteArticle(@PathVariable Long id, HttpSession session) {
         if (session.getAttribute("user") == null) return "redirect:/login";
 
@@ -183,7 +183,7 @@ public String deleteUser(@PathVariable Long id, HttpSession session) {
         levelRepository.save(level);
         return "redirect:/admin/levels";
     }
-    @GetMapping("/levels/delete/{id}")
+    @PostMapping("/levels/delete/{id}")
     public String deleteLevel(@PathVariable Long id, HttpSession session) {
         if (session.getAttribute("user") == null) return "redirect:/login";
 

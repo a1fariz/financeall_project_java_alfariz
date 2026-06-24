@@ -41,6 +41,28 @@
             </div>
         </div>
     </footer>
+
+    <!--
+        SECURITY FIX (Phase 1): Global double-submit prevention.
+        Prevents accidental duplicate transactions/payments from rapid button clicks.
+        Any form that does NOT have data-allow-multi-submit will disable its button on first click.
+    -->
+    <script th:inline="none">
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('form:not([data-allow-multi-submit])').forEach(function (form) {
+                form.addEventListener('submit', function () {
+                    const buttons = form.querySelectorAll('button[type="submit"]');
+                    buttons.forEach(function (btn) {
+                        btn.disabled = true;
+                        if (!btn.dataset.originalText) {
+                            btn.dataset.originalText = btn.innerHTML;
+                        }
+                        btn.innerHTML = '⏳ Memproses...';
+                    });
+                });
+            });
+        });
+    </script>
 </div>
 
 </body>
