@@ -49,7 +49,6 @@ public class WalletController {
                             .user(user)
                             .balance(BigDecimal.ZERO)
                             .monthlyLimit(BigDecimal.ZERO)
-                            .amount(BigDecimal.ZERO)
                             .build();
                     return walletRepository.save(newWallet);
                 });

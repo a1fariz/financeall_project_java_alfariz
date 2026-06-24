@@ -1,0 +1,14 @@
+target/
+.git/
+.github/
+.idea/
+.vscode/
+.mvn/wrapper/maven-wrapper.jar
+*.iml
+*.log
+*.zip
+*.lnk
+docs/
+*.sql
+!src/main/resources/db/migration/*.sql
+HELP.md

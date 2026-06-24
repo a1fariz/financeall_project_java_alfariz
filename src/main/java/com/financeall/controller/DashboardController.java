@@ -50,8 +50,7 @@ public class DashboardController {
                     Wallet newWallet = Wallet.builder()
                             .user(user)
                             .balance(BigDecimal.ZERO)
-                            .monthlyLimit(BigDecimal.ZERO) 
-                            .amount(BigDecimal.ZERO)
+                            .monthlyLimit(BigDecimal.ZERO)
                             .build();
                     return walletRepository.save(newWallet);
                 });
