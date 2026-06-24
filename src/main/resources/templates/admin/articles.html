@@ -45,7 +45,10 @@
                                 <small class="text-secondary d-block mb-2" th:text="${#temporals.format(a.createdAt, 'dd MMM yyyy HH:mm')}"></small>
                                 <p class="mb-0 text-secondary" style="font-size: 0.95rem;" th:text="${a.content}"></p>
                             </div>
-                            <a th:href="@{/admin/articles/delete/{id}(id=${a.id})}" class="btn-primary py-1 px-2" style="background: var(--danger); font-size: 0.8rem;" onclick="return confirm('Hapus artikel ini?')">🗑️</a>
+                            <form th:action="@{/admin/articles/delete/{id}(id=${a.id})}" method="post" class="m-0"
+                                  onsubmit="return confirm('Hapus artikel ini?')">
+                                <button type="submit" class="btn-primary py-1 px-2" style="background: var(--danger); font-size: 0.8rem;">🗑️</button>
+                            </form>
                         </div>
                     </div>
                 </div>

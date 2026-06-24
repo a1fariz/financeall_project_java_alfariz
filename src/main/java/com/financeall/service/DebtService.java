@@ -42,30 +42,35 @@ public class DebtService {
         repository.save(debt);
     }
 
-    @Transactional // FIX: Kasih transactional karena ada update wallet & debt
-    public void payDebt(Long debtId, BigDecimal amount) {
+    @Transactional
+    public void payDebt(Long debtId, BigDecimal amount, Long authenticatedUserId) {
         DebtItem debt = repository.findById(debtId)
                 .orElseThrow(() -> new RuntimeException("Data hutang tidak ditemukan"));
-        
+
+        // SECURITY FIX (IDOR): Validate that this debt belongs to the authenticated user.
+        // Previously, any user could submit another user's debtId to drain their wallet.
+        if (!debt.getUser().getId().equals(authenticatedUserId)) {
+            throw new RuntimeException("Akses ditolak: Ini bukan hutang Anda!");
+        }
+
         Wallet wallet = walletRepository.findByUser(debt.getUser())
                 .orElseThrow(() -> new RuntimeException("Dompet tidak ditemukan!"));
 
-        // FIX: Cek duitnya ada atau nggak sebelum bayar utang
+        if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new RuntimeException("Nominal pembayaran harus lebih dari 0!");
+        }
+
         if (wallet.getBalance().compareTo(amount) < 0) {
             throw new RuntimeException("Saldo dompet tidak cukup untuk bayar utang!");
         }
 
         BigDecimal currentPaid = debt.getPaidAmount() != null ? debt.getPaidAmount() : BigDecimal.ZERO;
-        BigDecimal newPaid = currentPaid.add(amount);
-        
-        if (newPaid.compareTo(debt.getTotalAmount()) > 0) {
-            newPaid = debt.getTotalAmount();
-        }
-        
-        // FIX: Kurangi saldo dompet
-        wallet.setBalance(wallet.getBalance().subtract(amount));
-        
-        debt.setPaidAmount(newPaid);
+        BigDecimal remaining = debt.getTotalAmount().subtract(currentPaid);
+        BigDecimal actualPayment = amount.compareTo(remaining) > 0 ? remaining : amount;
+
+        wallet.setBalance(wallet.getBalance().subtract(actualPayment));
+        debt.setPaidAmount(currentPaid.add(actualPayment));
+
         walletRepository.save(wallet);
         repository.save(debt);
     }
@@ -82,5 +87,5 @@ public class DebtService {
     repository.delete(debt);
 }
     
-    public void delete(Long id) { repository.deleteById(id); }
+    // NOTE: Removed unsecured public delete(Long id). Use deleteByIdAndUser() instead.
 }

@@ -34,15 +34,20 @@ build/
 
 # ENV
 .env
-
-# IntelliJ
-.idea/
+.env.local
 
 # Build
 target/
 
 # Logs
 *.log
+
+# Archives & shortcuts (junk that crept into the source tree)
+*.zip
+*.lnk
+
+# Local DB dumps (schema is owned by src/main/resources/db/migration)
+/*.sql
 
 # OS
 .DS_Store

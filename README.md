@@ -124,62 +124,68 @@
 
 ## 🚀 Cara Menjalankan
 
-### Prerequisites
+Skema database dikelola otomatis oleh **Flyway** (`src/main/resources/db/migration/V1__init_schema.sql`).
+Tabel dibuat saat aplikasi pertama kali start — tidak perlu load SQL manual.
 
-- **Java 17** atau lebih baru
-- **PostgreSQL** terinstal dan berjalan
-- **Maven** (atau gunakan Maven Wrapper yang sudah disediakan)
+### Opsi A — Docker (direkomendasikan) 🐳
 
-### 1. Clone Repository
-
-```bash
-git clone https://github.com/a1fariz/financeall_project_java_alfariz.git
-cd financeall_project_java_alfariz
-```
-
-### 2. Setup Database
-
-Buat database PostgreSQL:
-
-```sql
-CREATE DATABASE financeall;
-```
-
-### 3. Konfigurasi Database
-
-Edit file `src/main/resources/application-dev.properties`:
-
-```properties
-spring.datasource.url=jdbc:postgresql://localhost:5432/financeall
-spring.datasource.username=postgres
-spring.datasource.password=YOUR_PASSWORD
-```
-
-### 4. Jalankan Aplikasi
+Prasyarat: **Docker** & **Docker Compose**.
 
 ```bash
-# Windows
-.\mvnw.cmd spring-boot:run
+# 1. Siapkan environment
+cp .env.example .env
+#    lalu edit .env: isi POSTGRES_PASSWORD, APP_ADMIN_PASSWORD, APP_ADMIN_RECOVERY_PIN
 
-# Linux / macOS
-./mvnw spring-boot:run
+# 2. Build & jalankan (app + PostgreSQL)
+docker compose up -d --build
+
+# 3. Cek kesehatan
+curl http://localhost:8080/actuator/health   # {"status":"UP"}
 ```
 
-### 5. Akses Aplikasi
+Akses aplikasi di `http://localhost:8080`. Hentikan dengan `docker compose down`
+(tambah `-v` untuk menghapus data database).
 
-Buka browser dan navigasi ke:
+### Opsi B — Lokal (Maven)
 
+Prasyarat: **Java 17+**, **PostgreSQL** berjalan.
+
+```bash
+# Buat database
+createdb financeall
+
+# Set kredensial via environment (jangan hardcode!)
+export SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/financeall
+export SPRING_DATASOURCE_USERNAME=postgres
+export SPRING_DATASOURCE_PASSWORD=your_password
+export SPRING_PROFILES_ACTIVE=dev
+
+# Jalankan
+./mvnw spring-boot:run      # Windows: .\mvnw.cmd spring-boot:run
 ```
-http://localhost:1234
-```
+
+### Konfigurasi (Environment Variables)
+
+| Variable | Wajib | Default | Keterangan |
+|----------|:-----:|---------|-----------|
+| `SPRING_DATASOURCE_URL` | ✅ | — | JDBC URL PostgreSQL |
+| `SPRING_DATASOURCE_USERNAME` | ✅ | — | Username database |
+| `SPRING_DATASOURCE_PASSWORD` | ✅ | — | Password database |
+| `SPRING_PROFILES_ACTIVE` | — | `prod` | `prod` atau `dev` |
+| `APP_ADMIN_PASSWORD` | — | `admin123` | Password admin yang di-seed (first run) |
+| `APP_ADMIN_RECOVERY_PIN` | — | `123456` | Recovery PIN admin (first run) |
+| `PORT` | — | `8080` | Port HTTP |
 
 ### Default Admin Account
 
-| Field | Value |
-|-------|-------|
+Di-seed otomatis saat pertama kali start (gunakan `APP_ADMIN_PASSWORD` /
+`APP_ADMIN_RECOVERY_PIN` untuk meng-override nilai default di bawah).
+
+| Field | Default |
+|-------|---------|
 | Username | `admin` |
-| Password | `admin123` |
-| Recovery PIN | `123456` |
+| Password | `admin123` ⚠️ **ganti di production** |
+| Recovery PIN | `123456` ⚠️ **ganti di production** |
 
 ---
 

@@ -43,6 +43,10 @@ public class UserService {
 
         user.setRole("USER");
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        // SECURITY FIX: Hash recovery PIN just like a password — never store it plaintext.
+        if (user.getRecoveryPin() != null && !user.getRecoveryPin().isEmpty()) {
+            user.setRecoveryPin(passwordEncoder.encode(user.getRecoveryPin()));
+        }
         userRepository.save(user);
     }
 
@@ -74,9 +78,40 @@ public class UserService {
             );
         }
 
+        // SECURITY FIX: Hash the new recovery PIN before saving.
         if (updatedData.getRecoveryPin() != null
-                && !updatedData.getRecoveryPin().isEmpty()) {
-            user.setRecoveryPin(updatedData.getRecoveryPin());
+                && !updatedData.getRecoveryPin().isEmpty()
+                && !updatedData.getRecoveryPin().startsWith("$2a$")) {
+            user.setRecoveryPin(passwordEncoder.encode(updatedData.getRecoveryPin()));
+        }
+
+        userRepository.save(user);
+    }
+
+    /**
+     * Update the admin profile from the admin profile form (username/email/password only).
+     * Does NOT touch fullName/role/recoveryPin, and guards username uniqueness.
+     */
+    @Transactional
+    public void updateAdminProfile(Long adminId, String username, String email, String password) {
+        User user = userRepository.findById(adminId)
+                .orElseThrow(() -> new RuntimeException("Admin tidak ditemukan!"));
+
+        if (username != null && !username.isBlank() && !username.equals(user.getUsername())) {
+            User existing = userRepository.findByUsername(username.trim());
+            if (existing != null && !existing.getId().equals(adminId)) {
+                throw new RuntimeException("Username sudah digunakan!");
+            }
+            user.setUsername(username.trim());
+        }
+
+        if (email != null && !email.isBlank()) {
+            user.setEmail(email.trim());
+        }
+
+        // Hash new password only if provided and not already a hash
+        if (password != null && !password.isEmpty() && !password.startsWith("$2a$")) {
+            user.setPassword(passwordEncoder.encode(password));
         }
 
         userRepository.save(user);
@@ -93,8 +128,9 @@ public class UserService {
             throw new RuntimeException("Username tidak ditemukan!");
         }
 
+        // SECURITY FIX: Compare hashed PIN using encoder, not plaintext equals.
         if (user.getRecoveryPin() == null ||
-                !user.getRecoveryPin().equals(pin)) {
+                !passwordEncoder.matches(pin, user.getRecoveryPin())) {
             throw new RuntimeException("PIN Pemulihan salah!");
         }
 

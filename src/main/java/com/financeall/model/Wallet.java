@@ -17,10 +17,7 @@ public class Wallet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Builder.Default // FIX: Wajib agar Builder tidak membuat nilai ini menjadi null
-    private BigDecimal amount = BigDecimal.ZERO;
 
-    private String walletName; 
 
     @Column(nullable = false)
     @Builder.Default // FIX

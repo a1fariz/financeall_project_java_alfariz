@@ -11,6 +11,7 @@ import com.financeall.repository.AnnouncementRepository;
 import com.financeall.repository.LevelRepository;
 import com.financeall.repository.AdminLogRepository;
 import com.financeall.service.AdminService;
+import com.financeall.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -33,7 +34,8 @@ public class AdminController {
     private final AnnouncementRepository announcementRepository;
     private final LevelRepository levelRepository;
     private final AdminLogRepository adminLogRepository;
-    private final AdminService adminService;    
+    private final AdminService adminService;
+    private final UserService userService;
     // ==========================================================
     // 1. ADMIN DASHBOARD
     // ==========================================================
@@ -93,7 +95,7 @@ public class AdminController {
     }
 
     // Di AdminController.java:
-@GetMapping("/users/delete/{id}")
+@PostMapping("/users/delete/{id}")
 public String deleteUser(@PathVariable Long id, HttpSession session) {
     User admin = (User) session.getAttribute("user");
     if (admin == null) return "redirect:/login";
@@ -148,7 +150,7 @@ public String deleteUser(@PathVariable Long id, HttpSession session) {
         return "redirect:/admin/articles";
     }
 
-    @GetMapping("/articles/delete/{id}")
+    @PostMapping("/articles/delete/{id}")
     public String deleteArticle(@PathVariable Long id, HttpSession session) {
         if (session.getAttribute("user") == null) return "redirect:/login";
 
@@ -183,7 +185,7 @@ public String deleteUser(@PathVariable Long id, HttpSession session) {
         levelRepository.save(level);
         return "redirect:/admin/levels";
     }
-    @GetMapping("/levels/delete/{id}")
+    @PostMapping("/levels/delete/{id}")
     public String deleteLevel(@PathVariable Long id, HttpSession session) {
         if (session.getAttribute("user") == null) return "redirect:/login";
 
@@ -213,5 +215,25 @@ public String deleteUser(@PathVariable Long id, HttpSession session) {
 
         model.addAttribute("adminUser", admin);
         return "admin/profile";
+    }
+
+    @PostMapping("/profile/update")
+    public String updateAdminProfile(@RequestParam String username,
+                                     @RequestParam String email,
+                                     @RequestParam(required = false) String password,
+                                     HttpSession session,
+                                     RedirectAttributes ra) {
+        User admin = (User) session.getAttribute("user");
+        if (admin == null) return "redirect:/login";
+
+        try {
+            userService.updateAdminProfile(admin.getId(), username, email, password);
+            // Refresh session so navbar/profile reflect changes
+            session.setAttribute("user", userService.findById(admin.getId()));
+            return "redirect:/admin/profile?success";
+        } catch (Exception e) {
+            ra.addFlashAttribute("errorMsg", e.getMessage());
+            return "redirect:/admin/profile?error";
+        }
     }
 }

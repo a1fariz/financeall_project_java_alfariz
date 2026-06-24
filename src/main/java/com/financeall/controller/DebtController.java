@@ -56,7 +56,7 @@ public class DebtController {
         if (sessionUser == null) return "redirect:/login";
     
         try {
-            debtService.payDebt(debtId, amount);
+            debtService.payDebt(debtId, amount, sessionUser.getId());
             redirectAttributes.addFlashAttribute("successMsg", "Pembayaran berhasil!");
         } catch (RuntimeException e) {
             redirectAttributes.addFlashAttribute("errorMsg", e.getMessage());
@@ -64,7 +64,7 @@ public class DebtController {
         return "redirect:/user/debt";
     }
     
-    @GetMapping("/delete/{id}")
+    @PostMapping("/delete/{id}")
     public String deleteDebt(@PathVariable Long id, HttpSession session, RedirectAttributes ra) {
         User sessionUser = (User) session.getAttribute("user");
         if (sessionUser == null) return "redirect:/login";

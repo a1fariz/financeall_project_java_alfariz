@@ -1,0 +1,43 @@
+services:
+  db:
+    image: postgres:16
+    container_name: financeall-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-financeall}
+      POSTGRES_USER: ${POSTGRES_USER:-financeall}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-financeall} -d ${POSTGRES_DB:-financeall}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - financeall-net
+
+  app:
+    build: .
+    container_name: financeall-app
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB:-financeall}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-financeall}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      APP_ADMIN_PASSWORD: ${APP_ADMIN_PASSWORD:?set APP_ADMIN_PASSWORD in .env}
+      APP_ADMIN_RECOVERY_PIN: ${APP_ADMIN_RECOVERY_PIN:?set APP_ADMIN_RECOVERY_PIN in .env}
+    ports:
+      - "${APP_PORT:-8080}:8080"
+    networks:
+      - financeall-net
+
+volumes:
+  pgdata:
+
+networks:
+  financeall-net:
