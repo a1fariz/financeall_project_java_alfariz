@@ -1,0 +1,33 @@
+# Render Blueprint — https://render.com/docs/blueprint-spec
+# Deploys the FinanceAll app from the Dockerfile on Render's free tier.
+# The database is NOT defined here — use a free Neon Postgres and set the
+# SPRING_DATASOURCE_* secrets in the Render dashboard (they are sync:false).
+services:
+  - type: web
+    name: financeall
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    region: oregon
+    branch: main
+    # Render hits this to know the app is healthy (Spring Actuator)
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      # Memory tuning for the 512 MB free instance — SerialGC has the smallest
+      # footprint; 55% max heap leaves room for metaspace/threads/native.
+      # Without this, Spring Boot tends to get OOM-killed on free tiers.
+      - key: JAVA_OPTS
+        value: "-XX:MaxRAMPercentage=55.0 -XX:+UseSerialGC -XX:MaxMetaspaceSize=128m"
+      # ---- Secrets: set these in the Render dashboard (sync:false) ----
+      - key: SPRING_DATASOURCE_URL        # jdbc:postgresql://<neon-host>/<db>?sslmode=require
+        sync: false
+      - key: SPRING_DATASOURCE_USERNAME
+        sync: false
+      - key: SPRING_DATASOURCE_PASSWORD
+        sync: false
+      - key: APP_ADMIN_PASSWORD
+        sync: false
+      - key: APP_ADMIN_RECOVERY_PIN
+        sync: false
