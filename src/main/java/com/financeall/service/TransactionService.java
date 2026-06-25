@@ -15,9 +15,13 @@ import java.time.LocalDate;
 @Transactional
 public class TransactionService {
 
+    /** Points awarded for each recorded transaction (drives level progression). */
+    private static final int POINTS_PER_TRANSACTION = 10;
+
     private final TransactionRecordRepository transactionRepository;
     private final WalletRepository walletRepository;
     private final AdminService adminService;
+    private final LevelService levelService;
 
     public Page<TransactionRecord> findUserTransactions(User user, int page) {
         return transactionRepository.findByUser(
@@ -37,6 +41,14 @@ public class TransactionService {
         transactionRepository.save(transaction);
 
         adminService.saveLog(user, "TRANSACTION", "Menambah transaksi: " + transaction.getTitle());
+
+        // Gamification: reward consistent recording so users actually level up.
+        // Guarded so a level-system failure can never break transaction creation.
+        try {
+            levelService.addPoints(user, POINTS_PER_TRANSACTION);
+        } catch (Exception ignored) {
+            // intentionally ignored — gamification is non-critical
+        }
     }
 
     public void deleteTransaction(Long id, User user) {
