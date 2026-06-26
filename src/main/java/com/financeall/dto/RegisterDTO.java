@@ -2,6 +2,7 @@ package com.financeall.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
@@ -23,15 +24,15 @@ public class RegisterDTO {
     private String email;
 
     @NotBlank(message = "Password wajib diisi")
-    @Size(min = 6,
-            message = "Password minimal 6 karakter")
+    @Size(min = 8,
+            message = "Password minimal 8 karakter")
     private String password;
 
     @NotBlank(message = "Konfirmasi password wajib diisi")
     private String confirmPassword;
 
     @NotBlank(message = "Recovery PIN wajib diisi")
-    @Size(min = 4, max = 10,
-            message = "Recovery PIN minimal 4 digit")
+    @Pattern(regexp = "\\d{6}",
+            message = "Recovery PIN harus 6 digit angka")
     private String recoveryPin;
 }

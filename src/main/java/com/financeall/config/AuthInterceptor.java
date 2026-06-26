@@ -39,12 +39,13 @@ public boolean preHandle(HttpServletRequest request,
 }
 
 private boolean isPublicPath(String uri) {
-    return uri.equals("/login")
+    return uri.equals("/")
+            || uri.equals("/login")
             || uri.equals("/register")
-            || uri.equals("/forgot-password")
+            || uri.equals("/reset-password")
+            || uri.equals("/error")
             || uri.startsWith("/css/")
             || uri.startsWith("/js/")
-            || uri.startsWith("/images/")
-            || uri.startsWith("/public/");
+            || uri.startsWith("/images/");
 }
 }

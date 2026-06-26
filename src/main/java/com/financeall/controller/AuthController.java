@@ -4,9 +4,11 @@ import com.financeall.dto.RegisterDTO;
 import com.financeall.model.User;
 import com.financeall.service.UserService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -63,7 +65,12 @@ return "redirect:/user/dashboard";
         return "auth/register";
     }
 @PostMapping("/register")
-    public String processRegister(@ModelAttribute("registerDTO") RegisterDTO registerDTO, Model model) {
+    public String processRegister(@Valid @ModelAttribute("registerDTO") RegisterDTO registerDTO,
+                                  BindingResult bindingResult, Model model) {
+        // Bean validation (@NotBlank/@Email/@Size/@Pattern on RegisterDTO) — render field errors on the form
+        if (bindingResult.hasErrors()) {
+            return "auth/register";
+        }
         try {
             // 1. Cek Password Match
             if (!registerDTO.getPassword().equals(registerDTO.getConfirmPassword())) {
