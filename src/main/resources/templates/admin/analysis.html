@@ -2,55 +2,44 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analysis - FinanceAll</title>
+    <title>Analisis Sistem - FinanceAll</title>
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
     <link th:href="@{/css/style.css}" rel="stylesheet">
 </head>
 <body>
-    <div th:replace="~{fragments/header :: header}"></div>
+<div th:replace="~{fragments/header :: header}"></div>
 
-    <main class="main-content">
-        <h2 class="fw-bold mb-4">System-Wide Analysis 📊</h2>
-        
-        <div class="row g-4 mb-4">
-            <div class="col-md-4">
-                <div class="glass-card stat-card">
-                    <small class="text-secondary d-block">Total Registered Users</small>
-                    <h3 class="fw-bold mt-1 mb-0" th:text="${totalUsers}">0</h3>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="glass-card stat-card" style="border-left-color: var(--warning);">
-                    <small class="text-secondary d-block">Total System Debt</small>
-                    <h3 class="fw-bold mt-1 mb-0" style="color: var(--warning);" th:text="'Rp ' + ${#numbers.formatDecimal(totalSystemDebt ?: 0, 0, 'POINT', 0, 'COMMA')}">Rp 0</h3>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="glass-card stat-card" style="border-left-color: var(--success);">
-                    <small class="text-secondary d-block">Global System Balance</small>
-                    <h3 class="fw-bold mt-1 mb-0" style="color: var(--success);" th:text="'Rp ' + ${#numbers.formatDecimal(globalBalance ?: 0, 0, 'POINT', 0, 'COMMA')}">Rp 0</h3>
-                </div>
+<div class="main-content">
+    <div class="color-block-section color-block-mint mb-4">
+        <span class="eyebrow">METRIK PLATFORM</span>
+        <h2 class="display-lg fw-bold mb-1">System-Wide Financial Analysis</h2>
+        <p class="body-sm mb-0">Analisis statistik platform, distribusi aset, dan likuiditas global pengguna.</p>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-md-6">
+            <div class="corporate-card stat-card p-4 h-100">
+                <span class="caption text-muted">TOTAL CASHFLOW SAAAT INI</span>
+                <h2 class="display-lg fw-bold mt-2" th:classappend="${globalCashflow >= 0} ? 'text-success' : 'text-danger'" th:text="'Rp ' + ${#numbers.formatDecimal(globalCashflow ?: 0, 0, 'POINT', 0, 'COMMA')}"></h2>
             </div>
         </div>
-
-        <div class="glass-card">
-            <h4 class="fw-bold mb-4">Transaction Comparison</h4>
-            <div class="row g-3">
-                <div class="col-md-6">
-                    <div class="p-3 rounded-3" style="background: rgba(16, 185, 129, 0.08); border-left: 4px solid var(--success);">
-                        <small class="text-success d-block fw-semibold">Total All-Time Income</small>
-                        <p class="h5 fw-bold mt-1 mb-0" th:text="'Rp ' + ${#numbers.formatDecimal(totalIncome ?: 0, 0, 'POINT', 0, 'COMMA')}">Rp 0</p>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="p-3 rounded-3" style="background: rgba(239, 68, 68, 0.08); border-left: 4px solid var(--danger);">
-                        <small class="text-danger d-block fw-semibold">Total All-Time Expense</small>
-                        <p class="h5 fw-bold mt-1 mb-0" th:text="'Rp ' + ${#numbers.formatDecimal(totalExpense ?: 0, 0, 'POINT', 0, 'COMMA')}">Rp 0</p>
-                    </div>
-                </div>
+        <div class="col-md-6">
+            <div class="corporate-card stat-card p-4 h-100" style="border-left-color: var(--semantic-success) !important;">
+                <span class="caption text-muted">LIKUIDITAS GLOBAL TERCATAT</span>
+                <h2 class="display-lg fw-bold text-success mt-2" th:text="'Rp ' + ${#numbers.formatDecimal(totalGlobalBalance ?: 0, 0, 'POINT', 0, 'COMMA')}"></h2>
             </div>
         </div>
-    </main>
+    </div>
+
+    <div class="corporate-card p-4 shadow-sm">
+        <h5 class="headline fw-bold mb-3 text-dark">Ringkasan Statistik</h5>
+        <p class="body-sm text-secondary mb-0">
+            Seluruh metrik dihitung secara kumulatif dari total transaksi, dompet aktif, dan dana darurat pengguna di platform.
+        </p>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script th:src="@{/js/bootstrap.min.js}"></script>
 </body>
 </html>

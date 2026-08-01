@@ -8,66 +8,115 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body class="auth-page">
-    <div class="auth-container" style="max-width: 950px;">
-        <div class="auth-banner" style="background-color: #1e293b;">
-            <h2 class="fw-bold mb-3">Join FinanceAll 📈</h2>
-            <p class="mb-0" style="font-size: 1rem; opacity: 0.85; line-height: 1.6;">Mulai pencatatan kekayaan bersih secara riil dengan alokasi otomatis kalkulator Financial Independence.</p>
+
+    <div class="auth-container" style="max-width: 960px;">
+        <!-- LEFT BANNER (FIGMA LIME COLOR BLOCK) -->
+        <div class="auth-banner color-block-lime">
+            <div>
+                <span class="eyebrow mb-2 d-block text-dark opacity-75">JOIN PLATFORM</span>
+                <h2 class="display-lg fw-bold mb-3 text-dark">FinanceAll.</h2>
+                <p class="body-sm text-dark mb-4 opacity-85">
+                    Mulai pencatatan kekayaan bersih secara riil dengan alokasi otomatis kalkulator Financial Independence.
+                </p>
+            </div>
+
+            <!-- MICRO CARD STICKY NOTE (FIGMA STYLE) -->
+            <div class="p-3 bg-white rounded-3 border border-dark border-opacity-10 text-dark">
+                <small class="caption d-block mb-2 text-muted">KEUNTUNGAN MEMBUAT AKUN</small>
+                <ul class="list-unstyled mb-0 body-sm d-flex flex-column gap-1">
+                    <li class="d-flex align-items-center gap-2">
+                        <span class="text-success fw-bold">✓</span> Setup Akun Gratis &amp; Instan
+                    </li>
+                    <li class="d-flex align-items-center gap-2">
+                        <span class="text-success fw-bold">✓</span> Simulasi Pensiun Dini 4% Rule
+                    </li>
+                    <li class="d-flex align-items-center gap-2">
+                        <span class="text-success fw-bold">✓</span> Security PIN Pemulihan 6 Digit
+                    </li>
+                </ul>
+            </div>
         </div>
 
+        <!-- RIGHT FORM WRAPPER -->
         <div class="auth-form-wrapper">
-            <h1 class="fw-bold text-dark mb-1">Create Account</h1>
-            <p class="text-muted small mb-4">Lengkapi formulir di bawah ini dengan data valid</p>
+            <h1 class="headline fw-bold mb-1 text-dark">Create Account</h1>
+            <p class="body-sm text-muted mb-4">Lengkapi formulir di bawah ini dengan data valid</p>
 
-            <div th:if="${error}" class="p-3 mb-3 small rounded-3 bg-danger" style="border-left: 4px solid var(--danger);">
+            <div th:if="${error}" class="p-3 mb-3 badge bg-danger w-100 justify-content-start text-start">
                 <span th:text="${error}"></span>
             </div>
 
             <form th:action="@{/register}" th:object="${registerDTO}" method="post" class="d-flex flex-column gap-3">
                 <div>
-                    <label class="form-label">Nama Lengkap</label>
+                    <label class="form-label">NAMA LENGKAP</label>
                     <input type="text" th:field="*{fullName}" placeholder="Nama Sesuai ID" class="form-control" required>
-                    <small class="text-danger d-block mt-1 small" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></small>
+                    <small class="text-danger d-block mt-1 body-sm" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></small>
                 </div>
                 
                 <div class="row g-3">
                     <div class="col-md-6">
-                        <label class="form-label">Username</label>
-                        <input type="text" th:field="*{username}" placeholder="Pilih username unik" class="form-control" required>
-                        <small class="text-danger d-block mt-1 small" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></small>
+                        <label class="form-label">USERNAME</label>
+                        <input type="text" th:field="*{username}" placeholder="Username unik" class="form-control" required>
+                        <small class="text-danger d-block mt-1 body-sm" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></small>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Email</label>
+                        <label class="form-label">EMAIL</label>
                         <input type="email" th:field="*{email}" placeholder="nama@domain.com" class="form-control" required>
-                        <small class="text-danger d-block mt-1 small" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
+                        <small class="text-danger d-block mt-1 body-sm" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
                     </div>
                 </div>
 
                 <div class="row g-3">
                     <div class="col-md-6">
-                        <label class="form-label">Password</label>
-                        <input type="password" th:field="*{password}" placeholder="••••••••" class="form-control" required>
-                        <small class="text-danger d-block mt-1 small" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></small>
+                        <label class="form-label">PASSWORD</label>
+                        <div class="position-relative">
+                            <input type="password" id="regPasswordInput" th:field="*{password}" placeholder="••••••••" class="form-control pe-5" required>
+                            <button type="button" class="btn btn-link position-absolute end-0 top-50 translate-middle-y text-muted p-2 me-1" onclick="togglePasswordVisibility('regPasswordInput', this)" tabindex="-1" style="text-decoration: none;">
+                                <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>
+                            </button>
+                        </div>
+                        <small class="text-danger d-block mt-1 body-sm" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></small>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Konfirmasi Password</label>
-                        <input type="password" th:field="*{confirmPassword}" placeholder="••••••••" class="form-control" required>
-                        <small class="text-danger d-block mt-1 small" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></small>
+                        <label class="form-label">KONFIRMASI PASSWORD</label>
+                        <div class="position-relative">
+                            <input type="password" id="regConfirmPasswordInput" th:field="*{confirmPassword}" placeholder="••••••••" class="form-control pe-5" required>
+                            <button type="button" class="btn btn-link position-absolute end-0 top-50 translate-middle-y text-muted p-2 me-1" onclick="togglePasswordVisibility('regConfirmPasswordInput', this)" tabindex="-1" style="text-decoration: none;">
+                                <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>
+                            </button>
+                        </div>
+                        <small class="text-danger d-block mt-1 body-sm" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></small>
                     </div>
                 </div>
 
                 <div>
-                    <label class="form-label">Recovery PIN (6 Digit)</label>
-                    <input type="text" th:field="*{recoveryPin}" maxlength="6" placeholder="Contoh: 882910" class="form-control" required>
-                    <small class="text-danger d-block mt-1 small" th:if="${#fields.hasErrors('recoveryPin')}" th:errors="*{recoveryPin}"></small>
+                    <label class="form-label">RECOVERY PIN (6 DIGIT)</label>
+                    <input type="text" th:field="*{recoveryPin}" maxlength="6" placeholder="Contoh: 882910" class="form-control" required pattern="\d{6}">
+                    <small class="text-muted d-block mt-1 body-sm">Gunakan 6 angka rahasia ini jika lupa kata sandi.</small>
+                    <small class="text-danger d-block mt-1 body-sm" th:if="${#fields.hasErrors('recoveryPin')}" th:errors="*{recoveryPin}"></small>
                 </div>
 
-                <button type="submit" class="btn-auth w-100 mt-2">Daftar Akun Baru</button>
+                <button type="submit" class="btn-primary w-100 mt-2">Daftar Akun Baru</button>
             </form>
 
-            <div class="text-center mt-4 small text-muted">
-                Sudah memiliki akun? <a th:href="@{/login}" class="fw-bold text-decoration-none" style="color: var(--accent-blue);">Sign In</a>
+            <div class="text-center mt-4 body-sm text-muted">
+                Sudah memiliki akun? <a th:href="@{/login}" class="fw-bold text-dark text-decoration-none">Sign In</a>
             </div>
         </div>
     </div>
+
+<script>
+function togglePasswordVisibility(inputId, btn) {
+    const input = document.getElementById(inputId);
+    if (input.type === 'password') {
+        input.type = 'text';
+        btn.innerHTML = '<span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg></span>';
+    } else {
+        input.type = 'password';
+        btn.innerHTML = '<span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>';
+    }
+}
+</script>
+
 </body>
 </html>

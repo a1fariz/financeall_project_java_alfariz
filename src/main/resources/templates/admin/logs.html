@@ -2,40 +2,50 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinanceAll</title>
+    <title>System Logs - FinanceAll Admin</title>
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
     <link th:href="@{/css/style.css}" rel="stylesheet">
 </head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
+
 <div class="main-content">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem;">
-        <h1>Activity Logs 📜</h1>
-        <a th:href="@{/admin/dashboard}" style="color:var(--accent);">&larr; Dashboard</a>
+    <div class="color-block-section color-block-navy mb-4">
+        <span class="eyebrow text-uppercase opacity-75" style="color:#ffffff;">AUDIT TRAIL</span>
+        <h2 class="display-lg fw-bold mb-1 text-white">System Activity Logs</h2>
+        <p class="body-sm mb-0 opacity-75" style="color:#ffffff;">Catatan aktivitas audit administrasi dan tindakan penting pada platform.</p>
     </div>
-    <section class="glass-card">
+
+    <div class="corporate-card p-4 shadow-sm">
         <div class="table-container">
             <table class="table-modern">
                 <thead>
                     <tr>
-                        <th>Waktu</th>
-                        <th>User Admin</th>
-                        <th>Aksi</th>
-                        <th>Detail</th>
+                        <th>TANGGAL &amp; WAKTU</th>
+                        <th>ADMIN</th>
+                        <th>AKSI</th>
+                        <th>Rincian Detail</th>
+                        <th>IP ADDRESS</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="log : ${allLogs}">
-                        <td th:text="${#temporals.format(log.createdAt, 'dd MMM HH:mm')}"></td>
-                        <td th:text="${log.user.username}"></td>
-                        <td><span class="badge badge-income" th:text="${log.action}"></span></td>
+                    <tr th:each="log : ${logs ?: allLogs}">
+                        <td th:text="${#temporals.format(log.createdAt, 'dd MMM yyyy HH:mm:ss')}"></td>
+                        <td class="fw-semibold text-dark" th:text="${log.user != null ? log.user.username : 'System'}"></td>
+                        <td><span class="badge bg-secondary" th:text="${log.action}"></span></td>
                         <td th:text="${log.detail}"></td>
+                        <td class="font-monospace text-muted" th:text="${log.ipAddress != null ? log.ipAddress : '127.0.0.1'}"></td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(logs ?: allLogs)}">
+                        <td colspan="5" class="text-center py-5 text-muted body-sm">Belum ada catatan aktivitas audit.</td>
                     </tr>
                 </tbody>
             </table>
         </div>
-    </section>
+    </div>
 </div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script th:src="@{/js/bootstrap.min.js}"></script>
 </body>
 </html>

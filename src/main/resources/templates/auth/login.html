@@ -8,47 +8,90 @@
     <link th:href="@{/css/style.css}" rel="stylesheet">
 </head>
 <body class="auth-page">
+
     <div class="auth-container">
-        <div class="auth-banner">
-            <h2 class="fw-bold mb-3">Secure Access 🔐</h2>
-            <p class="mb-0" style="font-size: 1rem; opacity: 0.85; line-height: 1.6;">Kelola dana darurat, pantau debt payoff tracker, dan akselerasi kebebasan finansial Anda di platform terintegrasi.</p>
+        <!-- LEFT BANNER (FIGMA SIGNATURE LILAC COLOR BLOCK) -->
+        <div class="auth-banner color-block-lilac">
+            <div>
+                <span class="eyebrow mb-2 d-block text-dark opacity-75">SECURE ACCESS</span>
+                <h2 class="display-lg fw-bold mb-3 text-dark">FinanceAll.</h2>
+                <p class="body-sm text-dark mb-4 opacity-85">
+                    Kelola dana darurat, pantau arus kas bulanan, dan akselerasi target kebebasan finansial Anda di platform terintegrasi.
+                </p>
+            </div>
+
+            <!-- MICRO CARD STICKY NOTE (FIGMA STYLE) -->
+            <div class="p-3 bg-white rounded-3 border border-dark border-opacity-10 text-dark">
+                <small class="caption d-block mb-2 text-muted">FITUR UNGGLAN</small>
+                <ul class="list-unstyled mb-0 body-sm d-flex flex-column gap-1">
+                    <li class="d-flex align-items-center gap-2">
+                        <span class="text-success fw-bold">✓</span> Otomatisasi Kalkulator FI Goals
+                    </li>
+                    <li class="d-flex align-items-center gap-2">
+                        <span class="text-success fw-bold">✓</span> Jaring Pengaman Dana Darurat
+                    </li>
+                    <li class="d-flex align-items-center gap-2">
+                        <span class="text-success fw-bold">✓</span> Bebas Iklan &amp; Data Terenkripsi
+                    </li>
+                </ul>
+            </div>
         </div>
         
+        <!-- RIGHT FORM WRAPPER -->
         <div class="auth-form-wrapper d-flex flex-column justify-content-center">
-            <h1 class="fw-bold text-dark mb-1" style="letter-spacing: -0.03em;">Sign In</h1>
-            <p class="text-muted small mb-4">Masukkan kredensial akun Anda untuk melanjutkan</p>
+            <h1 class="headline fw-bold mb-1 text-dark">Sign In</h1>
+            <p class="body-sm text-muted mb-4">Masukkan kredensial akun Anda untuk melanjutkan</p>
 
-            <div th:if="${error}" class="p-3 mb-3 small rounded-3 bg-danger" style="border-left: 4px solid var(--danger);">
+            <div th:if="${error}" class="p-3 mb-3 badge bg-danger w-100 justify-content-start text-start">
                 <span th:text="${error}"></span>
             </div>
-            <div th:if="${success}" class="p-3 mb-3 small rounded-3 bg-success" style="border-left: 4px solid var(--success);">
+            <div th:if="${success}" class="p-3 mb-3 badge bg-success w-100 justify-content-start text-start">
                 <span th:text="${success}"></span>
             </div>
 
             <form th:action="@{/login}" method="post" class="d-flex flex-column gap-3">
                 <div>
-                    <label class="form-label">Username</label>
-                    <input type="text" name="username" placeholder="Masukkan username" required class="form-control">
+                    <label class="form-label">USERNAME</label>
+                    <input type="text" name="username" placeholder="Masukkan username" required class="form-control" autocomplete="username">
                 </div>
                 <div>
-                    <label class="form-label">Password</label>
-                    <input type="password" name="password" placeholder="••••••••" required class="form-control">
+                    <label class="form-label">PASSWORD</label>
+                    <div class="position-relative">
+                        <input type="password" id="passwordInput" name="password" placeholder="••••••••" required class="form-control pe-5" autocomplete="current-password">
+                        <button type="button" class="btn btn-link position-absolute end-0 top-50 translate-middle-y text-muted p-2 me-1" onclick="togglePasswordVisibility('passwordInput', this)" tabindex="-1" style="text-decoration: none;">
+                            <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>
+                        </button>
+                    </div>
                 </div>
                 
                 <div class="d-flex justify-content-between align-items-center mt-1 mb-2">
-                    <label class="d-flex align-items-center gap-2 small text-secondary" style="cursor: pointer;">
-                        <input type="checkbox" style="accent-color: var(--accent-blue);"> Tetap Masuk
+                    <label class="d-flex align-items-center gap-2 body-sm text-secondary" style="cursor: pointer;">
+                        <input type="checkbox" style="accent-color: #000000;"> Tetap Masuk
                     </label>
-                    <a th:href="@{/reset-password}" class="small text-decoration-none fw-semibold" style="color: var(--accent-blue);">Lupa Password?</a>
+                    <a th:href="@{/reset-password}" class="caption fw-semibold text-dark text-decoration-none">Lupa Password?</a>
                 </div>
                 
-                <button type="submit" class="btn-auth w-100">Masuk Aplikasi</button>
+                <button type="submit" class="btn-primary w-100 mt-2">Masuk Aplikasi</button>
             </form>
             
-            <div class="text-center mt-4 small text-muted">
-                Belum terdaftar? <a th:href="@{/register}" class="fw-bold text-decoration-none" style="color: var(--accent-blue);">Buat Akun Baru</a>
+            <div class="text-center mt-4 body-sm text-muted">
+                Belum terdaftar? <a th:href="@{/register}" class="fw-bold text-dark text-decoration-none">Buat Akun Baru</a>
             </div>
         </div>
     </div>
+
+<script>
+function togglePasswordVisibility(inputId, btn) {
+    const input = document.getElementById(inputId);
+    if (input.type === 'password') {
+        input.type = 'text';
+        btn.innerHTML = '<span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg></span>';
+    } else {
+        input.type = 'password';
+        btn.innerHTML = '<span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>';
+    }
+}
+</script>
+
 </body>
 </html>

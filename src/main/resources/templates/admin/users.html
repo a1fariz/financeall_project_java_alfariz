@@ -2,60 +2,79 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Manage Users - FinanceAll</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management - FinanceAll</title>
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
     <link th:href="@{/css/style.css}" rel="stylesheet">
 </head>
 <body>
+
 <div th:replace="~{fragments/header :: header}"></div>
 
 <div class="main-content">
-    <div class="glass-card mb-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
-        <h3 class="fw-bold mb-0">👥 User Management</h3>
-        <form th:action="@{/admin/users}" method="get" class="d-flex gap-2">
-            <input type="hidden" name="sortBy" th:value="${currentSort}">
-            <input type="text" name="keyword" th:value="${keyword}" placeholder="Search username..." class="form-control" style="max-width: 240px;">
-            <button type="submit" class="btn-primary">Search</button>
-        </form>
+    <div class="color-block-section color-block-cream mb-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <div>
+            <span class="eyebrow">ADMINISTRATION</span>
+            <h2 class="display-lg fw-bold mb-1">User Management</h2>
+            <p class="body-sm mb-0">Kelola akun pengguna, status banned, dan hak akses sistem.</p>
+        </div>
+        <a th:href="@{/admin/users(sortField=${sortField ?: 'id'}, sortDir=${(sortDir ?: 'asc') == 'asc' ? 'desc' : 'asc'})}" class="btn-secondary" style="font-size: 0.85rem;">
+            Sort Direction: <span th:text="${(sortDir ?: 'asc').toUpperCase()}">ASC</span>
+        </a>
     </div>
 
-    <div class="table-container">
-        <table class="table-modern">
-            <thead>
-                <tr>
-                    <th><a th:href="@{/admin/users(sortBy='username', keyword=${keyword})}" class="text-decoration-none">Username ↕</a></th>
-                    <th><a th:href="@{/admin/users(sortBy='email', keyword=${keyword})}" class="text-decoration-none">Email ↕</a></th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="u : ${users}">
-                    <td th:text="${u.username}" class="fw-bold"></td>
-                    <td th:text="${u.email}"></td>
-                    <td>
-                        <span class="badge" 
-                              th:style="${u.banned} ? 'background: var(--danger); color: white;' : 'background: var(--success); color: white;'"
-                              th:text="${u.banned ? 'Banned' : 'Active'}"></span>
-                    </td>
-                    <td>
-                        <div class="d-flex gap-2">
-                            <form th:action="@{/admin/users/ban/{id}(id=${u.id})}" method="post" class="m-0">
-                                <button type="submit" class="btn-auth py-2 px-3 text-sm" style="font-size: 0.85rem;" th:text="${u.banned ? '✅ Unban' : '🚫 Ban'}"></button>
-                            </form>
-                            <form th:action="@{/admin/users/delete/{id}(id=${u.id})}" method="post" class="m-0"
-                                  onsubmit="return confirm('Hapus user ini selamanya? Tindakan ini tidak dapat dibatalkan.')">
-                                <button type="submit" class="btn-primary py-2 px-3 text-sm" style="background: var(--danger); font-size: 0.85rem;">🗑️ Delete</button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-                <tr th:if="${#lists.isEmpty(users)}">
-                    <td colspan="4" class="text-center text-secondary py-5">No users found.</td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="corporate-card p-4 shadow-sm">
+        <div class="table-container">
+            <table class="table-modern">
+                <thead>
+                    <tr>
+                        <th>
+                            <a th:href="@{/admin/users(sortField='id', sortDir=${(sortDir ?: 'asc') == 'asc' ? 'desc' : 'asc'})}" class="text-decoration-none text-dark">ID</a>
+                        </th>
+                        <th>
+                            <a th:href="@{/admin/users(sortField='username', sortDir=${(sortDir ?: 'asc') == 'asc' ? 'desc' : 'asc'})}" class="text-decoration-none text-dark">USERNAME</a>
+                        </th>
+                        <th>
+                            <a th:href="@{/admin/users(sortField='email', sortDir=${(sortDir ?: 'asc') == 'asc' ? 'desc' : 'asc'})}" class="text-decoration-none text-dark">EMAIL</a>
+                        </th>
+                        <th>ROLE</th>
+                        <th>STATUS</th>
+                        <th class="text-center">AKSI</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="u : ${users}">
+                        <td th:text="${u.id}"></td>
+                        <td class="fw-semibold text-dark" th:text="${u.username}"></td>
+                        <td th:text="${u.email}"></td>
+                        <td><span class="badge bg-secondary" th:text="${u.role}"></span></td>
+                        <td>
+                            <span class="badge" th:classappend="${u.isBanned} ? 'bg-danger' : 'bg-success'" th:text="${u.isBanned ? 'Banned' : 'Active'}"></span>
+                        </td>
+                        <td class="text-center">
+                            <div class="d-inline-flex gap-2">
+                                <a th:if="${u.isBanned}" th:href="@{/admin/users/unban/{id}(id=${u.id})}" class="btn-success py-1 px-3" style="font-size: 0.8rem; text-decoration: none;">
+                                    <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+                                    Unban
+                                </a>
+                                <a th:if="${!u.isBanned}" th:href="@{/admin/users/ban/{id}(id=${u.id})}" class="btn-warning py-1 px-3" style="font-size: 0.8rem; text-decoration: none;">
+                                    <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></span>
+                                    Ban
+                                </a>
+                                <a th:href="@{/admin/users/delete/{id}(id=${u.id})}" class="btn-danger py-1 px-3" style="font-size: 0.8rem; text-decoration: none;" onclick="return confirm('Apakah Anda yakin ingin menghapus user ini?')">
+                                    <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></span>
+                                    Hapus
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script th:src="@{/js/bootstrap.min.js}"></script>
 </body>
 </html>

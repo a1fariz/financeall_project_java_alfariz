@@ -10,17 +10,18 @@
 <div th:replace="~{fragments/header :: header}"></div>
 
 <div class="main-content d-flex justify-content-center">
-    <div class="corporate-card" style="width: 100%; max-width: 600px; padding: 2.5rem;">
+    <div class="corporate-card p-4" style="width: 100%; max-width: 640px;">
         
         <div class="mb-4 text-center">
-            <h2 class="fw-bold text-dark mb-1">Pengaturan Profil 👤</h2>
-            <p class="text-secondary small">Perbarui informasi pribadi dan keamanan akun Anda.</p>
+            <span class="eyebrow">PENGATURAN AKUN</span>
+            <h2 class="headline fw-bold text-dark mb-1">Pengaturan Profil</h2>
+            <p class="body-sm text-secondary">Perbarui informasi pribadi dan keamanan akun Anda.</p>
         </div>
 
-        <div th:if="${successMsg}" class="p-3 mb-4 rounded-3 bg-success" style="border-left: 4px solid var(--success);">
+        <div th:if="${successMsg}" class="p-3 mb-4 badge bg-success w-100 justify-content-start text-start">
             <span th:text="${successMsg}"></span>
         </div>
-        <div th:if="${errorMsg}" class="p-3 mb-4 rounded-3 bg-danger" style="border-left: 4px solid var(--danger);">
+        <div th:if="${errorMsg}" class="p-3 mb-4 badge bg-danger w-100 justify-content-start text-start">
             <span th:text="${errorMsg}"></span>
         </div>
 
@@ -28,30 +29,32 @@
             <input type="hidden" name="id" th:value="${user.id}">
             
             <div>
-                <label class="form-label">Nama Lengkap</label>
+                <label class="form-label">NAMA LENGKAP</label>
                 <input type="text" name="fullName" th:value="${user.fullName}" class="form-control" required>
             </div>
             
             <div>
-                <label class="form-label">Alamat Email</label>
+                <label class="form-label">ALAMAT EMAIL</label>
                 <input type="email" name="email" th:value="${user.email}" class="form-control" required>
             </div>
             
-            <div class="p-3 mt-2 rounded-3" style="background-color: #f8fafc; border: 1px solid var(--border-light);">
-                <label class="form-label text-danger">Ubah Password (Opsional)</label>
+            <div class="p-3 mt-2 rounded-3" style="background-color: var(--color-surface-soft); border: 1px solid var(--color-hairline);">
+                <label class="form-label text-danger">UBAH PASSWORD (OPSIONAL)</label>
                 <input type="password" name="password" class="form-control" placeholder="Biarkan kosong jika tidak ingin mengubah sandi">
             </div>
 
             <div>
-                <label class="form-label">Recovery PIN (6 Digit)</label>
+                <label class="form-label">RECOVERY PIN (6 DIGIT)</label>
                 <input type="text" name="recoveryPin" th:value="${user.recoveryPin}" class="form-control" maxlength="6" required>
-                <small class="text-muted mt-1 d-block">Pastikan Anda mengingat PIN ini untuk reset password.</small>
+                <small class="caption text-muted mt-1 d-block">Pastikan Anda mengingat PIN ini untuk reset password.</small>
             </div>
 
-            <button type="submit" class="btn-auth mt-3 w-100">Simpan Perubahan</button>
+            <button type="submit" class="btn-primary mt-3 w-100">Simpan Perubahan</button>
         </form>
     </div>
 </div>
 
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script th:src="@{/js/bootstrap.min.js}"></script>
 </body>
 </html>

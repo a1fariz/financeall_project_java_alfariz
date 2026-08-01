@@ -7,46 +7,63 @@
         <div class="container">
             <div class="row g-4">
                 <div class="col-lg-6">
-                    <h3 class="fw-bold m-0" style="color: #ffffff;">
-                        Finance<span style="color: var(--success);">All.</span>
+                    <h3 class="card-title m-0" style="color: var(--color-ink);">
+                        Finance<span style="color: var(--semantic-success);">All.</span>
                     </h3>
-                    <p class="mt-3 mb-0" style="max-width: 480px; font-size: 0.9rem; line-height: 1.7; color: #94a3b8;">
+                    <p class="mt-3 mb-0 body-sm" style="max-width: 480px; color: #555555;">
                         Platform manajemen keuangan cerdas untuk memantau aset, mengelola dana darurat, simulasi utang, hingga melacak target Financial Independence Anda.
                     </p>
                 </div>
 
                 <div class="col-lg-3 col-6">
-                    <h5 class="fw-bold mb-3" style="font-size: 0.95rem; letter-spacing: 0.5px; color: #ffffff;">Navigasi</h5>
+                    <h5 class="caption mb-3" style="color: var(--color-ink);">NAVIGASI</h5>
                     <div class="d-flex flex-column gap-2">
-                        <a th:href="${session.user != null ? ((session.user.role == 'ADMIN') ? '/admin/dashboard' : '/user/dashboard') : '/login'}" class="footer-link">Dashboard</a>
-                        <a th:if="${session.user != null && session.user.role == 'USER'}" th:href="@{/user/wallet}" class="footer-link">Dompet &amp; Saldo</a>
-                        <a th:if="${session.user != null && session.user.role == 'USER'}" th:href="@{/user/transaction}" class="footer-link">Riwayat Transaksi</a>
-                        <a th:if="${session.user == null}" th:href="@{/login}" class="footer-link">Masuk Ke Sistem</a>
+                        <a th:href="${session.user != null ? ((session.user.role == 'ADMIN') ? '/admin/dashboard' : '/user/dashboard') : '/login'}" class="footer-link">
+                            <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg></span>
+                            Dashboard
+                        </a>
+                        <a th:if="${session.user != null && session.user.role == 'USER'}" th:href="@{/user/wallet}" class="footer-link">
+                            <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span>
+                            Dompet &amp; Saldo
+                        </a>
+                        <a th:if="${session.user != null && session.user.role == 'USER'}" th:href="@{/user/transaction}" class="footer-link">
+                            <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
+                            Riwayat Transaksi
+                        </a>
+                        <a th:if="${session.user == null}" th:href="@{/login}" class="footer-link">
+                            <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg></span>
+                            Masuk Ke Sistem
+                        </a>
                     </div>
                 </div>
 
                 <div class="col-lg-3 col-6">
-                    <h5 class="fw-bold mb-3" style="font-size: 0.95rem; letter-spacing: 0.5px; color: #ffffff;">Teknologi</h5>
-                    <div class="d-flex flex-column gap-2" style="font-size: 0.9rem; color: #94a3b8;">
-                        <span>🍃 Java Spring Boot</span>
-                        <span>🐘 PostgreSQL DB</span>
-                        <span>🎨 Thymeleaf Engine</span>
+                    <h5 class="caption mb-3" style="color: var(--color-ink);">TEKNOLOGI</h5>
+                    <div class="d-flex flex-column gap-2 body-sm" style="color: #555555;">
+                        <span class="d-inline-flex align-items-center gap-2">
+                            <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg></span>
+                            Java Spring Boot
+                        </span>
+                        <span class="d-inline-flex align-items-center gap-2">
+                            <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg></span>
+                            PostgreSQL DB
+                        </span>
+                        <span class="d-inline-flex align-items-center gap-2">
+                            <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.92 0 1.5-.75 1.5-1.5 0-.41-.15-.79-.4-1.08-.26-.29-.42-.68-.42-1.11 0-.92.75-1.67 1.67-1.67H16c3.31 0 6-2.69 6-6 0-4.96-4.49-9-10-9z"/></svg></span>
+                            Thymeleaf Engine
+                        </span>
                     </div>
                 </div>
             </div>
 
-            <div class="mt-4 pt-3 d-flex justify-content-between flex-wrap gap-2" style="border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.8rem;">
-                <span style="color: #64748b;">© 2026 FinanceAll System. All rights reserved.</span>
-                <span style="color: #64748b;">Built with Precision by Alfarizi</span>
+            <div class="mt-4 pt-3 d-flex justify-content-between flex-wrap gap-2 caption" style="border-top: 1px solid var(--color-hairline); color: #888888;">
+                <span>© 2026 FinanceAll System. All rights reserved.</span>
+                <span>Built with Precision by Alfarizi</span>
             </div>
         </div>
     </footer>
 
-    <!--
-        SECURITY FIX (Phase 1): Global double-submit prevention.
-        Prevents accidental duplicate transactions/payments from rapid button clicks.
-        Any form that does NOT have data-allow-multi-submit will disable its button on first click.
-    -->
+    <!-- Global double-submit prevention script -->
     <script th:inline="none">
         document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('form:not([data-allow-multi-submit])').forEach(function (form) {
@@ -57,7 +74,7 @@
                         if (!btn.dataset.originalText) {
                             btn.dataset.originalText = btn.innerHTML;
                         }
-                        btn.innerHTML = '⏳ Memproses...';
+                        btn.innerHTML = 'Memproses...';
                     });
                 });
             });

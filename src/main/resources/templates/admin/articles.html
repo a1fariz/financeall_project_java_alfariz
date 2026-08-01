@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Manage Articles - FinanceAll</title>
+    <title>Manajemen Artikel &amp; Pengumuman - FinanceAll</title>
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
     <link th:href="@{/css/style.css}" rel="stylesheet">
 </head>
@@ -10,51 +10,62 @@
 <div th:replace="~{fragments/header :: header}"></div>
 
 <div class="main-content">
+    <div class="color-block-section color-block-cream mb-4">
+        <span class="eyebrow">PUBLIKASI CONTENT</span>
+        <h2 class="display-lg fw-bold mb-1">Articles &amp; Announcements</h2>
+        <p class="body-sm mb-0">Publikasikan informasi terbaru dan pengumuman kepada pengguna FinanceAll.</p>
+    </div>
+
+    <div th:if="${successMsg}" class="p-3 mb-4 badge bg-success w-100 justify-content-start text-start">
+        <span th:text="${successMsg}"></span>
+    </div>
+
     <div class="row g-4">
         <div class="col-lg-5">
-            <div class="glass-card">
-                <h3 class="fw-bold mb-1">📢 Create Article</h3>
-                <p class="text-secondary mb-4">Broadcast information to all users</p>
-                
+            <div class="corporate-card p-4">
+                <h5 class="headline fw-bold mb-3 text-dark">Buat Artikel / Pengumuman</h5>
                 <form th:action="@{/admin/articles/add}" method="post" class="d-flex flex-column gap-3">
                     <div>
-                        <label class="form-label small fw-semibold">Article Title</label>
-                        <input type="text" name="title" placeholder="Enter title..." required class="form-control">
+                        <label class="form-label">JUDUL ARTIKEL</label>
+                        <input type="text" name="title" class="form-control" required placeholder="Judul pengumuman...">
                     </div>
                     <div>
-                        <label class="form-label small fw-semibold">Content Body</label>
-                        <textarea name="content" rows="5" class="form-control" placeholder="Write your message here..." required></textarea>
+                        <label class="form-label">KONTEN ARTIKEL</label>
+                        <textarea name="content" class="form-control" rows="5" required placeholder="Tulis isi pengumuman atau artikel finansial di sini..."></textarea>
                     </div>
-                    <button type="submit" class="btn-auth mt-2">🚀 Post Article</button>
+                    <button type="submit" class="btn-primary w-100 mt-2">Terbitkan Artikel</button>
                 </form>
             </div>
         </div>
 
         <div class="col-lg-7">
-            <div class="glass-card">
-                <h3 class="fw-bold mb-4">Recent Published Articles</h3>
-                <div th:if="${#lists.isEmpty(articles)}" class="text-center py-4 text-secondary opacity-75">
-                    No articles published yet.
-                </div>
+            <div class="corporate-card p-4">
+                <h5 class="headline fw-bold mb-4 text-dark">Daftar Artikel Terbit</h5>
                 
-                <div class="d-flex flex-column gap-3">
-                    <div th:each="a : ${articles}" class="p-3 rounded-3" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-color);">
-                        <div class="d-flex justify-content-between align-items-start gap-2">
-                            <div>
-                                <h5 class="fw-bold mb-1" style="color: var(--accent);" th:text="${a.title}"></h5>
-                                <small class="text-secondary d-block mb-2" th:text="${#temporals.format(a.createdAt, 'dd MMM yyyy HH:mm')}"></small>
-                                <p class="mb-0 text-secondary" style="font-size: 0.95rem;" th:text="${a.content}"></p>
+                <div th:if="${#lists.isEmpty(announcements)}" class="text-center py-5 text-muted body-sm">
+                    Belum ada artikel yang diterbitkan.
+                </div>
+
+                <div th:if="${!#lists.isEmpty(announcements)}" class="d-flex flex-column gap-3">
+                    <div th:each="ann : ${announcements}" class="p-3 rounded-3 color-block-cream border d-flex justify-content-between align-items-start gap-3">
+                        <div>
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <h6 class="fw-bold mb-0 text-dark" th:text="${ann.title}"></h6>
+                                <span class="badge bg-secondary" th:text="${#temporals.format(ann.createdAt, 'dd MMM yyyy')}"></span>
                             </div>
-                            <form th:action="@{/admin/articles/delete/{id}(id=${a.id})}" method="post" class="m-0"
-                                  onsubmit="return confirm('Hapus artikel ini?')">
-                                <button type="submit" class="btn-primary py-1 px-2" style="background: var(--danger); font-size: 0.8rem;">🗑️</button>
-                            </form>
+                            <p class="body-sm mb-0 text-secondary" th:text="${ann.content}"></p>
                         </div>
+                        <a th:href="@{/admin/articles/delete/{id}(id=${ann.id})}" class="btn-danger py-1 px-3" style="font-size: 0.8rem; text-decoration: none;" onclick="return confirm('Hapus artikel ini?')">
+                            Hapus
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script th:src="@{/js/bootstrap.min.js}"></script>
 </body>
 </html>

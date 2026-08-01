@@ -10,13 +10,19 @@
 <div th:replace="~{fragments/header :: header}"></div>
 
 <div class="main-content d-flex justify-content-center">
-    <div class="corporate-card" style="width: 100%; max-width: 600px; padding: 2.5rem;">
+    <div class="corporate-card p-4" style="width: 100%; max-width: 640px;">
 
         <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
-            <h3 class="fw-bold text-dark mb-0">Edit Transaksi ✏️</h3>
+            <div>
+                <span class="eyebrow">EDIT ENTRY</span>
+                <h3 class="headline fw-bold text-dark mb-0">Edit Transaksi</h3>
+            </div>
             
             <form th:action="@{/user/transaction/delete/{id}(id=${transaction.id})}" method="post" class="m-0">
-                <button type="submit" class="btn btn-sm btn-outline-danger fw-semibold" onclick="return confirm('Apakah Anda yakin ingin menghapus transaksi ini? Saldo dompet akan disesuaikan kembali.')">🗑️ Hapus</button>
+                <button type="submit" class="btn-danger py-1 px-3" style="font-size: 0.85rem;" onclick="return confirm('Apakah Anda yakin ingin menghapus transaksi ini? Saldo dompet akan disesuaikan kembali.')">
+                    <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></span>
+                    Hapus
+                </button>
             </form>
         </div>
 
@@ -25,17 +31,17 @@
             <input type="hidden" name="type" th:value="${transaction.type}">
 
             <div>
-                <label class="form-label">Judul Transaksi</label>
+                <label class="form-label">JUDUL TRANSAKSI</label>
                 <input type="text" name="title" th:value="${transaction.title}" class="form-control" required>
             </div>
 
             <div class="row g-3">
                 <div class="col-md-6">
-                    <label class="form-label">Nominal (Rp)</label>
+                    <label class="form-label">NOMINAL (RP)</label>
                     <input type="number" name="amount" th:value="${transaction.amount}" class="form-control" required>
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label">Tanggal Transaksi</label>
+                    <label class="form-label">TANGGAL TRANSAKSI</label>
                     <input type="date" name="transactionDate" 
                            th:value="${#temporals.format(transaction.transactionDate, 'yyyy-MM-dd')}" 
                            class="form-control" required>
@@ -43,26 +49,27 @@
             </div>
 
             <div>
-                <label class="form-label">Kategori</label>
+                <label class="form-label">KATEGORI</label>
                 <select name="category" class="form-select">
                     <option th:each="cat : ${categories}" th:value="${cat}" th:text="${cat}" th:selected="${cat == transaction.category}"></option>
                 </select>
             </div>
 
             <div>
-                <label class="form-label">Keterangan Tambahan</label>
+                <label class="form-label">KETERANGAN TAMBAHAN</label>
                 <input type="text" name="description" th:value="${transaction.description}" class="form-control">
             </div>
 
             <div class="d-flex gap-3 mt-4">
-                <a th:href="@{/user/transaction}" class="btn btn-secondary flex-fill fw-semibold py-2">Batal</a>
-                <button type="submit" class="btn-auth flex-fill py-2">Simpan Perubahan</button>
+                <a th:href="@{/user/transaction}" class="btn-secondary flex-fill text-center">Batal</a>
+                <button type="submit" class="btn-primary flex-fill">Simpan Perubahan</button>
             </div>
         </form>
 
     </div>
 </div>
 
+<div th:replace="~{fragments/footer :: footer}"></div>
 <script th:src="@{/js/bootstrap.min.js}"></script>
 </body>
 </html>

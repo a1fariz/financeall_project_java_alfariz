@@ -12,37 +12,40 @@
 <div th:replace="~{fragments/header :: header}"></div>
 
 <div class="main-content">
-    <div class="corporate-card mb-4 d-flex justify-content-between align-items-center flex-wrap gap-3" style="background: var(--nav-dark); color: white;">
-        <div>
-            <h2 class="fw-bold mb-1 text-white">Dana Darurat 🛡️</h2>
-            <p class="mb-0" style="color: #94a3b8;">Bangun jaring pengaman finansial Anda.</p>
-        </div>
-        <div class="text-md-end">
-            <small style="color: #94a3b8;">Progress Saat Ini</small>
-            <h2 class="fw-bold m-0" style="color: var(--success);" th:text="${#numbers.formatDecimal(progress, 0, 1)} + '%'">0%</h2>
+    <div class="color-block-section color-block-lilac mb-4">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <span class="eyebrow">PROTEKSI FINANSIAL</span>
+                <h2 class="display-lg fw-bold mb-1">Dana Darurat</h2>
+                <p class="body-sm mb-0">Bangun jaring pengaman finansial Anda untuk menghadapi ketidakpastian.</p>
+            </div>
+            <div class="text-md-end p-3 rounded-4" style="background: rgba(255,255,255,0.4); border: 1px solid rgba(0,0,0,0.08);">
+                <small class="caption d-block mb-1">PROGRESS SAAT INI</small>
+                <h2 class="headline fw-bold m-0 text-dark" th:text="${#numbers.formatDecimal(progress, 0, 1)} + '%'">0%</h2>
+            </div>
         </div>
     </div>
 
-    <div class="corporate-card mb-4">
+    <div class="corporate-card mb-4 p-4">
         <div class="d-flex justify-content-between mb-2">
-            <small class="fw-bold text-secondary">Progress Menuju Target</small>
-            <small class="fw-bold text-dark" th:text="'Target: Rp ' + ${#numbers.formatDecimal(emergencyFund.targetAmount, 0, 'POINT', 0, 'COMMA')}"></small>
+            <span class="caption text-muted">PROGRESS MENUJU TARGET</span>
+            <span class="caption text-dark" th:text="'TARGET: RP ' + ${#numbers.formatDecimal(emergencyFund.targetAmount, 0, 'POINT', 0, 'COMMA')}"></span>
         </div>
-        <div class="progress" style="height: 14px; background: rgba(0,0,0,0.05); border-radius: 10px; overflow: hidden;">
-            <div class="progress-bar" role="progressbar" th:style="'width: ' + ${progress} + '%; background-color: var(--accent-blue);'"></div>
+        <div class="progress-track">
+            <div class="progress-fill" th:style="'width: ' + ${progress} + '%; background-color: var(--color-primary);'"></div>
         </div>
         
         <div class="row g-3 mt-3">
             <div class="col-md-6">
-                <div class="p-3 rounded-3" style="background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.2);">
-                    <small class="text-secondary d-block">Terkumpul Saat Ini</small>
-                    <h4 class="fw-bold mt-1 mb-0 text-success" th:text="'Rp ' + ${#numbers.formatDecimal(emergencyFund.currentAmount, 0, 'POINT', 0, 'COMMA')}"></h4>
+                <div class="p-3 rounded-3 color-block-mint" style="border: 1px solid rgba(30,166,74,0.2);">
+                    <small class="caption text-muted d-block mb-1">TERKUMPUL SAAT INI</small>
+                    <h4 class="headline fw-bold mt-1 mb-0 text-success" th:text="'Rp ' + ${#numbers.formatDecimal(emergencyFund.currentAmount, 0, 'POINT', 0, 'COMMA')}"></h4>
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="p-3 rounded-3" style="background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2);">
-                    <small class="text-secondary d-block">Kekurangan Dana</small>
-                    <h4 class="fw-bold mt-1 mb-0 text-danger" th:text="'Rp ' + ${#numbers.formatDecimal(emergencyFund.targetAmount.subtract(emergencyFund.currentAmount), 0, 'POINT', 0, 'COMMA')}"></h4>
+                <div class="p-3 rounded-3 color-block-pink" style="border: 1px solid rgba(239,68,68,0.2);">
+                    <small class="caption text-muted d-block mb-1">KEKURANGAN DANA</small>
+                    <h4 class="headline fw-bold mt-1 mb-0 text-danger" th:text="'Rp ' + ${#numbers.formatDecimal(emergencyFund.targetAmount.subtract(emergencyFund.currentAmount), 0, 'POINT', 0, 'COMMA')}"></h4>
                 </div>
             </div>
         </div>
@@ -50,22 +53,22 @@
 
     <div class="row g-4">
         <div class="col-lg-6">
-            <div class="corporate-card h-100">
-                <h5 class="fw-bold mb-3 text-dark">Update Tabungan 💸</h5>
+            <div class="corporate-card h-100 p-4">
+                <h5 class="headline fw-bold mb-3 text-dark">Update Tabungan</h5>
                 <form th:action="@{/user/emergency/update}" method="post" class="d-flex flex-column gap-3">
                     <div>
-                        <label class="form-label">Tambahkan Dana (Rp)</label>
+                        <label class="form-label">TAMBAHKAN DANA (RP)</label>
                         <input type="number" name="amount" class="form-control" required placeholder="Contoh: 500000">
                     </div>
-                    <button type="submit" class="btn-primary mt-2">Simpan ke Dana Darurat</button>
+                    <button type="submit" class="btn-primary mt-2 w-100">Simpan ke Dana Darurat</button>
                 </form>
             </div>
         </div>
 
         <div class="col-lg-6">
-            <div class="corporate-card h-100 stat-card">
-                <h5 class="fw-bold mb-3 text-dark">Financial Insight 💡</h5>
-                <p class="text-secondary mb-0" style="line-height:1.7;">
+            <div class="corporate-card h-100 stat-card p-4">
+                <h5 class="headline fw-bold mb-3 text-dark">Financial Insight</h5>
+                <p class="body-sm text-secondary mb-0" style="line-height:1.7;">
                     Dana darurat adalah benteng utama Anda dari krisis (seperti PHK, sakit, atau alat kerja rusak). 
                     Menabung sedikit demi sedikit jauh lebih baik daripada tidak sama sekali. 
                     <br><br><strong>Estimasi Capaian:</strong> Jika Anda konsisten menabung sesuai rencana, target ini akan tercapai dalam <strong><span th:text="${estimatedMonths}"></span> bulan</strong> lagi.
@@ -74,6 +77,8 @@
         </div>
     </div>
 </div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
 
 <script th:src="@{/js/bootstrap.min.js}"></script>
 </body>

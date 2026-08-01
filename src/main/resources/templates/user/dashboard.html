@@ -13,89 +13,284 @@
 
 <div class="main-content">
 
-    <div class="corporate-card p-4 mb-4 shadow-sm" style="background-color: var(--nav-dark); color: white;">
-        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-            <div>
-                <h2 class="fw-bold mb-1 text-white">Hello, <span th:text="${user != null ? user.fullName : 'User'}" style="color: var(--success);">User</span> 👋</h2>
-                <p class="mb-0" style="color: #94a3b8;">Ringkasan finansial Anda hari ini.</p>
+    <!-- 1. SIMPLE & CLEAN HERO HERO COLOR BLOCK (DESIGN-figma.md: color-block-section-lilac) -->
+    <div class="color-block-lilac mb-4">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-8">
+                <span class="eyebrow d-block mb-2">OVERVIEW PORTOFOLIO KEUANGAN</span>
+                <h1 class="display-lg text-dark mb-2 fw-bold">
+                    Halo, <span th:text="${user != null ? user.fullName : 'User'}">User</span>!
+                </h1>
+                <p class="body-lg text-dark mb-4 opacity-85" style="max-width: 540px;">
+                    Kelola saldo dompet, kontrol arus kas bulanan, dan akselerasi target kebebasan finansial Anda di platform terintegrasi.
+                </p>
+                
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+                    <button type="button" class="btn-primary py-2 px-4" data-bs-toggle="modal" data-bs-target="#quickIncomeModal">
+                        <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+                        + Catat Pemasukan
+                    </button>
+                    <button type="button" class="btn-secondary py-2 px-4" data-bs-toggle="modal" data-bs-target="#quickExpenseModal">
+                        <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+                        - Catat Pengeluaran
+                    </button>
+                </div>
             </div>
-            <div class="text-md-end">
-                <small style="color: #94a3b8;">Saldo Aktif</small>
-                <h3 class="fw-bold text-success m-0" th:text="${wallet != null ? 'Rp ' + #numbers.formatDecimal(wallet.balance,0,'POINT',0,'COMMA') : 'Rp 0'}"></h3>
+            
+            <div class="col-lg-4 text-lg-end">
+                <div class="bento-card p-4 text-start text-dark bg-white shadow-sm" style="border-radius: var(--radius-lg);">
+                    <span class="caption text-muted d-block mb-1">TOTAL SALDO UTAMA</span>
+                    <h2 class="headline text-dark mb-2 fw-bold" style="font-size: 32px;" th:text="${wallet != null ? 'Rp ' + #numbers.formatDecimal(wallet.balance,0,'POINT',0,'COMMA') : 'Rp 0'}">Rp 0</h2>
+                    <span class="badge bg-success">WALLET READY</span>
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- 2. ANNOUNCEMENTS (IF ANY) -->
     <div th:if="${announcements != null && !#lists.isEmpty(announcements)}" class="mb-4">
-        <div th:each="ann : ${announcements}" class="corporate-card p-3 shadow-sm mb-3 d-flex gap-3 align-items-start" style="border-left: 5px solid var(--accent-blue); background: #f0fdf4;">
-            <div style="font-size: 1.5rem;">📢</div>
+        <div th:each="ann : ${announcements}" class="bento-card color-block-cream p-4 mb-3 d-flex gap-3 align-items-start border-0">
+            <div class="icon-badge">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            </div>
             <div>
                 <div class="d-flex align-items-center gap-2 mb-1">
-                    <h5 class="fw-bold mb-0 text-dark" th:text="${ann.title}"></h5>
-                    <span class="badge bg-secondary opacity-75" style="font-size: 0.75rem;" th:text="${#temporals.format(ann.createdAt,'dd MMM yyyy')}"></span>
+                    <h5 class="headline fw-bold mb-0 text-dark" th:text="${ann.title}"></h5>
+                    <span class="badge bg-secondary" th:text="${#temporals.format(ann.createdAt,'dd MMM yyyy')}"></span>
                 </div>
-                <p class="mb-0 text-dark" style="font-size: 0.95rem;" th:text="${ann.content}"></p>
+                <p class="body-sm mb-0 text-dark" th:text="${ann.content}"></p>
             </div>
         </div>
     </div>
 
+    <!-- 3. METRIC STAT CARDS (4 COLUMNS - DESIGN-figma.md STYLE) -->
     <div class="row g-4 mb-4">
-        <div class="col-lg-4 col-md-6">
-            <div class="corporate-card p-4 h-100 stat-card shadow-sm" style="border-left-color: var(--success);">
-                <small class="text-secondary fw-bold text-uppercase">Pemasukan Bulan Ini</small>
-                <h3 class="fw-bold text-dark mt-2" th:text="'Rp ' + ${#numbers.formatDecimal(totalIncome,0,'POINT',0,'COMMA')}">Rp 0</h3>
+        <div class="col-lg-3 col-md-6">
+            <div class="bento-card metric-bento">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="caption text-muted">PEMASUKAN BULAN INI</span>
+                    <span class="svg-icon text-success"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span>
+                </div>
+                <div>
+                    <h3 class="headline fw-bold text-dark mb-1" th:text="'Rp ' + ${#numbers.formatDecimal(totalIncome,0,'POINT',0,'COMMA')}">Rp 0</h3>
+                    <small class="caption text-success d-block">TOTAL AKUMULASI INFLOW</small>
+                </div>
             </div>
         </div>
-        <div class="col-lg-4 col-md-6">
-            <div class="corporate-card p-4 h-100 stat-card shadow-sm" style="border-left-color: var(--danger);">
-                <small class="text-secondary fw-bold text-uppercase">Pengeluaran Bulan Ini</small>
-                <h3 class="fw-bold text-dark mt-2" th:text="'Rp ' + ${#numbers.formatDecimal(totalExpense,0,'POINT',0,'COMMA')}">Rp 0</h3>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="bento-card metric-bento">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="caption text-muted">PENGELUARAN BULAN INI</span>
+                    <span class="svg-icon text-danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg></span>
+                </div>
+                <div>
+                    <h3 class="headline fw-bold text-dark mb-1" th:text="'Rp ' + ${#numbers.formatDecimal(totalExpense,0,'POINT',0,'COMMA')}">Rp 0</h3>
+                    <small class="caption text-danger d-block">TOTAL AKUMULASI OUTFLOW</small>
+                </div>
             </div>
         </div>
-        <div class="col-lg-4 col-md-6">
-            <div class="corporate-card p-4 h-100 stat-card shadow-sm" style="border-left-color: var(--warning);">
-                <small class="text-secondary fw-bold text-uppercase">Cashflow (Arus Kas)</small>
-                <h3 class="fw-bold mt-2" th:classappend="${cashflow >= 0} ? 'text-success' : 'text-danger'" th:text="'Rp ' + ${#numbers.formatDecimal(cashflow,0,'POINT',0,'COMMA')}">Rp 0</h3>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="bento-card metric-bento">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="caption text-muted">ARUS KAS BERSIH</span>
+                    <span class="svg-icon text-warning"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
+                </div>
+                <div>
+                    <h3 class="headline fw-bold mb-1" th:classappend="${cashflow >= 0} ? 'text-success' : 'text-danger'" th:text="'Rp ' + ${#numbers.formatDecimal(cashflow,0,'POINT',0,'COMMA')}">Rp 0</h3>
+                    <small class="caption d-block" th:classappend="${cashflow >= 0} ? 'text-success' : 'text-danger'" th:text="${cashflow >= 0} ? 'SURPLUS (+)' : 'DEFISIT (-)'"></small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="bento-card metric-bento">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="caption text-muted">LIMIT BULANAN</span>
+                    <span class="svg-icon text-muted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+                </div>
+                <div>
+                    <h3 class="headline fw-bold text-dark mb-1" th:text="${wallet != null && wallet.monthlyLimit != null ? 'Rp ' + #numbers.formatDecimal(wallet.monthlyLimit,0,'POINT',0,'COMMA') : 'Rp 0'}">Rp 0</h3>
+                    <small class="caption text-muted d-block">ANGGARAN MAKSIMAL</small>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="corporate-card p-4 shadow-sm">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h5 class="fw-bold m-0 text-dark">Transaksi Terakhir</h5>
-            <a th:href="@{/user/transaction}" class="btn-primary text-decoration-none py-1 px-3" style="font-size: 0.85rem;">Lihat Semua</a>
-        </div>
-        
-        <div th:if="${#lists.isEmpty(recentTransactions)}" class="text-center py-5 text-secondary">
-            <p>Belum ada transaksi. Mulai catat keuangan Anda.</p>
+    <!-- 4. SPLIT BENTO CONTENT GRID (65% TABLE | 35% QUICK WIDGETS) -->
+    <div class="row g-4">
+        <!-- LEFT PANEL (65%): RECENT TRANSACTIONS TABLE -->
+        <div class="col-lg-7">
+            <div class="bento-card h-100 p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <span class="caption text-muted d-block mb-1">MUTASI REKENING</span>
+                        <h4 class="headline fw-bold text-dark mb-0">Riwayat Transaksi</h4>
+                    </div>
+                    <a th:href="@{/user/transaction}" class="btn-secondary py-1 px-3" style="font-size: 0.85rem; text-decoration: none;">Lihat Semua &rarr;</a>
+                </div>
+
+                <div th:if="${#lists.isEmpty(recentTransactions)}" class="text-center py-5 body-sm text-secondary">
+                    <div class="icon-badge mx-auto mb-3" style="width: 54px; height: 54px;">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    </div>
+                    <p class="mb-1 fw-bold text-dark fs-5">Belum Ada Catatan Transaksi</p>
+                    <p class="text-muted mb-3">Mulai catat arus masuk dan keluar dana Anda untuk memantau keuangan.</p>
+                    <button type="button" class="btn-primary py-2 px-4" data-bs-toggle="modal" data-bs-target="#quickIncomeModal">
+                        + Catat Transaksi Pertama
+                    </button>
+                </div>
+
+                <div th:if="${!#lists.isEmpty(recentTransactions)}" class="table-container">
+                    <table class="table-modern">
+                        <thead>
+                        <tr>
+                            <th>TANGGAL</th>
+                            <th>JUDUL TRANSAKSI</th>
+                            <th>TIPE</th>
+                            <th>KATEGORI</th>
+                            <th class="text-end">NOMINAL</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="trx : ${recentTransactions}">
+                            <td class="font-monospace text-muted" th:text="${#temporals.format(trx.transactionDate,'dd MMM yyyy')}"></td>
+                            <td class="fw-semibold text-dark" th:text="${trx.title}"></td>
+                            <td>
+                                <span class="badge" th:classappend="${trx.type.name() == 'INCOME'} ? 'bg-success' : 'bg-danger'" th:text="${trx.type.name()}"></span>
+                            </td>
+                            <td><span class="badge bg-secondary" th:text="${trx.category}"></span></td>
+                            <td class="fw-bold text-end" th:classappend="${trx.type.name() == 'INCOME'} ? 'text-success' : 'text-danger'" th:text="'Rp ' + ${#numbers.formatDecimal(trx.amount,0,'POINT',0,'COMMA')}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
 
-        <div th:if="${!#lists.isEmpty(recentTransactions)}" class="table-container">
-            <table class="table-modern">
-                <thead>
-                <tr>
-                    <th>Tanggal</th>
-                    <th>Judul</th>
-                    <th>Tipe</th>
-                    <th>Kategori</th>
-                    <th class="text-end">Nominal</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="trx : ${recentTransactions}">
-                    <td th:text="${#temporals.format(trx.transactionDate,'dd MMM yyyy')}"></td>
-                    <td class="fw-semibold text-dark" th:text="${trx.title}"></td>
-                    <td>
-                        <span class="badge" th:classappend="${trx.type.name() == 'INCOME'} ? 'bg-success' : 'bg-danger'" th:text="${trx.type.name()}"></span>
-                    </td>
-                    <td><span class="badge bg-secondary" th:text="${trx.category}"></span></td>
-                    <td class="fw-bold text-end" th:classappend="${trx.type.name() == 'INCOME'} ? 'text-success' : 'text-danger'" th:text="'Rp ' + ${#numbers.formatDecimal(trx.amount,0,'POINT',0,'COMMA')}"></td>
-                </tr>
-                </tbody>
-            </table>
+        <!-- RIGHT PANEL (35%): PASTEL COLOR BLOCK SERVICE CARDS -->
+        <div class="col-lg-5">
+            <div class="d-flex flex-column gap-4 h-100">
+                <!-- WIDGET 1: DANA DARURAT (MINT BLOCK) -->
+                <div class="color-block-mint p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="caption text-dark">DANA DARURAT</span>
+                        <a th:href="@{/user/emergency}" class="caption text-dark fw-bold text-decoration-none">Kelola &rarr;</a>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-2">Proteksi Keuangan</h5>
+                    <p class="body-sm mb-3 text-dark opacity-85">Jaring pengaman finansial Anda saat terjadi risiko mendadak.</p>
+                    <a th:href="@{/user/emergency}" class="btn-primary w-100 text-center py-2" style="font-size: 0.85rem; text-decoration: none;">Tabung Dana Darurat</a>
+                </div>
+
+                <!-- WIDGET 2: FI GOALS (LIME BLOCK) -->
+                <div class="color-block-lime p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="caption text-dark">BEBAS KERJA (FI)</span>
+                        <a th:href="@{/user/fi}" class="caption text-dark fw-bold text-decoration-none">Simulasi &rarr;</a>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-2">Target Pensiun Dini</h5>
+                    <p class="body-sm mb-3 text-dark opacity-85">Hitung angka kemerdekaan finansial dengan simulasi aturan 4%.</p>
+                    <a th:href="@{/user/fi}" class="btn-primary w-100 text-center py-2" style="font-size: 0.85rem; text-decoration: none;">Hitung Target FI</a>
+                </div>
+
+                <!-- WIDGET 3: MANAJEMEN UTANG (NAVY BLOCK) -->
+                <div class="color-block-navy p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="caption text-white opacity-75">KEWAJIBAN &amp; UTANG</span>
+                        <a th:href="@{/user/debt}" class="caption text-white fw-bold text-decoration-none">Pantau &rarr;</a>
+                    </div>
+                    <h5 class="fw-bold text-white mb-2">Debt Payoff Tracker</h5>
+                    <p class="body-sm mb-3 text-white opacity-80">Lacak dan bayar kewajiban secara teratur tanpa beban stres.</p>
+                    <a th:href="@{/user/debt}" class="btn-secondary w-100 text-center py-2" style="font-size: 0.85rem; text-decoration: none; background: #ffffff; color: var(--color-ink) !important;">Lihat Status Utang</a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<!-- QUICK PEMASUKAN MODAL -->
+<div class="modal fade" id="quickIncomeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bento-card p-0 overflow-hidden" style="border-radius: var(--radius-lg);">
+            <div class="modal-header border-bottom p-4">
+                <h5 class="headline fw-bold text-dark mb-0">Tambah Pemasukan</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form th:action="@{/user/transaction/add}" method="post">
+                <input type="hidden" name="type" value="INCOME">
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label class="form-label">JUDUL TRANSAKSI</label>
+                        <input type="text" name="title" class="form-control" required placeholder="Contoh: Gaji Bulanan / Bonus">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">NOMINAL (RP)</label>
+                        <input type="number" name="amount" class="form-control" required min="1" placeholder="1000000">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">TANGGAL</label>
+                        <input type="date" name="transactionDate" class="form-control" required th:value="${#temporals.format(#temporals.createNow(),'yyyy-MM-dd')}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">KATEGORI</label>
+                        <select name="category" class="form-select">
+                            <option value="GAJI">GAJI</option>
+                            <option value="LAINNYA">LAINNYA</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer border-top p-4">
+                    <button type="submit" class="btn-success w-100 py-2">Simpan Pemasukan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- QUICK PENGELUARAN MODAL -->
+<div class="modal fade" id="quickExpenseModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bento-card p-0 overflow-hidden" style="border-radius: var(--radius-lg);">
+            <div class="modal-header border-bottom p-4">
+                <h5 class="headline fw-bold text-dark mb-0">Tambah Pengeluaran</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form th:action="@{/user/transaction/add}" method="post">
+                <input type="hidden" name="type" value="EXPENSE">
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label class="form-label">JUDUL TRANSAKSI</label>
+                        <input type="text" name="title" class="form-control" required placeholder="Contoh: Belanja Bulanan / Makan">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">NOMINAL (RP)</label>
+                        <input type="number" name="amount" class="form-control" required min="1" placeholder="50000">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">TANGGAL</label>
+                        <input type="date" name="transactionDate" class="form-control" required th:value="${#temporals.format(#temporals.createNow(),'yyyy-MM-dd')}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">KATEGORI</label>
+                        <select name="category" class="form-select">
+                            <option value="MAKANAN">MAKANAN</option>
+                            <option value="TRANSPORT">TRANSPORT</option>
+                            <option value="HIBURAN">HIBURAN</option>
+                            <option value="TAGIHAN">TAGIHAN</option>
+                            <option value="LAINNYA">LAINNYA</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer border-top p-4">
+                    <button type="submit" class="btn-danger w-100 py-2">Simpan Pengeluaran</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
 
 <script th:src="@{/js/bootstrap.min.js}"></script>
 </body>

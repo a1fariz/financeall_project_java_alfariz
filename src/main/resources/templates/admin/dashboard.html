@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th=\"http://www.thymeleaf.org\">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,35 +12,40 @@
 <div th:replace="~{fragments/header :: header}"></div>
 
 <div class="main-content">
-    <div class="glass-card mb-4">
+    <div class="color-block-section color-block-navy mb-4">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
             <div>
-                <h1 class="fw-bold mb-1">Admin Dashboard 🛠️</h1>
-                <p class="text-secondary mb-0">Monitor FinanceAll system activity and metrics.</p>
+                <span class="eyebrow text-uppercase opacity-75" style="color: #ffffff;">SYSTEM CONTROL</span>
+                <h1 class="display-lg fw-bold mb-1 text-white">Admin Dashboard</h1>
+                <p class="body-sm mb-0 opacity-75" style="color: #ffffff;">Monitor FinanceAll system activity and platform metrics.</p>
             </div>
-            <div class="text-md-end">
-                <small class="text-secondary d-block">System Status</small>
-                <span class="badge" style="background: var(--success); color: white;">ACTIVE</span>
+            <div class="text-md-end p-3 rounded-4" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);">
+                <small class="caption d-block mb-1 opacity-75" style="color: #ffffff;">SYSTEM STATUS</small>
+                <span class="badge bg-success">ACTIVE</span>
             </div>
         </div>
     </div>
 
     <div class="row g-4 mb-4">
-        <div class="col-md-3">
-            <div class="glass-card stat-card h-100 d-flex align-items-center gap-3">
-                <div class="stat-icon"><i class="bi bi-people"></i>👥</div>
+        <div class="col-md-6">
+            <div class="corporate-card stat-card p-4 h-100 d-flex align-items-center gap-3">
+                <div class="icon-box">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-3-3.87"/><path d="M9 21v-2a4 4 0 0 1 3-3.87"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><circle cx="16" cy="3.13" r="3"/></svg>
+                </div>
                 <div>
-                    <small class="text-secondary d-block">Total Users</small>
-                    <h3 class="fw-bold mb-0" th:text="${totalUsers}">0</h3>
+                    <span class="caption text-muted d-block">TOTAL USERS</span>
+                    <h3 class="headline fw-bold mb-0 text-dark" th:text="${totalUsers}">0</h3>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="glass-card stat-card h-100 d-flex align-items-center gap-3" style="border-left-color: var(--success);">
-                <div class="stat-icon" style="color: var(--success); background: rgba(16,185,129,0.1);"><i class="bi bi-wallet"></i>💰</div>
+        <div class="col-md-6">
+            <div class="corporate-card stat-card p-4 h-100 d-flex align-items-center gap-3" style="border-left-color: var(--semantic-success) !important;">
+                <div class="icon-box" style="background: var(--block-mint); border-color: rgba(30,166,74,0.3);">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                </div>
                 <div>
-                    <small class="text-secondary d-block">Global Balance</small>
-                    <h4 class="fw-bold mb-0" th:text="'Rp ' + ${#numbers.formatDecimal(globalBalance ?: 0, 0, 'POINT', 0, 'COMMA')}">Rp 0</h4>
+                    <span class="caption text-muted d-block">GLOBAL BALANCE</span>
+                    <h3 class="headline fw-bold mb-0 text-success" th:text="'Rp ' + ${#numbers.formatDecimal(globalBalance ?: 0, 0, 'POINT', 0, 'COMMA')}">Rp 0</h3>
                 </div>
             </div>
         </div>
@@ -48,29 +53,29 @@
 
     <div class="row g-4">
         <div class="col-lg-7">
-            <div class="glass-card h-100">
+            <div class="corporate-card p-4 h-100">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h3 class="fw-bold mb-0">System Logs 📜</h3>
-                    <a th:href="@{/admin/logs}" class="nav-link p-0" style="color: var(--accent);">View All &rarr;</a>
+                    <h3 class="headline fw-bold mb-0 text-dark">System Logs</h3>
+                    <a th:href="@{/admin/logs}" class="caption fw-bold" style="color: var(--color-ink);">View All &rarr;</a>
                 </div>
                 
                 <div class="table-container">
                     <table class="table-modern">
                         <thead>
                             <tr>
-                                <th>Admin</th>
-                                <th>Action</th>
-                                <th>Detail</th>
+                                <th>ADMIN</th>
+                                <th>ACTION</th>
+                                <th>DETAIL</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr th:each="log : ${latestLogs}">
-                                <td th:text="${log.user.username}" class="fw-semibold"></td>
-                                <td><span class="badge bg-secondary text-uppercase" th:text="${log.action}"></span></td>
+                                <td th:text="${log.user.username}" class="fw-semibold text-dark"></td>
+                                <td><span class="badge bg-secondary" th:text="${log.action}"></span></td>
                                 <td th:text="${log.detail}"></td>
                             </tr>
                             <tr th:if="${#lists.isEmpty(latestLogs)}">
-                                <td colspan="3" class="text-center text-secondary py-4">No recent logs available.</td>
+                                <td colspan="3" class="text-center text-secondary py-4 body-sm">No recent logs available.</td>
                             </tr>
                         </tbody>
                     </table>
@@ -79,20 +84,20 @@
         </div>
 
         <div class="col-lg-5">
-            <div class="glass-card h-100">
-                <h3 class="fw-bold mb-4">Latest Users 👥</h3>
+            <div class="corporate-card p-4 h-100">
+                <h3 class="headline fw-bold mb-4 text-dark">Latest Users</h3>
                 
-                <div th:if="${#lists.isEmpty(latestUsers)}" class="empty-state">
-                    <h5>No users found</h5>
+                <div th:if="${#lists.isEmpty(latestUsers)}" class="text-center py-4 body-sm text-muted">
+                    <p class="mb-0">No users found</p>
                 </div>
 
                 <div th:if="${!#lists.isEmpty(latestUsers)}" class="d-flex flex-column gap-3">
-                    <div th:each="u : ${latestUsers}" class="d-flex justify-content-between align-items-center p-3 rounded-3" style="background: rgba(255,255,255,0.04); border: 1px solid var(--border-color);">
+                    <div th:each="u : ${latestUsers}" class="d-flex justify-content-between align-items-center p-3 rounded-3" style="background: var(--color-surface-soft); border: 1px solid var(--color-hairline);">
                         <div>
-                            <h6 class="fw-bold mb-0" th:text="${u.username}"></h6>
-                            <small class="text-secondary" th:text="${u.email}"></small>
+                            <h6 class="fw-bold mb-0 text-dark" th:text="${u.username}"></h6>
+                            <small class="caption text-muted" th:text="${u.email}"></small>
                         </div>
-                        <span class="badge" style="background: var(--accent); color: white;" th:text="${u.role}"></span>
+                        <span class="badge bg-secondary" th:text="${u.role}"></span>
                     </div>
                 </div>
             </div>
@@ -100,6 +105,7 @@
     </div>
 </div>
 
+<div th:replace="~{fragments/footer :: footer}"></div>
 <script th:src="@{/js/bootstrap.min.js}"></script>
 </body>
 </html>

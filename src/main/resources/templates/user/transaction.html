@@ -11,92 +11,104 @@
 <div th:replace="~{fragments/header :: header}"></div>
 
 <div class="main-content">
-    <div class="corporate-card mb-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+    <div class="color-block-section color-block-lime mb-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
         <div>
-            <h2 class="fw-bold mb-1 text-dark">Riwayat Transaksi 📊</h2>
-            <p class="text-secondary mb-0">Catat pemasukan dan pengeluaran Anda.</p>
+            <span class="eyebrow">ARUS KAS</span>
+            <h2 class="display-lg fw-bold mb-1">Riwayat Transaksi</h2>
+            <p class="body-sm mb-0">Catat pemasukan dan pengeluaran Anda dengan detail.</p>
         </div>
         <div class="d-flex gap-2">
-            <button type="button" class="btn-primary" style="background: var(--success);" data-bs-toggle="modal" data-bs-target="#incomeModal">➕ Pemasukan</button>
-            <button type="button" class="btn-primary" style="background: var(--danger);" data-bs-toggle="modal" data-bs-target="#expenseModal">➖ Pengeluaran</button>
+            <button type="button" class="btn-primary" data-bs-toggle="modal" data-bs-target="#incomeModal">
+                <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+                Pemasukan
+            </button>
+            <button type="button" class="btn-danger" data-bs-toggle="modal" data-bs-target="#expenseModal">
+                <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+                Pengeluaran
+            </button>
         </div>
     </div>
 
-    <div th:if="${errorMsg}" class="p-3 mb-4 rounded-3 bg-danger" style="border-left: 4px solid var(--danger);">
+    <div th:if="${errorMsg}" class="p-3 mb-4 badge bg-danger w-100 justify-content-start text-start">
         <span th:text="${errorMsg}"></span>
     </div>
-    <div th:if="${successMsg}" class="p-3 mb-4 rounded-3 bg-success" style="border-left: 4px solid var(--success);">
+    <div th:if="${successMsg}" class="p-3 mb-4 badge bg-success w-100 justify-content-start text-start">
         <span th:text="${successMsg}"></span>
     </div>
 
-    <div class="table-container shadow-sm">
-        <table class="table-modern">
-            <thead>
-            <tr>
-                <th>Tanggal</th>
-                <th>Judul</th>
-                <th>Kategori</th>
-                <th>Tipe</th>
-                <th class="text-end">Nominal</th>
-                <th>Deskripsi</th>
-                <th class="text-center">Aksi</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:if="${#lists.isEmpty(transactions)}">
-                <td colspan="7" class="text-center py-5 text-muted">Belum ada transaksi.</td>
-            </tr>
-            <tr th:each="trx : ${transactions}">
-                <td th:text="${trx.transactionDate != null ? #temporals.format(trx.transactionDate, 'dd MMM yyyy') : '-'}"></td>
-                <td class="fw-semibold text-dark" th:text="${trx.title}"></td>
-                <td><span class="badge bg-secondary" th:text="${trx.category}"></span></td>
-                <td><span class="badge" th:classappend="${trx.type.name() == 'INCOME'} ? 'bg-success' : 'bg-danger'" th:text="${trx.type.name()}"></span></td>
-                <td class="fw-bold text-end" th:classappend="${trx.type.name() == 'INCOME'} ? 'text-success' : 'text-danger'" th:text="${(trx.type.name() == 'EXPENSE' ? '- ' : '+ ') + 'Rp ' + #numbers.formatDecimal(trx.amount, 0, 'POINT', 0, 'COMMA')}"></td>
-                <td th:text="${trx.description}"></td>
-                <td class="text-center">
-                    <a th:href="@{/user/transaction/edit/{id}(id=${trx.id})}" class="btn btn-sm btn-outline-primary py-1 px-2" style="font-size: 0.8rem;">Edit</a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+    <div class="corporate-card p-4 shadow-sm">
+        <div class="table-container">
+            <table class="table-modern">
+                <thead>
+                <tr>
+                    <th>TANGGAL</th>
+                    <th>JUDUL</th>
+                    <th>KATEGORI</th>
+                    <th>TIPE</th>
+                    <th class="text-end">NOMINAL</th>
+                    <th>DESKRIPSI</th>
+                    <th class="text-center">AKSI</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(transactions)}">
+                    <td colspan="7" class="text-center py-5 text-muted body-sm">Belum ada transaksi.</td>
+                </tr>
+                <tr th:each="trx : ${transactions}">
+                    <td th:text="${trx.transactionDate != null ? #temporals.format(trx.transactionDate, 'dd MMM yyyy') : '-'}"></td>
+                    <td class="fw-semibold text-dark" th:text="${trx.title}"></td>
+                    <td><span class="badge bg-secondary" th:text="${trx.category}"></span></td>
+                    <td><span class="badge" th:classappend="${trx.type.name() == 'INCOME'} ? 'bg-success' : 'bg-danger'" th:text="${trx.type.name()}"></span></td>
+                    <td class="fw-bold text-end" th:classappend="${trx.type.name() == 'INCOME'} ? 'text-success' : 'text-danger'" th:text="${(trx.type.name() == 'EXPENSE' ? '- ' : '+ ') + 'Rp ' + #numbers.formatDecimal(trx.amount, 0, 'POINT', 0, 'COMMA')}"></td>
+                    <td th:text="${trx.description}"></td>
+                    <td class="text-center">
+                        <a th:href="@{/user/transaction/edit/{id}(id=${trx.id})}" class="btn-secondary py-1 px-3" style="font-size: 0.8rem; text-decoration: none;">
+                            <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg></span>
+                            Edit
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
 <div class="modal fade" id="incomeModal" tabindex="-1" aria-labelledby="incomeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content corporate-card p-0">
-            <div class="modal-header border-bottom-0 pb-0">
-                <h5 class="fw-bold text-dark mb-0">Tambah Pemasukan</h5>
+        <div class="modal-content corporate-card p-0" style="border-radius: var(--radius-lg);">
+            <div class="modal-header border-bottom-0 p-4 pb-0">
+                <h5 class="headline fw-bold text-dark mb-0">Tambah Pemasukan</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form th:action="@{/user/transaction/add}" method="post">
                 <input type="hidden" name="type" value="INCOME">
-                <div class="modal-body">
+                <div class="modal-body p-4">
                     <div class="mb-3">
-                        <label class="form-label">Judul</label>
+                        <label class="form-label">JUDUL</label>
                         <input type="text" name="title" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Nominal (Rp)</label>
+                        <label class="form-label">NOMINAL (RP)</label>
                         <input type="number" name="amount" class="form-control" required min="1" step="0.01">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Tanggal</label>
+                        <label class="form-label">TANGGAL</label>
                         <input type="date" name="transactionDate" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Kategori</label>
+                        <label class="form-label">KATEGORI</label>
                         <select name="category" class="form-select">
                             <option th:each="cat : ${categories}" th:value="${cat}" th:text="${cat}"></option>
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Deskripsi</label>
+                        <label class="form-label">DESKRIPSI</label>
                         <input type="text" name="description" class="form-control">
                     </div>
                 </div>
-                <div class="modal-footer border-top-0 pt-0">
-                    <button type="submit" class="btn-primary w-100" style="background: var(--success);">Simpan Pemasukan</button>
+                <div class="modal-footer border-top-0 p-4 pt-0">
+                    <button type="submit" class="btn-primary w-100">Simpan Pemasukan</button>
                 </div>
             </form>
         </div>
@@ -105,45 +117,46 @@
 
 <div class="modal fade" id="expenseModal" tabindex="-1" aria-labelledby="expenseModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content corporate-card p-0">
-            <div class="modal-header border-bottom-0 pb-0">
-                <h5 class="fw-bold text-dark mb-0">Tambah Pengeluaran</h5>
+        <div class="modal-content corporate-card p-0" style="border-radius: var(--radius-lg);">
+            <div class="modal-header border-bottom-0 p-4 pb-0">
+                <h5 class="headline fw-bold text-dark mb-0">Tambah Pengeluaran</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form th:action="@{/user/transaction/add}" method="post">
                 <input type="hidden" name="type" value="EXPENSE">
-                <div class="modal-body">
+                <div class="modal-body p-4">
                     <div class="mb-3">
-                        <label class="form-label">Judul</label>
+                        <label class="form-label">JUDUL</label>
                         <input type="text" name="title" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Nominal (Rp)</label>
+                        <label class="form-label">NOMINAL (RP)</label>
                         <input type="number" name="amount" class="form-control" required min="1" step="0.01">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Tanggal</label>
+                        <label class="form-label">TANGGAL</label>
                         <input type="date" name="transactionDate" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Kategori</label>
+                        <label class="form-label">KATEGORI</label>
                         <select name="category" class="form-select">
                             <option th:each="cat : ${categories}" th:value="${cat}" th:text="${cat}"></option>
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Deskripsi</label>
+                        <label class="form-label">DESKRIPSI</label>
                         <input type="text" name="description" class="form-control">
                     </div>
                 </div>
-                <div class="modal-footer border-top-0 pt-0">
-                    <button type="submit" class="btn-primary w-100" style="background: var(--danger);">Simpan Pengeluaran</button>
+                <div class="modal-footer border-top-0 p-4 pt-0">
+                    <button type="submit" class="btn-danger w-100">Simpan Pengeluaran</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
+<div th:replace="~{fragments/footer :: footer}"></div>
 <script th:src="@{/js/bootstrap.min.js}"></script>
 </body>
 </html>

@@ -11,42 +11,47 @@
 <div th:replace="~{fragments/header :: header}"></div>
 
 <div class="main-content">
-    <div class="corporate-card mb-4 d-flex justify-content-between align-items-center flex-wrap gap-3" style="background: var(--nav-dark); color: white;">
-        <div>
-            <h2 class="fw-bold mb-1 text-white">Dompet Saya 💳</h2>
-            <p class="mb-0" style="color: #94a3b8;">Pantau likuiditas dan cashflow bulanan Anda.</p>
-        </div>
-        <div class="text-md-end">
-            <small style="color: #94a3b8;">Total Saldo</small>
-            <h2 class="fw-bold text-success m-0" th:text="${wallet != null ? 'Rp ' + #numbers.formatDecimal(wallet.balance,0,'POINT',0,'COMMA') : 'Rp 0'}"></h2>
+    <div class="color-block-section color-block-mint mb-4">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <span class="eyebrow">DOMPET SAYA</span>
+                <h2 class="display-lg fw-bold mb-1">
+                    Likuiditas &amp; Saldo
+                </h2>
+                <p class="body-sm mb-0">Pantau likuiditas dan cashflow bulanan Anda secara real-time.</p>
+            </div>
+            <div class="text-md-end p-3 rounded-4" style="background: rgba(255,255,255,0.4); border: 1px solid rgba(0,0,0,0.08);">
+                <small class="caption d-block mb-1">TOTAL SALDO</small>
+                <h2 class="headline fw-bold m-0 text-success" th:text="${wallet != null ? 'Rp ' + #numbers.formatDecimal(wallet.balance,0,'POINT',0,'COMMA') : 'Rp 0'}"></h2>
+            </div>
         </div>
     </div>
 
     <div class="row g-4 mb-4">
         <div class="col-lg-4">
-            <div class="corporate-card stat-card p-4 h-100" style="border-left-color: var(--success);">
-                <small class="text-secondary fw-bold text-uppercase">Pemasukan Bulanan</small>
-                <h3 class="fw-bold text-success mt-2" th:text="'Rp ' + ${#numbers.formatDecimal(totalIncome,0,'POINT',0,'COMMA')}"></h3>
+            <div class="corporate-card stat-card p-4 h-100" style="border-left-color: var(--semantic-success) !important;">
+                <span class="caption text-muted">PEMASUKAN BULANAN</span>
+                <h3 class="headline fw-bold text-success mt-2" th:text="'Rp ' + ${#numbers.formatDecimal(totalIncome,0,'POINT',0,'COMMA')}"></h3>
             </div>
         </div>
         <div class="col-lg-4">
-            <div class="corporate-card stat-card p-4 h-100" style="border-left-color: var(--danger);">
-                <small class="text-secondary fw-bold text-uppercase">Pengeluaran Bulanan</small>
-                <h3 class="fw-bold text-danger mt-2" th:text="'Rp ' + ${#numbers.formatDecimal(totalExpense,0,'POINT',0,'COMMA')}"></h3>
+            <div class="corporate-card stat-card p-4 h-100" style="border-left-color: var(--semantic-danger) !important;">
+                <span class="caption text-muted">PENGELUARAN BULANAN</span>
+                <h3 class="headline fw-bold text-danger mt-2" th:text="'Rp ' + ${#numbers.formatDecimal(totalExpense,0,'POINT',0,'COMMA')}"></h3>
             </div>
         </div>
         <div class="col-lg-4">
-            <div class="corporate-card stat-card p-4 h-100" style="border-left-color: var(--warning);">
-                <small class="text-secondary fw-bold text-uppercase">Cashflow Bersih</small>
-                <h3 class="fw-bold mt-2" th:classappend="${cashflow >= 0} ? 'text-success' : 'text-danger'" th:text="'Rp ' + ${#numbers.formatDecimal(cashflow,0,'POINT',0,'COMMA')}"></h3>
+            <div class="corporate-card stat-card p-4 h-100" style="border-left-color: var(--semantic-warning) !important;">
+                <span class="caption text-muted">CASHFLOW BERSIH</span>
+                <h3 class="headline fw-bold mt-2" th:classappend="${cashflow >= 0} ? 'text-success' : 'text-danger'" th:text="'Rp ' + ${#numbers.formatDecimal(cashflow,0,'POINT',0,'COMMA')}"></h3>
             </div>
         </div>
     </div>
 
-    <div class="corporate-card">
-        <h5 class="fw-bold mb-4 text-dark">Aktivitas Terakhir</h5>
+    <div class="corporate-card p-4 shadow-sm">
+        <h5 class="headline fw-bold mb-4 text-dark">Aktivitas Terakhir</h5>
         
-        <div th:if="${#lists.isEmpty(recentTransactions)}" class="text-center py-4 text-secondary">
+        <div th:if="${#lists.isEmpty(recentTransactions)}" class="text-center py-4 body-sm text-secondary">
             <p>Belum ada aktivitas dompet tercatat.</p>
         </div>
 
@@ -54,10 +59,10 @@
             <table class="table-modern">
                 <thead>
                 <tr>
-                    <th>Tanggal</th>
-                    <th>Judul</th>
-                    <th>Tipe</th>
-                    <th class="text-end">Nominal</th>
+                    <th>TANGGAL</th>
+                    <th>JUDUL</th>
+                    <th>TIPE</th>
+                    <th class="text-end">NOMINAL</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -74,6 +79,8 @@
         </div>
     </div>
 </div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
 
 <script th:src="@{/js/bootstrap.min.js}"></script>
 </body>

@@ -10,37 +10,77 @@
     <!-- ===================== DESKTOP HEADER ===================== -->
     <header class="desktop-header">
         <a th:href="${session.user != null ? ((session.user.role == 'ADMIN') ? '/admin/dashboard' : '/user/dashboard') : '/login'}" class="logo" style="text-decoration: none;">
-            Finance<span style="color: var(--success);">All.</span>
+            Finance<span style="color: var(--semantic-success);">All.</span>
         </a>
 
         <nav class="d-flex align-items-center gap-1">
             <!-- USER NAV -->
             <div th:if="${session.user != null && session.user.role == 'USER'}" class="d-flex align-items-center gap-1">
-                <a th:href="@{/user/dashboard}" class="nav-link" th:classappend="${requestURI == '/user/dashboard' ? 'active' : ''}">Dashboard</a>
-                <a th:href="@{/user/transaction}" class="nav-link" th:classappend="${requestURI == '/user/transaction' ? 'active' : ''}">Transaksi</a>
-                <a th:href="@{/user/wallet}" class="nav-link" th:classappend="${requestURI == '/user/wallet' ? 'active' : ''}">Dompet</a>
-                <a th:href="@{/user/debt}" class="nav-link" th:classappend="${requestURI == '/user/debt' ? 'active' : ''}">Utang</a>
-                <a th:href="@{/user/emergency}" class="nav-link" th:classappend="${requestURI == '/user/emergency' ? 'active' : ''}">Dana Darurat</a>
-                <a th:href="@{/user/fi}" class="nav-link" th:classappend="${requestURI == '/user/fi' ? 'active' : ''}">FI Goals</a>
-                <a th:href="@{/user/level}" class="nav-link" th:classappend="${requestURI == '/user/level' ? 'active' : ''}">Level</a>
+                <a th:href="@{/user/dashboard}" class="nav-link" th:classappend="${requestURI == '/user/dashboard' ? 'active' : ''}">
+                    <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg></span>
+                    Dashboard
+                </a>
+                <a th:href="@{/user/transaction}" class="nav-link" th:classappend="${requestURI == '/user/transaction' ? 'active' : ''}">
+                    <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
+                    Transaksi
+                </a>
+                <a th:href="@{/user/wallet}" class="nav-link" th:classappend="${requestURI == '/user/wallet' ? 'active' : ''}">
+                    <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span>
+                    Dompet
+                </a>
+                <a th:href="@{/user/debt}" class="nav-link" th:classappend="${requestURI == '/user/debt' ? 'active' : ''}">
+                    <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg></span>
+                    Utang
+                </a>
+                <a th:href="@{/user/emergency}" class="nav-link" th:classappend="${requestURI == '/user/emergency' ? 'active' : ''}">
+                    <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+                    Dana Darurat
+                </a>
+                <a th:href="@{/user/fi}" class="nav-link" th:classappend="${requestURI == '/user/fi' ? 'active' : ''}">
+                    <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.71 1.26-1.5 1.62-2.38M12 15l-3-3m7.38-4.62C18.5 5.26 19 1.5 19 1.5s-3.76.5-5 2c-.88.36-1.67.91-2.38 1.62L5 11.76l4.24 4.24L15.88 9.38z"/></svg></span>
+                    FI Goals
+                </a>
+                <a th:href="@{/user/level}" class="nav-link" th:classappend="${requestURI == '/user/level' ? 'active' : ''}">
+                    <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg></span>
+                    Level
+                </a>
             </div>
 
             <!-- ADMIN NAV -->
             <div th:if="${session.user != null && session.user.role == 'ADMIN'}" class="d-flex align-items-center gap-1">
-                <a th:href="@{/admin/dashboard}" class="nav-link" th:classappend="${requestURI == '/admin/dashboard' ? 'active' : ''}">Dashboard</a>
-                <a th:href="@{/admin/users}" class="nav-link" th:classappend="${requestURI == '/admin/users' ? 'active' : ''}">Users</a>
-                <a th:href="@{/admin/analysis}" class="nav-link" th:classappend="${requestURI == '/admin/analysis' ? 'active' : ''}">Analisis</a>
-                <a th:href="@{/admin/articles}" class="nav-link" th:classappend="${requestURI == '/admin/articles' ? 'active' : ''}">Artikel</a>
-                <a th:href="@{/admin/levels}" class="nav-link" th:classappend="${requestURI == '/admin/levels' ? 'active' : ''}">Levels</a>
-                <a th:href="@{/admin/logs}" class="nav-link" th:classappend="${requestURI == '/admin/logs' ? 'active' : ''}">Logs</a>
+                <a th:href="@{/admin/dashboard}" class="nav-link" th:classappend="${requestURI == '/admin/dashboard' ? 'active' : ''}">
+                    <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg></span>
+                    Dashboard
+                </a>
+                <a th:href="@{/admin/users}" class="nav-link" th:classappend="${requestURI == '/admin/users' ? 'active' : ''}">
+                    <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-3-3.87"/><path d="M9 21v-2a4 4 0 0 1 3-3.87"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><circle cx="16" cy="3.13" r="3"/></svg></span>
+                    Users
+                </a>
+                <a th:href="@{/admin/analysis}" class="nav-link" th:classappend="${requestURI == '/admin/analysis' ? 'active' : ''}">
+                    <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+                    Analisis
+                </a>
+                <a th:href="@{/admin/articles}" class="nav-link" th:classappend="${requestURI == '/admin/articles' ? 'active' : ''}">
+                    <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z"/><line x1="7" y1="7" x2="17" y2="7"/><line x1="7" y1="11" x2="17" y2="11"/><line x1="7" y1="15" x2="13" y2="15"/></svg></span>
+                    Artikel
+                </a>
+                <a th:href="@{/admin/levels}" class="nav-link" th:classappend="${requestURI == '/admin/levels' ? 'active' : ''}">
+                    <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg></span>
+                    Levels
+                </a>
+                <a th:href="@{/admin/logs}" class="nav-link" th:classappend="${requestURI == '/admin/logs' ? 'active' : ''}">
+                    <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
+                    Logs
+                </a>
             </div>
 
             <!-- USER INFO + LOGOUT -->
-            <div th:if="${session.user != null}" class="d-flex align-items-center gap-3 ms-3 border-start ps-3" style="border-color: #334155 !important;">
-                <a th:href="${session.user.role == 'USER' ? '/user/profile' : '/admin/profile'}" class="text-white small text-decoration-none fw-medium" style="color: #cbd5e1 !important;">
-                     👤 <span th:text="${session.user.username}"></span>
+            <div th:if="${session.user != null}" class="d-flex align-items-center gap-2 ms-3 border-start ps-3" style="border-color: var(--color-hairline) !important;">
+                <a th:href="${session.user.role == 'USER' ? '/user/profile' : '/admin/profile'}" class="btn-secondary py-1 px-3" style="font-size: 0.85rem; text-decoration: none;">
+                    <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+                    <span th:text="${session.user.username}"></span>
                 </a>
-                <a th:href="@{/logout}" class="btn-primary py-1 px-3 btn-sm text-white" style="background: var(--danger); font-size: 0.8rem; text-decoration: none;">Logout</a>
+                <a th:href="@{/logout}" class="btn-danger py-1 px-3" style="font-size: 0.85rem; text-decoration: none;">Logout</a>
             </div>
         </nav>
     </header>
@@ -48,54 +88,103 @@
     <!-- ===================== MOBILE HEADER ===================== -->
     <header class="mobile-header">
         <div class="mobile-logo">
-            Finance<span>All.</span>
+            Finance<span style="color: var(--semantic-success);">All.</span>
         </div>
-        <button class="hamburger-btn" onclick="toggleMobileSidebar()" aria-label="Menu">☰</button>
+        <button class="hamburger-btn" onclick="toggleMobileSidebar()" aria-label="Menu">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
     </header>
 
-    <!-- ===================== MOBILE SIDEBAR (DARI KANAN) ===================== -->
+    <!-- ===================== MOBILE SIDEBAR ===================== -->
     <div id="mobileSidebar" class="mobile-sidebar p-4">
         <!-- Header sidebar -->
-        <div class="d-flex justify-content-between align-items-center mb-4 pb-3" style="border-bottom: 1px solid var(--border-color);">
+        <div class="d-flex justify-content-between align-items-center mb-4 pb-3" style="border-bottom: 1px solid var(--color-hairline);">
             <div>
-                <h5 class="fw-bold mb-0" style="color: var(--text-main);">Menu</h5>
+                <h5 class="fw-bold mb-0" style="color: var(--color-ink);">Menu</h5>
                 <small th:if="${session.user != null}" class="text-muted" th:text="'@' + ${session.user.username}"></small>
             </div>
-            <button onclick="toggleMobileSidebar()" style="background:none; border:none; font-size:1.3rem; color: var(--text-muted); cursor:pointer; padding:0.25rem;">✕</button>
+            <button onclick="toggleMobileSidebar()" style="background:none; border:none; color: var(--color-ink); cursor:pointer; padding:0.25rem;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
         </div>
 
         <!-- MENU USER -->
         <div th:if="${session.user != null && session.user.role == 'USER'}" class="d-flex flex-column gap-1">
-            <a th:href="@{/user/dashboard}" class="sidebar-link"><span class="sidebar-icon">📊</span> Dashboard</a>
-            <a th:href="@{/user/transaction}" class="sidebar-link"><span class="sidebar-icon">💸</span> Transaksi</a>
-            <a th:href="@{/user/wallet}" class="sidebar-link"><span class="sidebar-icon">💳</span> Dompet</a>
-            <a th:href="@{/user/debt}" class="sidebar-link"><span class="sidebar-icon">📉</span> Utang</a>
-            <a th:href="@{/user/emergency}" class="sidebar-link"><span class="sidebar-icon">🛡️</span> Dana Darurat</a>
-            <a th:href="@{/user/fi}" class="sidebar-link"><span class="sidebar-icon">🚀</span> FI Goals</a>
-            <a th:href="@{/user/level}" class="sidebar-link"><span class="sidebar-icon">🎮</span> Level</a>
+            <a th:href="@{/user/dashboard}" class="sidebar-link">
+                <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg></span>
+                Dashboard
+            </a>
+            <a th:href="@{/user/transaction}" class="sidebar-link">
+                <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
+                Transaksi
+            </a>
+            <a th:href="@{/user/wallet}" class="sidebar-link">
+                <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span>
+                Dompet
+            </a>
+            <a th:href="@{/user/debt}" class="sidebar-link">
+                <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg></span>
+                Utang
+            </a>
+            <a th:href="@{/user/emergency}" class="sidebar-link">
+                <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+                Dana Darurat
+            </a>
+            <a th:href="@{/user/fi}" class="sidebar-link">
+                <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.71 1.26-1.5 1.62-2.38M12 15l-3-3m7.38-4.62C18.5 5.26 19 1.5 19 1.5s-3.76.5-5 2c-.88.36-1.67.91-2.38 1.62L5 11.76l4.24 4.24L15.88 9.38z"/></svg></span>
+                FI Goals
+            </a>
+            <a th:href="@{/user/level}" class="sidebar-link">
+                <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg></span>
+                Level
+            </a>
             
-            <div style="border-top: 1px solid var(--border-color); margin: 0.75rem 0;"></div>
+            <div style="border-top: 1px solid var(--color-hairline); margin: 0.75rem 0;"></div>
             
-            <a th:href="@{/user/profile}" class="sidebar-link"><span class="sidebar-icon">👤</span> Profil Saya</a>
+            <a th:href="@{/user/profile}" class="sidebar-link">
+                <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+                Profil Saya
+            </a>
         </div>
 
         <!-- MENU ADMIN -->
         <div th:if="${session.user != null && session.user.role == 'ADMIN'}" class="d-flex flex-column gap-1">
-            <a th:href="@{/admin/dashboard}" class="sidebar-link"><span class="sidebar-icon">📊</span> Dashboard</a>
-            <a th:href="@{/admin/users}" class="sidebar-link"><span class="sidebar-icon">👥</span> Users</a>
-            <a th:href="@{/admin/analysis}" class="sidebar-link"><span class="sidebar-icon">📈</span> Analisis</a>
-            <a th:href="@{/admin/articles}" class="sidebar-link"><span class="sidebar-icon">📰</span> Artikel</a>
-            <a th:href="@{/admin/levels}" class="sidebar-link"><span class="sidebar-icon">🎮</span> Levels</a>
-            <a th:href="@{/admin/logs}" class="sidebar-link"><span class="sidebar-icon">📋</span> Logs</a>
+            <a th:href="@{/admin/dashboard}" class="sidebar-link">
+                <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg></span>
+                Dashboard
+            </a>
+            <a th:href="@{/admin/users}" class="sidebar-link">
+                <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-3-3.87"/><path d="M9 21v-2a4 4 0 0 1 3-3.87"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><circle cx="16" cy="3.13" r="3"/></svg></span>
+                Users
+            </a>
+            <a th:href="@{/admin/analysis}" class="sidebar-link">
+                <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+                Analisis
+            </a>
+            <a th:href="@{/admin/articles}" class="sidebar-link">
+                <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z"/><line x1="7" y1="7" x2="17" y2="7"/><line x1="7" y1="11" x2="17" y2="11"/><line x1="7" y1="15" x2="13" y2="15"/></svg></span>
+                Artikel
+            </a>
+            <a th:href="@{/admin/levels}" class="sidebar-link">
+                <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg></span>
+                Levels
+            </a>
+            <a th:href="@{/admin/logs}" class="sidebar-link">
+                <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
+                Logs
+            </a>
             
-            <div style="border-top: 1px solid var(--border-color); margin: 0.75rem 0;"></div>
+            <div style="border-top: 1px solid var(--color-hairline); margin: 0.75rem 0;"></div>
             
-            <a th:href="@{/admin/profile}" class="sidebar-link"><span class="sidebar-icon">👤</span> Profil Admin</a>
+            <a th:href="@{/admin/profile}" class="sidebar-link">
+                <span class="svg-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+                Profil Admin
+            </a>
         </div>
 
         <!-- LOGOUT -->
         <div th:if="${session.user != null}" style="margin-top: auto; padding-top: 1rem;">
-            <a th:href="@{/logout}" class="btn-primary w-100 text-center" style="background: var(--danger); text-decoration: none; font-size: 0.85rem;">Logout</a>
+            <a th:href="@{/logout}" class="btn-danger w-100 text-center" style="text-decoration: none; font-size: 0.85rem;">Logout</a>
         </div>
     </div>
 
