@@ -1,255 +1,218 @@
+# 💰 FinanceAll — Integrated Personal Finance Management System
+
 <p align="center">
-  <h1 align="center">💰 FinanceAll</h1>
-  <p align="center">
-    <strong>Platform Manajemen Keuangan Pribadi Terintegrasi</strong>
-  </p>
-  <p align="center">
-    <img src="https://img.shields.io/badge/Java-17-orange?style=flat-square&logo=openjdk" alt="Java 17"/>
-    <img src="https://img.shields.io/badge/Spring%20Boot-3.2.0-brightgreen?style=flat-square&logo=spring-boot" alt="Spring Boot 3.2"/>
-    <img src="https://img.shields.io/badge/PostgreSQL-16-blue?style=flat-square&logo=postgresql" alt="PostgreSQL"/>
-    <img src="https://img.shields.io/badge/Thymeleaf-3.1-005F0F?style=flat-square&logo=thymeleaf" alt="Thymeleaf"/>
-    <img src="https://img.shields.io/badge/License-MIT-yellow?style=flat-square" alt="MIT License"/>
-  </p>
+  <img src="https://img.shields.io/badge/Java-17-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white" alt="Java 17"/>
+  <img src="https://img.shields.io/badge/Spring_Boot-3.2.0-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white" alt="Spring Boot 3.2"/>
+  <img src="https://img.shields.io/badge/PostgreSQL-16-316192?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL 16"/>
+  <img src="https://img.shields.io/badge/Flyway-Migration-CC0200?style=for-the-badge&logo=flyway&logoColor=white" alt="Flyway"/>
+  <img src="https://img.shields.io/badge/Thymeleaf-3.1-005F0F?style=for-the-badge&logo=thymeleaf&logoColor=white" alt="Thymeleaf"/>
+  <img src="https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker Compose"/>
+  <img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge" alt="MIT License"/>
 </p>
 
----
-
-## 📋 Tentang Project
-
-**FinanceAll** adalah sistem manajemen keuangan pribadi berbasis web yang dibangun menggunakan **Java Spring Boot**. Aplikasi ini membantu pengguna mencatat pemasukan & pengeluaran, mengelola hutang, membangun dana darurat, menghitung target Financial Independence (FI), serta melacak progress level gamifikasi keuangan.
-
-### ✨ Fitur Utama
-
-| Fitur | Deskripsi |
-|-------|-----------|
-| 📊 **Dashboard** | Ringkasan finansial lengkap: saldo, cashflow, dan transaksi terakhir |
-| 💸 **Transaksi** | Catat pemasukan & pengeluaran dengan kategori dan tanggal |
-| 💳 **Dompet** | Pantau likuiditas, saldo, dan arus kas bulanan |
-| 📉 **Manajemen Hutang** | Lacak dan lunasi kewajiban secara terstruktur |
-| 🛡️ **Dana Darurat** | Bangun jaring pengaman finansial dengan target & progress |
-| 🚀 **FI Calculator** | Kalkulasi target Financial Independence (aturan 4%) |
-| 🎮 **Level & Gamifikasi** | Level up berdasarkan konsistensi pencatatan keuangan |
-| 👤 **Profil** | Kelola data pribadi dan keamanan akun |
-| 🔐 **Recovery PIN** | Reset password tanpa email menggunakan PIN 6 digit |
-| 🛠️ **Admin Panel** | Dashboard admin, manajemen user, artikel, level, dan activity logs |
+**FinanceAll** adalah platform manajemen keuangan pribadi berbasis web tingkat produksi yang dibangun menggunakan **Java Spring Boot**. Terinspirasi dari buku *"The Psychology of Money"* oleh Morgan Housel, aplikasi ini memandang pengelolaan finansial bukan sekadar rumus matematika, melainkan sebuah **tantangan perilaku (behavioral habits)** melalui integrasi pelacak dana darurat, pelunasan hutang terstruktur, kalkulator Financial Independence (FI), dan sistem gamifikasi kenaikan level.
 
 ---
 
-## 📸 Screenshots
+## 📑 Daftar Isi
+- [Fitur Utama](#-fitur-utama)
+- [Galeri Tangkapan Layar](#-galeri-tangkapan-layar)
+- [Arsitektur Sistem](#-arsitektur-sistem)
+- [Fitur Keamanan & Proteksi Data](#-fitur-keamanan--proteksi-data)
+- [Teknologi yang Digunakan](#-teknologi-yang-digunakan)
+- [Panduan Menjalankan Aplikasi](#-panduan-menjalankan-aplikasi)
+- [Struktur Proyek](#-struktur-proyek)
+- [Author & Lisensi](#-author--lisensi)
 
-### Autentikasi
+---
 
+## ✨ Fitur Utama
+
+| Modul | Deskripsi |
+|---|---|
+| 📊 **Dashboard Finansial** | Ringkasan saldo total, visualisasi cashflow bulanan, dan log aktivitas transaksi terbaru. |
+| 💳 **Pencatatan Transaksi** | Catat pemasukan dan pengeluaran secara terperinci berdasarkan kategori dan tanggal. |
+| 👛 **Manajemen Dompet** | Pantau likuiditas saldo kas, rekening bank, e-wallet, dan arus kas per dompet. |
+| 📉 **Manajemen Hutang** | Rencanakan dan pantau pelunasan kewajiban/hutang dengan status pembayaran terstruktur. |
+| 🛡️ **Dana Darurat (Emergency Fund)** | Bangun jaring pengaman finansial dengan target dinamis dan indikator progres visual. |
+| 🎯 **Kalkulator FI (Financial Independence)** | Hitung target kebebasan finansial berdasarkan aturan 4% (*The 4% Rule*) dan rasio tabungan. |
+| 🏆 **Leveling & Gamifikasi** | Sistem level dan poin yang memotivasi konsistensi pencatatan keuangan harian. |
+| 🔑 **PIN Pemulihan Akun (Recovery PIN)** | Reset kata sandi secara instan dan aman tanpa bergantung pada layanan email. |
+| 🛡️ **Panel Administrator** | Manajemen pengguna, pemblokiran akun, publikasi artikel edukasi, dan log audit aktivitas. |
+
+---
+
+## 📸 Galeri Tangkapan Layar
+
+### 🔐 Autentikasi & Akun
 <table>
   <tr>
-    <td align="center"><strong>Login</strong></td>
-    <td align="center"><strong>Register</strong></td>
+    <td align="center"><strong>Halaman Login</strong></td>
+    <td align="center"><strong>Halaman Registrasi</strong></td>
   </tr>
   <tr>
-    <td><img src="docs/screenshots/login.png" width="400"/></td>
-    <td><img src="docs/screenshots/register.png" width="400"/></td>
+    <td><img src="docs/screenshots/login.png" width="400" alt="Login"/></td>
+    <td><img src="docs/screenshots/register.png" width="400" alt="Register"/></td>
   </tr>
 </table>
 
-### Panel User
-
+### 👤 Panel Pengguna
 <table>
   <tr>
-    <td align="center"><strong>Dashboard</strong></td>
-    <td align="center"><strong>Transaksi</strong></td>
+    <td align="center"><strong>Dashboard Pengguna</strong></td>
+    <td align="center"><strong>Riwayat Transaksi</strong></td>
   </tr>
   <tr>
-    <td><img src="docs/screenshots/user-dashboard.png" width="400"/></td>
-    <td><img src="docs/screenshots/user-transactions.png" width="400"/></td>
+    <td><img src="docs/screenshots/user-dashboard.png" width="400" alt="Dashboard"/></td>
+    <td><img src="docs/screenshots/user-transactions.png" width="400" alt="Transactions"/></td>
   </tr>
   <tr>
-    <td align="center"><strong>Dompet</strong></td>
-    <td align="center"><strong>Manajemen Hutang</strong></td>
+    <td align="center"><strong>Manajemen Dompet</strong></td>
+    <td align="center"><strong>Pelunasan Hutang</strong></td>
   </tr>
   <tr>
-    <td><img src="docs/screenshots/user-wallet.png" width="400"/></td>
-    <td><img src="docs/screenshots/user-debt.png" width="400"/></td>
+    <td><img src="docs/screenshots/user-wallet.png" width="400" alt="Wallet"/></td>
+    <td><img src="docs/screenshots/user-debt.png" width="400" alt="Debt"/></td>
   </tr>
   <tr>
     <td align="center"><strong>Dana Darurat</strong></td>
-    <td align="center"><strong>FI Calculator</strong></td>
+    <td align="center"><strong>Kalkulator FI</strong></td>
   </tr>
   <tr>
-    <td><img src="docs/screenshots/user-emergency.png" width="400"/></td>
-    <td><img src="docs/screenshots/user-fi.png" width="400"/></td>
+    <td><img src="docs/screenshots/user-emergency.png" width="400" alt="Emergency Fund"/></td>
+    <td><img src="docs/screenshots/user-fi.png" width="400" alt="FI Calculator"/></td>
   </tr>
   <tr>
-    <td align="center"><strong>Level & Gamifikasi</strong></td>
-    <td align="center"><strong>Profil</strong></td>
+    <td align="center"><strong>Gamifikasi & Level</strong></td>
+    <td align="center"><strong>Profil Pengguna</strong></td>
   </tr>
   <tr>
-    <td><img src="docs/screenshots/user-level.png" width="400"/></td>
-    <td><img src="docs/screenshots/user-profile.png" width="400"/></td>
+    <td><img src="docs/screenshots/user-level.png" width="400" alt="Level"/></td>
+    <td><img src="docs/screenshots/user-profile.png" width="400" alt="Profile"/></td>
   </tr>
 </table>
 
-### Panel Admin
-
+### 🛡️ Panel Administrator
 <table>
   <tr>
     <td align="center"><strong>Admin Dashboard</strong></td>
-    <td align="center"><strong>User Management</strong></td>
+    <td align="center"><strong>Manajemen Pengguna</strong></td>
   </tr>
   <tr>
-    <td><img src="docs/screenshots/admin-dashboard.png" width="400"/></td>
-    <td><img src="docs/screenshots/admin-users.png" width="400"/></td>
+    <td><img src="docs/screenshots/admin-dashboard.png" width="400" alt="Admin Dashboard"/></td>
+    <td><img src="docs/screenshots/admin-users.png" width="400" alt="Admin Users"/></td>
   </tr>
   <tr>
-    <td align="center"><strong>Artikel / Pengumuman</strong></td>
-    <td align="center"><strong>Activity Logs</strong></td>
+    <td align="center"><strong>Artikel Finansial</strong></td>
+    <td align="center"><strong>Log Audit Aktivitas</strong></td>
   </tr>
   <tr>
-    <td><img src="docs/screenshots/admin-articles.png" width="400"/></td>
-    <td><img src="docs/screenshots/admin-logs.png" width="400"/></td>
+    <td><img src="docs/screenshots/admin-articles.png" width="400" alt="Admin Articles"/></td>
+    <td><img src="docs/screenshots/admin-logs.png" width="400" alt="Admin Logs"/></td>
   </tr>
 </table>
 
 ---
 
-## 🛠️ Tech Stack
+## 🏗️ Arsitektur Sistem
 
-| Layer | Teknologi |
-|-------|-----------|
-| **Backend** | Java 17, Spring Boot 3.2.0, Spring Data JPA, Hibernate |
-| **Frontend** | Thymeleaf, Bootstrap 5, Custom CSS (Inter Font) |
-| **Database** | PostgreSQL 16 |
-| **Security** | BCrypt Password Encoder, Session-based Auth, Recovery PIN |
-| **Build Tool** | Apache Maven |
+```
+┌────────────────────────────────────────────────────────┐
+│                   Browser (Client)                     │
+│           HTML5 + Thymeleaf + Bootstrap 5              │
+└───────────────────────────┬────────────────────────────┘
+                            │ HTTP Requests
+                            ▼
+┌────────────────────────────────────────────────────────┐
+│               Spring Boot MVC Controllers              │
+│       - AuthController        - AdminController        │
+│       - TransactionController - GoalController         │
+└───────────────────────────┬────────────────────────────┘
+                            │ Service Invocations
+                            ▼
+┌────────────────────────────────────────────────────────┐
+│                 Business Logic Layer                   │
+│       - UserService           - TransactionService     │
+│       - GamificationService   - ReportService          │
+└───────────────────────────┬────────────────────────────┘
+                            │ Spring Data JPA
+                            ▼
+┌────────────────────────────────────────────────────────┐
+│                PostgreSQL 16 Database                  │
+│       (Skema & Migrasi dikelola otomatis Flyway)       │
+└────────────────────────────────────────────────────────┘
+```
 
 ---
 
-## 🚀 Cara Menjalankan
+## 🛡️ Fitur Keamanan & Proteksi Data
 
-Skema database dikelola otomatis oleh **Flyway** (`src/main/resources/db/migration/V1__init_schema.sql`).
-Tabel dibuat saat aplikasi pertama kali start — tidak perlu load SQL manual.
+- **BCrypt Password Hashing**: Seluruh kata sandi pengguna dienkripsi dengan *salt* sebelum disimpan.
+- **Session-Based Authentication & Interceptor**: Proteksi ketat rute `/user/**` dan `/admin/**`.
+- **Pencegahan IDOR (Insecure Direct Object Reference)**: Verifikasi kepemilikan data pada setiap operasi modifikasi dan penghapusan transaksi/dompet.
+- **6-Digit Recovery PIN**: Solusi pemulihan akses akun mandiri tanpa ketergantungan API pihak ketiga.
+- **Role-Based Access Control**: Pemisahan hak akses mutlak antara pengguna biasa dan administrator.
 
-### Opsi A — Docker (direkomendasikan) 🐳
+---
 
-Prasyarat: **Docker** & **Docker Compose**.
+## 🚀 Panduan Menjalankan Aplikasi
+
+### Opsi A: Menjalankan dengan Docker Compose (Direkomendasikan)
+
+1. **Clone Repositori**:
+   ```bash
+   git clone https://github.com/a1fariz/financeall_project_java_alfariz.git
+   cd financeall_project_java_alfariz
+   ```
+2. **Siapkan File Lingkungan**:
+   ```bash
+   cp .env.example .env
+   ```
+3. **Jalankan Aplikasi & PostgreSQL**:
+   ```bash
+   docker compose up -d --build
+   ```
+4. Buka browser pada `http://localhost:8080`.
+
+### Opsi B: Menjalankan Secara Lokal (Maven)
+
+Prasyarat: **Java 17+** dan **PostgreSQL** sudah terpasang.
 
 ```bash
-# 1. Siapkan environment
-cp .env.example .env
-#    lalu edit .env: isi POSTGRES_PASSWORD, APP_ADMIN_PASSWORD, APP_ADMIN_RECOVERY_PIN
-
-# 2. Build & jalankan (app + PostgreSQL)
-docker compose up -d --build
-
-# 3. Cek kesehatan
-curl http://localhost:8080/actuator/health   # {"status":"UP"}
-```
-
-Akses aplikasi di `http://localhost:8080`. Hentikan dengan `docker compose down`
-(tambah `-v` untuk menghapus data database).
-
-### Opsi B — Lokal (Maven)
-
-Prasyarat: **Java 17+**, **PostgreSQL** berjalan.
-
-```bash
-# Buat database
+# 1. Buat database
 createdb financeall
 
-# Set kredensial via environment (jangan hardcode!)
-export SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/financeall
-export SPRING_DATASOURCE_USERNAME=postgres
-export SPRING_DATASOURCE_PASSWORD=your_password
-export SPRING_PROFILES_ACTIVE=dev
-
-# Jalankan
-./mvnw spring-boot:run      # Windows: .\mvnw.cmd spring-boot:run
+# 2. Jalankan aplikasi via Maven Wrapper
+./mvnw spring-boot:run
+# Windows: .\mvnw.cmd spring-boot:run
 ```
-
-### Konfigurasi (Environment Variables)
-
-| Variable | Wajib | Default | Keterangan |
-|----------|:-----:|---------|-----------|
-| `SPRING_DATASOURCE_URL` | ✅ | — | JDBC URL PostgreSQL |
-| `SPRING_DATASOURCE_USERNAME` | ✅ | — | Username database |
-| `SPRING_DATASOURCE_PASSWORD` | ✅ | — | Password database |
-| `SPRING_PROFILES_ACTIVE` | — | `prod` | `prod` atau `dev` |
-| `APP_ADMIN_PASSWORD` | — | `admin123` | Password admin yang di-seed (first run) |
-| `APP_ADMIN_RECOVERY_PIN` | — | `123456` | Recovery PIN admin (first run) |
-| `PORT` | — | `8080` | Port HTTP |
-
-### Default Admin Account
-
-Di-seed otomatis saat pertama kali start (gunakan `APP_ADMIN_PASSWORD` /
-`APP_ADMIN_RECOVERY_PIN` untuk meng-override nilai default di bawah).
-
-| Field | Default |
-|-------|---------|
-| Username | `admin` |
-| Password | `admin123` ⚠️ **ganti di production** |
-| Recovery PIN | `123456` ⚠️ **ganti di production** |
 
 ---
 
-## 📁 Struktur Project
+## 📁 Struktur Proyek
 
-```
+```text
 financeall/
 ├── src/main/java/com/financeall/
-│   ├── config/              # Konfigurasi (Auth, WebConfig, DataSeeder)
-│   ├── controller/          # REST & MVC Controllers
+│   ├── config/              # Konfigurasi Security, Web, & Data Seeder
+│   ├── controller/          # Spring MVC & REST Controllers
 │   ├── dto/                 # Data Transfer Objects
-│   ├── model/               # JPA Entities
+│   ├── model/               # Entitas JPA Hibernate
 │   ├── repository/          # Spring Data JPA Repositories
-│   └── service/             # Business Logic Layer
+│   └── service/             # Layer Logika Bisnis
 ├── src/main/resources/
-│   ├── static/css/          # Custom CSS (style.css)
-│   ├── templates/           # Thymeleaf HTML Templates
-│   │   ├── admin/           # Admin pages
-│   │   ├── auth/            # Login, Register, Reset Password
-│   │   ├── fragments/       # Header & Footer fragments
-│   │   └── user/            # User pages
-│   ├── application.properties
-│   └── application-dev.properties
-├── docs/screenshots/        # Screenshot dokumentasi
-├── pom.xml                  # Maven dependencies
+│   ├── db/migration/        # Skrip Migrasi SQL Flyway
+│   ├── static/              # Asset CSS, JS, & Gambar
+│   ├── templates/           # Template UI Thymeleaf
+│   └── application.properties
+├── docker-compose.yml       # Orkestrasi Docker
+├── pom.xml                  # Konfigurasi Dependensi Maven
 └── README.md
-```
-
----
-
-## 🔒 Fitur Keamanan
-
-- **Password Hashing** — Semua password di-hash menggunakan BCrypt
-- **Session-based Authentication** — Login state dikelola via HttpSession
-- **Auth Interceptor** — Proteksi route `/user/**` dan `/admin/**`
-- **IDOR Prevention** — Validasi kepemilikan data sebelum edit/hapus
-- **Recovery PIN** — Reset password tanpa email, menggunakan PIN 6 digit
-- **Ban System** — Admin dapat menonaktifkan akun pengguna
-- **Role-based Access** — Pemisahan akses antara User dan Admin
-
----
-
-## 📊 Arsitektur
-
-```
-┌─────────────┐     ┌──────────────┐     ┌──────────────┐
-│   Browser   │────▶│  Controller  │────▶│   Service    │
-│ (Thymeleaf) │◀────│   (MVC)      │◀────│   (Logic)    │
-└─────────────┘     └──────────────┘     └──────┬───────┘
-                                                 │
-                    ┌──────────────┐     ┌───────▼───────┐
-                    │  PostgreSQL  │◀────│  Repository   │
-                    │  (Database)  │────▶│   (JPA)       │
-                    └──────────────┘     └───────────────┘
 ```
 
 ---
 
 ## 👨‍💻 Author
 
-**Alfarizi** — [GitHub](https://github.com/a1fariz)
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License.
+Dikembangkan oleh **Muhammad Hafiz Alfarizi** ([@a1fariz](https://github.com/a1fariz)).  
+*Dibuat untuk menghadirkan kebebasan finansial melalui kebiasaan keuangan yang terukur.*
